@@ -1,0 +1,2 @@
+This is a sample text file for demonstrating LangChain's TextLoader.
+You can replace this content with any text you want to load as a document. 
