@@ -1,0 +1,14 @@
+streamlit
+langchain
+google-generativeai
+groq
+pandas
+langchain-google-genai
+langchain-groq 
+python-dotenv
+# Hugging Face Integration
+langchain-huggingface
+transformers
+huggingface-hub
+streamlit-copy-to-clipboard
+openpyxl
