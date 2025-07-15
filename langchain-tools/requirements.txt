@@ -1,0 +1,12 @@
+# Requirements for LangChain Retriever Examples (Open Source)
+langchain
+langchain-community
+langchain-huggingface
+sentence-transformers
+transformers
+chromadb
+faiss-cpu
+wikipedia 
+pydantic 
+duckduckgo-search 
+langchain_experimental
