@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "jwt.validation",
+      "type": "com.example.jwtvalidator.config.JwtValidationProperties",
+      "sourceType": "com.example.jwtvalidator.config.JwtValidationProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "jwt.validation.cache-expiry",
+      "type": "java.lang.Long",
+      "sourceType": "com.example.jwtvalidator.config.JwtValidationProperties"
+    },
+    {
+      "name": "jwt.validation.cache-type",
+      "type": "com.example.jwtvalidator.config.JwtValidationProperties$CacheType",
+      "sourceType": "com.example.jwtvalidator.config.JwtValidationProperties"
+    },
+    {
+      "name": "jwt.validation.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.example.jwtvalidator.config.JwtValidationProperties"
+    },
+    {
+      "name": "jwt.validation.jwks-url",
+      "type": "java.lang.String",
+      "sourceType": "com.example.jwtvalidator.config.JwtValidationProperties"
+    },
+    {
+      "name": "jwt.validation.redis-key-prefix",
+      "type": "java.lang.String",
+      "sourceType": "com.example.jwtvalidator.config.JwtValidationProperties"
+    }
+  ],
+  "hints": []
+}
