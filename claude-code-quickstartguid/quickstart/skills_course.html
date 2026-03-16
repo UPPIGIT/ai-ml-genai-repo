@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Skills — Complete Course</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #f7f6f2;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --ink: #1a1814;
+  --ink2: #4a4640;
+  --ink3: #8a857d;
+  --accent: #c8440f;
+  --accent2: #1a6b4a;
+  --accent3: #1e4d8c;
+  --accent4: #7a3a9e;
+  --border: #e2ddd6;
+  --code-bg: #1e1c18;
+  --code-text: #e8e4d8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+/* Layout */
+.layout { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--ink);
+  color: #d4cfc6;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 32px 0;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 0 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 20px;
+}
+
+.sidebar-logo .eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.sidebar-logo h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #f0ede6;
+  line-height: 1.2;
+}
+
+.progress-mini {
+  padding: 0 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 16px;
+}
+
+.progress-track {
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.progress-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+}
+
+.nav-module { margin-bottom: 4px; }
+
+.nav-mod-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.nav-mod-title:hover { color: rgba(255,255,255,0.65); }
+.nav-mod-title.active-section { color: var(--accent); }
+
+.nav-mod-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+.nav-lessons { display: none; }
+.nav-lessons.open { display: block; }
+
+.nav-lesson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 24px 6px 44px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.nav-lesson:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.03); }
+.nav-lesson.done { color: rgba(255,255,255,0.3); }
+.nav-lesson.done::before { content: '✓'; color: var(--accent2); font-size: 11px; margin-right: -2px; }
+
+/* Main content */
+.main {
+  margin-left: 280px;
+  flex: 1;
+  max-width: 860px;
+  padding: 60px 64px;
+}
+
+/* Hero */
+.hero {
+  padding: 80px 0 60px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 80px;
+}
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(44px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+
+.hero-desc {
+  font-size: 18px;
+  color: var(--ink2);
+  max-width: 580px;
+  line-height: 1.65;
+  margin-bottom: 32px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.meta-val {
+  font-size: 22px;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Module sections */
+.module-section {
+  margin-bottom: 100px;
+  padding-top: 20px;
+}
+
+.module-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.module-num-big {
+  font-family: 'Fraunces', serif;
+  font-size: 72px;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--border);
+  flex-shrink: 0;
+  margin-top: -8px;
+}
+
+.module-header-text {}
+
+.module-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.module-title {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.module-desc {
+  font-size: 15px;
+  color: var(--ink2);
+  max-width: 520px;
+}
+
+/* Lesson */
+.lesson {
+  margin-bottom: 56px;
+  scroll-margin-top: 40px;
+}
+
+.lesson-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.lesson-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink3);
+  flex-shrink: 0;
+}
+
+.lesson h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.lesson-body {
+  padding-left: 44px;
+}
+
+.lesson-body p {
+  color: var(--ink2);
+  margin-bottom: 16px;
+  font-size: 15.5px;
+}
+
+.lesson-body p:last-child { margin-bottom: 0; }
+
+/* Callout boxes */
+.callout {
+  border-left: 3px solid;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.callout-key { border-color: var(--accent); background: rgba(200,68,15,0.04); }
+.callout-tip { border-color: var(--accent2); background: rgba(26,107,74,0.04); }
+.callout-warn { border-color: #c8940f; background: rgba(200,148,15,0.04); }
+.callout-info { border-color: var(--accent3); background: rgba(30,77,140,0.04); }
+
+.callout-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.callout-key .callout-label { color: var(--accent); }
+.callout-tip .callout-label { color: var(--accent2); }
+.callout-warn .callout-label { color: #c8940f; }
+.callout-info .callout-label { color: var(--accent3); }
+
+.callout p { margin: 0; font-size: 14.5px; color: var(--ink2); }
+
+/* Code blocks */
+pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 24px;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-x: auto;
+  margin: 20px 0;
+  position: relative;
+}
+
+pre .filename {
+  display: block;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.06em;
+}
+
+.c-comment { color: #6b7a5e; }
+.c-key { color: #e8a87c; }
+.c-str { color: #98c379; }
+.c-kw { color: #c678dd; }
+.c-fn { color: #61afef; }
+.c-num { color: #d19a66; }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 16px;
+  background: var(--surface2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink2);
+  vertical-align: top;
+}
+
+td:first-child { color: var(--ink); font-weight: 500; }
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(0,0,0,0.015); }
+
+/* Inline code */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* Lists */
+.lesson-body ul, .lesson-body ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+
+.lesson-body li {
+  color: var(--ink2);
+  margin-bottom: 6px;
+  font-size: 15.5px;
+}
+
+/* Comparison grid */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.compare-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  background: var(--surface);
+}
+
+.compare-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+
+.compare-card ul { padding-left: 16px; }
+.compare-card li { font-size: 13.5px; margin-bottom: 5px; color: var(--ink2); }
+
+/* Decision tree */
+.decision-tree {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.dt-q {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.dt-branch {
+  padding-left: 20px;
+  border-left: 2px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.dt-yes { color: var(--accent2); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.dt-no  { color: var(--accent);  font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.dt-ans { color: var(--ink2); margin-top: 4px; font-size: 13.5px; }
+
+/* Quiz section */
+.quiz {
+  background: var(--ink);
+  color: #d4cfc6;
+  border-radius: 14px;
+  padding: 32px;
+  margin: 32px 0;
+}
+
+.quiz h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  color: #f0ede6;
+  margin-bottom: 20px;
+}
+
+.quiz-q {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.quiz-q:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.quiz-q p {
+  font-size: 14.5px;
+  margin-bottom: 12px;
+  color: #d4cfc6;
+}
+
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+
+.quiz-opt {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  font-size: 13.5px;
+  transition: all 0.15s;
+  background: rgba(255,255,255,0.03);
+  color: #b4afa8;
+}
+
+.quiz-opt:hover { border-color: rgba(255,255,255,0.25); color: #f0ede6; }
+.quiz-opt.correct { border-color: #1a6b4a; background: rgba(26,107,74,0.15); color: #7de8b8; }
+.quiz-opt.wrong { border-color: #c8440f; background: rgba(200,68,15,0.15); color: #fa9d7d; }
+
+.quiz-explain {
+  display: none;
+  margin-top: 10px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #8a857d;
+  line-height: 1.6;
+}
+
+.quiz-explain.show { display: block; }
+
+/* Module color accents */
+.m0 .module-tag { color: var(--accent); }
+.m0 .module-num-big { color: rgba(200,68,15,0.15); }
+.m1 .module-tag { color: var(--accent4); }
+.m1 .module-num-big { color: rgba(122,58,158,0.15); }
+.m2 .module-tag { color: var(--accent2); }
+.m2 .module-num-big { color: rgba(26,107,74,0.15); }
+.m3 .module-tag { color: #c8940f; }
+.m3 .module-num-big { color: rgba(200,148,15,0.15); }
+.m4 .module-tag { color: var(--accent3); }
+.m4 .module-num-big { color: rgba(30,77,140,0.15); }
+.m5 .module-tag { color: var(--accent); }
+.m5 .module-num-big { color: rgba(200,68,15,0.15); }
+.m6 .module-tag { color: var(--accent4); }
+.m6 .module-num-big { color: rgba(122,58,158,0.15); }
+
+/* Divider */
+.lesson-divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+/* Summary box */
+.summary-box {
+  background: var(--ink);
+  color: #d4cfc6;
+  border-radius: 14px;
+  padding: 32px 36px;
+  margin: 40px 0 0;
+}
+
+.summary-box h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  color: #f0ede6;
+  margin-bottom: 16px;
+}
+
+.summary-box ul { padding-left: 20px; }
+.summary-box li { font-size: 14px; color: #8a857d; margin-bottom: 8px; line-height: 1.55; }
+.summary-box li strong { color: #d4cfc6; }
+
+/* File tree */
+.file-tree {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 20px 24px;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  margin: 20px 0;
+}
+
+.ft-dir { color: #61afef; }
+.ft-file { color: #e8e4d8; }
+.ft-comment { color: #6b7a5e; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 32px 24px; }
+  .compare-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- Sidebar Navigation -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="eyebrow">Complete Course</div>
+    <h2>Claude Code<br>Skills</h2>
+  </div>
+  <div class="progress-mini">
+    <div class="progress-track"><div class="progress-fill" id="pbar"></div></div>
+    <div class="progress-text" id="ptext">0% complete</div>
+  </div>
+  <div id="nav-modules"></div>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">Claude Code · Skills</div>
+  <h1>The Complete<br>Skills Course</h1>
+  <p class="hero-desc">Everything you need to understand, build, configure, share, and troubleshoot Claude Code Skills — taught through your Python todo app.</p>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="meta-label">Modules</span><span class="meta-val">7</span></div>
+    <div class="meta-item"><span class="meta-label">Lessons</span><span class="meta-val">45</span></div>
+    <div class="meta-item"><span class="meta-label">Read time</span><span class="meta-val">~3h</span></div>
+    <div class="meta-item"><span class="meta-label">Level</span><span class="meta-val">Deep</span></div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     MODULE 0 — Course Overview
+───────────────────────────────────────── -->
+<section class="module-section m0" id="m0">
+  <div class="module-header">
+    <div class="module-num-big">01</div>
+    <div class="module-header-text">
+      <div class="module-tag">Module 01</div>
+      <h2 class="module-title">Course Overview</h2>
+      <p class="module-desc">What you'll build, how to read this course, and why Skills are worth your time.</p>
+    </div>
+  </div>
+
+  <div class="lesson" id="m0-l0">
+    <div class="lesson-header"><span class="lesson-num">01.01</span><h3>What this course teaches</h3></div>
+    <div class="lesson-body">
+      <p>This course teaches Claude Code Skills from the ground up — not just what they are, but how they work internally, why they're designed that way, and how to use that understanding to build Skills that actually work in production.</p>
+      <p>By the end you'll be able to explain Skills to anyone, build them confidently, debug them when they misbehave, and make smart decisions about when to use Skills vs other Claude Code features.</p>
+      <div class="callout callout-info">
+        <div class="callout-label">What you already have</div>
+        <p>You have Claude Code installed, a todo app on GitHub, custom <code>/audit</code> and <code>/write_test</code> commands, and GitHub Actions set up. We'll use all of this. Your existing commands become Skills in Module 3.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m0-l1">
+    <div class="lesson-header"><span class="lesson-num">01.02</span><h3>How to read this course</h3></div>
+    <div class="lesson-body">
+      <p>Each module follows the same structure: concept first, then the hands-on implication, then a summary you can reference later. There are quiz questions at the end of each module — answer them honestly before checking.</p>
+      <p>Everything is grounded in your todo app. When a concept is abstract, we apply it immediately to something concrete.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m0-l2">
+    <div class="lesson-header"><span class="lesson-num">01.03</span><h3>Why Skills — the 30-second case</h3></div>
+    <div class="lesson-body">
+      <p>Custom commands are instructions you type. Skills are instructions Claude finds on its own — and they come with a full supporting folder of scripts, references, and templates.</p>
+      <p>The result: you stop managing your workflow and Claude starts managing it for you. You say "write tests for this" and the right playbook loads automatically, with the right tools, the right constraints, and the right output format — every time.</p>
+      <div class="callout callout-key">
+        <div class="callout-label">The core promise</div>
+        <p>Skills make your expertise reusable and auto-applying. You write the playbook once. Claude follows it whenever it's relevant — without you remembering to invoke it.</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ─────────────────────────────────────────
+     MODULE 1 — What are Skills?
+───────────────────────────────────────── -->
+<section class="module-section m1" id="m1">
+  <div class="module-header">
+    <div class="module-num-big">02</div>
+    <div class="module-header-text">
+      <div class="module-tag">Module 02</div>
+      <h2 class="module-title">What are Skills?</h2>
+      <p class="module-desc">The mental model, internal architecture, and triggering mechanism — explained from first principles.</p>
+    </div>
+  </div>
+
+  <div class="lesson" id="m1-l0">
+    <div class="lesson-header"><span class="lesson-num">02.01</span><h3>The mental model — onboarding guide for AI</h3></div>
+    <div class="lesson-body">
+      <p>The best way to understand Skills is to think about what happens when a new developer joins your team. You don't dump the entire codebase on them on day one. You give them an onboarding guide: what the project is, how to run it, what the conventions are, what to do when X happens.</p>
+      <p>A Skill is exactly that — but written for Claude. It packages your expertise into a structured playbook that Claude can pick up, understand, and apply when the situation calls for it.</p>
+      <p>The critical difference from a custom command is that a custom command is something you consciously invoke. A Skill is something Claude discovers and uses. You stop being the task router and become the knowledge author.</p>
+      <div class="callout callout-tip">
+        <div class="callout-label">Teaching framing</div>
+        <p>When explaining Skills to others, use this analogy: "A Skill is to Claude what a well-written SOP is to a new hire. The SOP doesn't need to be handed to them for every task — they know when to reach for it."</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m1-l1">
+    <div class="lesson-header"><span class="lesson-num">02.02</span><h3>The three-level loading architecture</h3></div>
+    <div class="lesson-body">
+      <p>This is the most important thing to understand about how Skills work under the hood. Skills don't load all at once — they load progressively, in three levels.</p>
+
+      <table>
+        <tr><th>Level</th><th>What loads</th><th>When</th><th>Token cost</th></tr>
+        <tr><td>1 — Metadata</td><td>name + description from frontmatter</td><td>Session start, always</td><td>~100 per skill</td></tr>
+        <tr><td>2 — Instructions</td><td>Full SKILL.md body</td><td>When skill triggers</td><td>~5,000</td></tr>
+        <tr><td>3 — Resources</td><td>Files in references/ and assets/</td><td>Only when needed</td><td>0 until read</td></tr>
+      </table>
+
+      <p>Level 1 is tiny — scanning 20 skills at session start costs about 2,000 tokens total. Level 2 only loads when you actually need the skill. Level 3 files only load if Claude decides to read them while working.</p>
+      <p>This is why Skills can include dozens of reference files without bloating the context window. A <code>references/</code> folder with 10 files costs zero tokens unless Claude needs one of them.</p>
+
+      <div class="callout callout-key">
+        <div class="callout-label">Why this matters</div>
+        <p>It means you can be generous with supporting material. Add examples, templates, reference docs, helper scripts — all at near-zero cost. The right files load only when the task requires them.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m1-l2">
+    <div class="lesson-header"><span class="lesson-num">02.03</span><h3>What Claude actually sees — the system prompt injection</h3></div>
+    <div class="lesson-body">
+      <p>At session start, Claude Code scans all skill folders and builds an <code>&lt;available_skills&gt;</code> XML block that gets injected into Claude's system prompt. It looks like this:</p>
+
+<pre><span class="c-comment">&lt;!-- Injected into system prompt at session start --&gt;</span>
+<span class="c-key">&lt;available_skills&gt;</span>
+  <span class="c-key">&lt;skill&gt;</span>
+    <span class="c-key">&lt;n&gt;</span>audit<span class="c-key">&lt;/n&gt;</span>
+    <span class="c-key">&lt;description&gt;</span>
+      Audits Python code for bugs, security issues...
+      Use when asked to review, audit, or check quality.
+    <span class="c-key">&lt;/description&gt;</span>
+    <span class="c-key">&lt;location&gt;</span>.claude/skills/audit/<span class="c-key">&lt;/location&gt;</span>
+  <span class="c-key">&lt;/skill&gt;</span>
+  <span class="c-key">&lt;skill&gt;</span>
+    <span class="c-key">&lt;n&gt;</span>write-test<span class="c-key">&lt;/n&gt;</span>
+    <span class="c-key">&lt;description&gt;</span>
+      Writes pytest tests for Python todo app...
+      Use when asked to write tests or improve coverage.
+    <span class="c-key">&lt;/description&gt;</span>
+    <span class="c-key">&lt;location&gt;</span>.claude/skills/write-test/<span class="c-key">&lt;/location&gt;</span>
+  <span class="c-key">&lt;/skill&gt;</span>
+<span class="c-key">&lt;/available_skills&gt;</span></pre>
+
+      <p>When Claude receives a message from you, it checks this block and decides whether any skill is relevant. If yes, it uses bash to read the full SKILL.md file — which is Level 2 loading.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m1-l3">
+    <div class="lesson-header"><span class="lesson-num">02.04</span><h3>Auto-trigger vs manual invocation — the full picture</h3></div>
+    <div class="lesson-body">
+      <p>Every skill supports two ways to trigger it. Understanding both is essential for designing skills that behave predictably.</p>
+
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h4>Manual — you type /name</h4>
+          <ul>
+            <li>Always fires, no matching needed</li>
+            <li>Good for side-effect actions</li>
+            <li>User is in explicit control</li>
+            <li>Same as custom commands</li>
+            <li>Works even with poor description</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4>Auto — Claude decides</h4>
+          <ul>
+            <li>Fires based on description match</li>
+            <li>Good for expertise skills</li>
+            <li>Transparent to the user</li>
+            <li>Requires good description</li>
+            <li>Can be disabled per-skill</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>The two modes aren't mutually exclusive. Most skills support both. You might auto-trigger <code>write-test</code> when you say "test the add function" and also manually invoke it with <code>/write-test todo.py</code> when you want to be explicit.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m1-l4">
+    <div class="lesson-header"><span class="lesson-num">02.05</span><h3>Skills vs instructions — the key difference</h3></div>
+    <div class="lesson-body">
+      <p>This distinction matters more than anything else when teaching others:</p>
+      <p>Rules in <code>CLAUDE.md</code> tell Claude what to do. Claude will usually follow them. Skills also tell Claude what to do — but they load only when relevant, they come with supporting resources, and they can be auto-discovered.</p>
+      <p>Neither Skills nor CLAUDE.md <em>guarantee</em> execution the way Hooks do. If you need something to always happen, use Hooks. If you need Claude to follow a playbook when a certain kind of task comes up, use Skills.</p>
+
+      <div class="callout callout-warn">
+        <div class="callout-label">Common misconception</div>
+        <p>Skills don't run code. They're instructions injected into Claude's context. The bash scripts in your <code>scripts/</code> folder only run if Claude decides to execute them — Skills don't automatically fire scripts.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz" id="m1-quiz">
+    <h4>Module 02 — Check your understanding</h4>
+
+    <div class="quiz-q">
+      <p><strong>Q1.</strong> A skill's SKILL.md is 8,000 tokens long. How many tokens does it cost at session start?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,false)">8,000 tokens — the full file is always read</div>
+        <div class="quiz-opt" onclick="answer(this,true)">~100 tokens — only metadata (name + description) loads</div>
+        <div class="quiz-opt" onclick="answer(this,false)">0 tokens — skills don't affect the context window</div>
+      </div>
+      <div class="quiz-explain">Only the frontmatter metadata loads at session start. The full SKILL.md body (Level 2) only loads when the skill is actually triggered.</div>
+    </div>
+
+    <div class="quiz-q">
+      <p><strong>Q2.</strong> You want a /deploy skill that Claude should never trigger automatically. Which frontmatter field controls this?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,false)">user-invocable: false</div>
+        <div class="quiz-opt" onclick="answer(this,true)">disable-model-invocation: true</div>
+        <div class="quiz-opt" onclick="answer(this,false)">auto-trigger: false</div>
+      </div>
+      <div class="quiz-explain">disable-model-invocation: true prevents Claude from auto-triggering the skill. user-invocable: false does the opposite — it prevents manual /command invocation but still allows auto-trigger.</div>
+    </div>
+
+    <div class="quiz-q">
+      <p><strong>Q3.</strong> Where does the available_skills block get injected?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,false)">Into every user message</div>
+        <div class="quiz-opt" onclick="answer(this,true)">Into the system prompt at session start</div>
+        <div class="quiz-opt" onclick="answer(this,false)">Into the first assistant response</div>
+      </div>
+      <div class="quiz-explain">Claude Code injects available_skills into the system prompt when the session starts. This is why skills are available throughout a session without being re-scanned.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─────────────────────────────────────────
+     MODULE 2 — Creating Your First Skill
+───────────────────────────────────────── -->
+<section class="module-section m2" id="m2">
+  <div class="module-header">
+    <div class="module-num-big">03</div>
+    <div class="module-header-text">
+      <div class="module-tag">Module 03</div>
+      <h2 class="module-title">Creating Your First Skill</h2>
+      <p class="module-desc">Convert your existing commands into Skills and write descriptions that reliably trigger.</p>
+    </div>
+  </div>
+
+  <div class="lesson" id="m2-l0">
+    <div class="lesson-header"><span class="lesson-num">03.01</span><h3>The folder structure</h3></div>
+    <div class="lesson-body">
+      <p>Every skill is a folder inside <code>.claude/skills/</code>. The folder name becomes the command name. Inside it, only <code>SKILL.md</code> is required.</p>
+
+      <div class="file-tree"><span class="ft-dir">.claude/</span>
+├── <span class="ft-dir">commands/</span>
+│   ├── <span class="ft-file">audit.md</span>          <span class="ft-comment">← old commands still work</span>
+│   └── <span class="ft-file">write_test.md</span>
+└── <span class="ft-dir">skills/</span>
+    ├── <span class="ft-dir">audit/</span>
+    │   ├── <span class="ft-file">SKILL.md</span>       <span class="ft-comment">← required</span>
+    │   ├── <span class="ft-dir">scripts/</span>
+    │   ├── <span class="ft-dir">references/</span>
+    │   └── <span class="ft-dir">assets/</span>
+    └── <span class="ft-dir">write-test/</span>
+        ├── <span class="ft-file">SKILL.md</span>
+        └── <span class="ft-dir">references/</span>
+            └── <span class="ft-file">pytest_patterns.md</span></div>
+
+      <p>The three optional subdirectories serve distinct purposes: <code>scripts/</code> holds executable files Claude can run via bash. <code>references/</code> holds documentation loaded into context on demand. <code>assets/</code> holds templates and binary files.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m2-l1">
+    <div class="lesson-header"><span class="lesson-num">03.02</span><h3>The SKILL.md structure — frontmatter + body</h3></div>
+    <div class="lesson-body">
+      <p>Every SKILL.md has two parts separated by <code>---</code>. The frontmatter configures how the skill behaves. The body tells Claude what to do.</p>
+
+<pre><span class="filename">audit/SKILL.md</span><span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">audit</span>
+<span class="c-key">description</span>: <span class="c-str">Audits Python code for bugs, security issues,</span>
+             <span class="c-str">input validation, and test coverage. Use when</span>
+             <span class="c-str">asked to review, audit, or check code quality —</span>
+             <span class="c-str">even if the user just says "look at this".</span>
+<span class="c-key">version</span>: <span class="c-str">1.0.0</span>
+<span class="c-comment">---</span>
+
+<span class="c-comment"># Code Audit</span>
+
+Audit $ARGUMENTS. If no argument, audit the whole project.
+
+<span class="c-comment">## Steps</span>
+1. Read all relevant .py files first
+2. Check security: hardcoded secrets, injection risks...
+<span class="c-comment">... rest of your existing audit.md content ...</span></pre>
+
+      <div class="callout callout-tip">
+        <div class="callout-label">Migrating your existing commands</div>
+        <p>Your existing <code>audit.md</code> content goes directly into the SKILL.md body. Add the frontmatter on top. That's the entire migration.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m2-l2">
+    <div class="lesson-header"><span class="lesson-num">03.03</span><h3>Writing descriptions that actually trigger — the formula</h3></div>
+    <div class="lesson-body">
+      <p>The description field is the most important thing you write. It's the only signal Claude uses to decide whether to auto-trigger your skill. A bad description means your skill sits unused no matter how good the instructions are.</p>
+
+      <p>The formula that works consistently:</p>
+
+<pre><span class="c-comment"># FORMULA</span>
+<span class="c-str">[What it does] + [domain nouns].</span>
+<span class="c-str">Use when asked to [verb list] — even if [edge cases].</span>
+
+<span class="c-comment"># BAD — too vague, will undertrigger</span>
+description: Audits code.
+
+<span class="c-comment"># GOOD — specific domain, clear trigger verbs, edge case</span>
+description: Audits Python code for bugs, security issues,
+             input validation, error handling, and test
+             coverage gaps. Use when asked to review,
+             audit, check, or inspect code quality — even
+             if the user just says "look at this file" or
+             "something seems wrong here".</pre>
+
+      <p>Three rules for descriptions:</p>
+      <ul>
+        <li>Write in third person — it gets injected into the system prompt</li>
+        <li>Include the verb list explicitly with "Use when asked to..."</li>
+        <li>Add at least one "even if..." clause for edge case coverage</li>
+      </ul>
+
+      <div class="callout callout-warn">
+        <div class="callout-label">The undertriggering problem</div>
+        <p>Claude naturally errs on the side of not using a skill if it's unsure. Make your description a little "pushy" — explicitly tell Claude when to use it. Vague descriptions cause the skill to be ignored most of the time.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m2-l3">
+    <div class="lesson-header"><span class="lesson-num">03.04</span><h3>Testing with the 20-query eval method</h3></div>
+    <div class="lesson-body">
+      <p>After writing a description, test it with 20 realistic queries — half that should trigger your skill, half that shouldn't. Save them as a JSON file in your skill folder:</p>
+
+<pre><span class="filename">audit/eval.json</span>[
+  { <span class="c-key">"query"</span>: <span class="c-str">"can you review todo.py"</span>,           <span class="c-key">"should"</span>: <span class="c-num">true</span>  },
+  { <span class="c-key">"query"</span>: <span class="c-str">"something seems off with validation"</span>, <span class="c-key">"should"</span>: <span class="c-num">true</span>  },
+  { <span class="c-key">"query"</span>: <span class="c-str">"check for bugs in my code"</span>,           <span class="c-key">"should"</span>: <span class="c-num">true</span>  },
+  { <span class="c-key">"query"</span>: <span class="c-str">"write tests for add_todo"</span>,            <span class="c-key">"should"</span>: <span class="c-num">false</span> },
+  { <span class="c-key">"query"</span>: <span class="c-str">"what does complete_todo do?"</span>,         <span class="c-key">"should"</span>: <span class="c-num">false</span> },
+  { <span class="c-key">"query"</span>: <span class="c-str">"audit my flask routes"</span>,              <span class="c-key">"should"</span>: <span class="c-num">true</span>  }
+]</pre>
+
+      <p>Use realistic queries — include typos, casual speech, file paths, and abbreviations. Simple queries like "review file X" are poor tests. The edge cases are what matter.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m2-l4">
+    <div class="lesson-header"><span class="lesson-num">03.05</span><h3>Step-by-step: migrate audit.md to a Skill</h3></div>
+    <div class="lesson-body">
+<pre><span class="c-comment"># Step 1 — Create the folder</span>
+mkdir -p .claude/skills/audit
+
+<span class="c-comment"># Step 2 — Copy your existing command</span>
+cp .claude/commands/audit.md .claude/skills/audit/SKILL.md
+
+<span class="c-comment"># Step 3 — Open SKILL.md and add frontmatter at the top</span></pre>
+
+<pre><span class="filename">.claude/skills/audit/SKILL.md — add this at line 1</span><span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">audit</span>
+<span class="c-key">description</span>: <span class="c-str">Audits Python code for bugs, security issues,</span>
+             <span class="c-str">input validation, error handling, and test</span>
+             <span class="c-str">coverage gaps. Use when asked to review, audit,</span>
+             <span class="c-str">check, or inspect code quality — even if the</span>
+             <span class="c-str">user just says "look at this" or "something</span>
+             <span class="c-str">seems wrong".</span>
+<span class="c-key">version</span>: <span class="c-str">1.0.0</span>
+<span class="c-comment">---</span>
+
+<span class="c-comment"># Code Audit   ← your existing content starts here</span></pre>
+
+<pre><span class="c-comment"># Step 4 — Test it. Open Claude Code and say:</span>
+<span class="c-str">"can you review todo.py for any issues"</span>
+
+<span class="c-comment"># Should auto-trigger without you typing /audit</span>
+<span class="c-comment"># Also verify manual trigger still works:</span>
+/audit src/</pre>
+
+      <p>Repeat the same steps for <code>write_test.md</code> → <code>write-test/SKILL.md</code>.</p>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <h4>Module 03 — Key takeaways</h4>
+    <ul>
+      <li><strong>Folder name = command name.</strong> <code>.claude/skills/audit/</code> creates <code>/audit</code>.</li>
+      <li><strong>Only SKILL.md is required.</strong> Supporting folders are optional.</li>
+      <li><strong>Migration is one-step.</strong> Copy the .md file, add frontmatter on top.</li>
+      <li><strong>Description quality determines auto-trigger accuracy.</strong> Use the verb list formula.</li>
+      <li><strong>Test with 20 queries</strong> — mix of should-trigger and should-not-trigger.</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ─────────────────────────────────────────
+     MODULE 3 — Configuration and Multi-file Skills
+───────────────────────────────────────── -->
+<section class="module-section m3" id="m3">
+  <div class="module-header">
+    <div class="module-num-big">04</div>
+    <div class="module-header-text">
+      <div class="module-tag">Module 04</div>
+      <h2 class="module-title">Configuration & Multi-file Skills</h2>
+      <p class="module-desc">Every frontmatter field, invocation control, and how to use supporting files effectively.</p>
+    </div>
+  </div>
+
+  <div class="lesson" id="m3-l0">
+    <div class="lesson-header"><span class="lesson-num">04.01</span><h3>Every frontmatter field explained</h3></div>
+    <div class="lesson-body">
+      <table>
+        <tr><th>Field</th><th>Required</th><th>What it does</th></tr>
+        <tr><td><code>name</code></td><td>Yes</td><td>Max 64 chars, lowercase + hyphens only. Becomes the /command name.</td></tr>
+        <tr><td><code>description</code></td><td>Yes</td><td>Max 1024 chars. The auto-trigger signal. Write in third person.</td></tr>
+        <tr><td><code>version</code></td><td>No</td><td>Semantic version for tracking. Good practice for shared skills.</td></tr>
+        <tr><td><code>allowed-tools</code></td><td>No</td><td>Restrict which tools Claude can use. e.g. <code>"Read, Write"</code></td></tr>
+        <tr><td><code>disable-model-invocation</code></td><td>No</td><td>Set <code>true</code> to block auto-trigger. Manual /command only.</td></tr>
+        <tr><td><code>user-invocable</code></td><td>No</td><td>Set <code>false</code> to hide /command. Auto-trigger only.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m3-l1">
+    <div class="lesson-header"><span class="lesson-num">04.02</span><h3>disable-model-invocation — for dangerous side effects</h3></div>
+    <div class="lesson-body">
+      <p>Some skills should only run when you explicitly decide to run them. Deployment, git commits, sending messages, deleting data — these have real-world side effects. You don't want Claude auto-deciding to deploy your app because the code looks ready.</p>
+
+<pre><span class="filename">.claude/skills/deploy/SKILL.md</span><span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">deploy</span>
+<span class="c-key">description</span>: <span class="c-str">Runs pre-deploy checks for the todo app and</span>
+             <span class="c-str">verifies readiness. Use when explicitly asked</span>
+             <span class="c-str">to deploy or ship.</span>
+<span class="c-key">disable-model-invocation</span>: <span class="c-num">true</span>   <span class="c-comment">← only /deploy works</span>
+<span class="c-comment">---</span></pre>
+
+      <p>With this set, Claude will never auto-trigger <code>/deploy</code> no matter what you say. Only typing <code>/deploy</code> explicitly will fire it.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m3-l2">
+    <div class="lesson-header"><span class="lesson-num">04.03</span><h3>user-invocable: false — background knowledge</h3></div>
+    <div class="lesson-body">
+      <p>Some skills aren't actions — they're knowledge. A skill that explains your legacy data format, your team's architecture decisions, or historical context shouldn't expose a <code>/command</code>. There's nothing meaningful to do when you type <code>/legacy-context</code>. But Claude should load it automatically when the task touches that area.</p>
+
+<pre><span class="filename">.claude/skills/legacy-storage/SKILL.md</span><span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">legacy-storage</span>
+<span class="c-key">description</span>: <span class="c-str">Context about the old JSON storage format used</span>
+             <span class="c-str">before the SQLite migration. Load when the user</span>
+             <span class="c-str">asks about todos.json, old data, or migration.</span>
+<span class="c-key">user-invocable</span>: <span class="c-num">false</span>   <span class="c-comment">← no /command exposed</span>
+<span class="c-comment">---</span>
+
+The original todos.json format stored todos as a flat
+array with integer IDs starting at 1...</pre>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m3-l3">
+    <div class="lesson-header"><span class="lesson-num">04.04</span><h3>allowed-tools — least privilege for safety</h3></div>
+    <div class="lesson-body">
+      <p>By default a skill can use any tool. <code>allowed-tools</code> restricts this. A read-only audit skill has no business running bash commands. A test-writer shouldn't be touching the network.</p>
+
+<pre><span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">audit</span>
+<span class="c-key">allowed-tools</span>: <span class="c-str">"Read, Grep, Glob"</span>  <span class="c-comment">← read-only</span>
+<span class="c-comment">---</span>
+
+<span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">write-test</span>
+<span class="c-key">allowed-tools</span>: <span class="c-str">"Read, Write, Bash"</span> <span class="c-comment">← can write + run pytest</span>
+<span class="c-comment">---</span>
+
+<span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">deploy</span>
+<span class="c-key">allowed-tools</span>: <span class="c-str">"Bash, Read"</span>        <span class="c-comment">← can run shell commands</span>
+<span class="c-comment">---</span></pre>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m3-l4">
+    <div class="lesson-header"><span class="lesson-num">04.05</span><h3>Adding supporting files — the real power</h3></div>
+    <div class="lesson-body">
+      <p>Multi-file skills are where things get genuinely powerful. You can bundle reference docs, templates, and scripts alongside your instructions — and they only load when needed.</p>
+
+      <p>Here's a fully built write-test skill with all three supporting folders:</p>
+
+      <div class="file-tree"><span class="ft-dir">.claude/skills/write-test/</span>
+├── <span class="ft-file">SKILL.md</span>                       <span class="ft-comment">← instructions + frontmatter</span>
+├── <span class="ft-dir">references/</span>
+│   └── <span class="ft-file">pytest_patterns.md</span>          <span class="ft-comment">← team conventions</span>
+├── <span class="ft-dir">assets/</span>
+│   └── <span class="ft-file">test_template.py</span>            <span class="ft-comment">← base test file template</span>
+└── <span class="ft-dir">scripts/</span>
+    └── <span class="ft-file">run_coverage.sh</span>             <span class="ft-comment">← run tests + show coverage</span></div>
+
+<pre><span class="filename">references/pytest_patterns.md</span><span class="c-comment"># Pytest conventions for this project</span>
+
+- Always use tmp_path fixture for file operations
+- Group tests in classes: TestCreate, TestRead, TestUpdate, TestDelete
+- Naming: test_&lt;action&gt;_&lt;condition&gt;_&lt;expected&gt;
+- Never import from conftest — use fixtures directly</pre>
+
+<pre><span class="filename">scripts/run_coverage.sh</span><span class="c-comment">#!/bin/bash</span>
+pytest --cov=todo --cov-report=term-missing -q
+echo <span class="c-str">"Coverage complete."</span></pre>
+
+<pre><span class="filename">SKILL.md body — referencing the supporting files</span><span class="c-comment"># Write Tests
+
+Before writing, read references/pytest_patterns.md for
+team conventions. Use assets/test_template.py as the
+base for all new test files.
+
+After writing tests, run scripts/run_coverage.sh and
+report the coverage percentage.</span></pre>
+
+      <div class="callout callout-tip">
+        <div class="callout-label">Progressive disclosure in practice</div>
+        <p>Claude only reads <code>pytest_patterns.md</code> if it decides the conventions are needed. If you ask for one quick test, it might not bother. If you ask for comprehensive coverage, it will. Zero token cost either way until the file is actually read.</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ─────────────────────────────────────────
+     MODULE 4 — Skills vs Other Features
+───────────────────────────────────────── -->
+<section class="module-section m4" id="m4">
+  <div class="module-header">
+    <div class="module-num-big">05</div>
+    <div class="module-header-text">
+      <div class="module-tag">Module 05</div>
+      <h2 class="module-title">Skills vs Other Features</h2>
+      <p class="module-desc">How Skills fit alongside CLAUDE.md, Hooks, Custom Commands, and MCP Servers.</p>
+    </div>
+  </div>
+
+  <div class="lesson" id="m4-l0">
+    <div class="lesson-header"><span class="lesson-num">05.01</span><h3>The complete decision framework</h3></div>
+    <div class="lesson-body">
+      <p>Each Claude Code feature occupies a distinct role. The mistake most people make is trying to use one feature for everything. Here's when to reach for each:</p>
+
+      <table>
+        <tr><th>Feature</th><th>Use when you need...</th><th>Guarantees?</th></tr>
+        <tr><td>CLAUDE.md</td><td>Always-on project context, style rules, architecture notes</td><td>No</td></tr>
+        <tr><td>Skills</td><td>On-demand expertise with auto-discovery and supporting files</td><td>No</td></tr>
+        <tr><td>Custom Commands</td><td>Simple manual invocations (legacy, no auto-trigger needed)</td><td>No</td></tr>
+        <tr><td>Hooks</td><td>Guaranteed execution — enforcement, not guidance</td><td>Yes</td></tr>
+        <tr><td>MCP Servers</td><td>External tools — GitHub, databases, Playwright, APIs</td><td>Yes</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m4-l1">
+    <div class="lesson-header"><span class="lesson-num">05.02</span><h3>Skills vs CLAUDE.md — where to put what</h3></div>
+    <div class="lesson-body">
+      <p>The most common question. Use this decision tree:</p>
+
+      <div class="decision-tree">
+        <div class="dt-q">Should this information be in CLAUDE.md or a Skill?</div>
+        <div class="dt-branch">
+          <span class="dt-yes">YES →</span> Is it always relevant regardless of task?
+          <div class="dt-ans">→ <strong>CLAUDE.md</strong>. Stack, project structure, coding style, naming conventions, architecture. Claude reads this always.</div>
+        </div>
+        <div class="dt-branch">
+          <span class="dt-no">NO →</span> Is it only relevant for certain task types?
+          <div class="dt-ans">→ <strong>Skill</strong>. Testing conventions → write-test skill. Audit criteria → audit skill. Deploy checklist → deploy skill.</div>
+        </div>
+        <div class="dt-branch">
+          <span class="dt-yes">ALSO →</span> Does it come with scripts, templates, or reference docs?
+          <div class="dt-ans">→ <strong>Always a Skill</strong>. CLAUDE.md is text-only. Skills have a full folder.</div>
+        </div>
+      </div>
+
+      <p>Practical rule: CLAUDE.md holds your project's identity. Skills hold your project's playbooks.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m4-l2">
+    <div class="lesson-header"><span class="lesson-num">05.03</span><h3>Skills vs Hooks — guidance vs enforcement</h3></div>
+    <div class="lesson-body">
+      <p>This is the most important distinction to teach others because it's the one that causes the most confusion.</p>
+
+      <div class="callout callout-key">
+        <div class="callout-label">The rule</div>
+        <p>Use Skills when you want Claude to do something well. Use Hooks when you need something to always happen, no exceptions.</p>
+      </div>
+
+      <p>Concrete example with your todo app:</p>
+      <ul>
+        <li><strong>write-test Skill</strong> — guides Claude to write good tests when testing is needed</li>
+        <li><strong>PostToolUse Hook</strong> — runs pytest after every file edit, guaranteed, even if Claude forgets</li>
+      </ul>
+
+      <p>The Skill makes the tests good. The Hook makes the tests run. You need both.</p>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m4-l3">
+    <div class="lesson-header"><span class="lesson-num">05.04</span><h3>Everything working together — the full stack</h3></div>
+    <div class="lesson-body">
+      <p>Here's what a production setup looks like with all features working in concert:</p>
+
+<pre><span class="c-comment"># CLAUDE.md — always-on context</span>
+Stack: Python 3.11, Flask, SQLite
+Rules: raise ValueError for empty titles, use pytest
+Commands: pytest, python app.py
+
+<span class="c-comment"># Skills — on-demand playbooks</span>
+audit/        → triggered by "review my code"
+write-test/   → triggered by "write tests for X"
+deploy/       → triggered only by /deploy (disabled auto)
+
+<span class="c-comment"># Hooks — guaranteed execution (.claude/settings.json)</span>
+PostToolUse   → run pytest after every file edit
+PreToolUse    → block rm -rf and .env modifications
+Stop          → desktop notification when done
+
+<span class="c-comment"># MCP Servers — external tools</span>
+GitHub MCP    → @claude creates PRs from issues
+Playwright    → browser testing for the Flask UI</pre>
+
+      <p>Each feature does what it's best at. Nothing overlaps. The whole is greater than the sum of its parts.</p>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz" id="m4-quiz">
+    <h4>Module 05 — Check your understanding</h4>
+    <div class="quiz-q">
+      <p><strong>Q1.</strong> You want Claude to always run linting after editing Python files. Which feature?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,false)">A Skill with instructions to lint</div>
+        <div class="quiz-opt" onclick="answer(this,true)">A PostToolUse Hook</div>
+        <div class="quiz-opt" onclick="answer(this,false)">A rule in CLAUDE.md</div>
+      </div>
+      <div class="quiz-explain">Hooks guarantee execution. Skills and CLAUDE.md are guidance — Claude might follow them most of the time but not always. For enforcement, always use Hooks.</div>
+    </div>
+    <div class="quiz-q">
+      <p><strong>Q2.</strong> Your coding style rules (4-space indent, snake_case, etc.) should go in:</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,true)">CLAUDE.md — always relevant</div>
+        <div class="quiz-opt" onclick="answer(this,false)">A coding-style Skill</div>
+        <div class="quiz-opt" onclick="answer(this,false)">A PreToolUse Hook</div>
+      </div>
+      <div class="quiz-explain">Style rules apply to every coding task, so they belong in CLAUDE.md which is always loaded. A Skill only loads when triggered — you'd miss the style rules on tasks that don't match the trigger.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─────────────────────────────────────────
+     MODULE 5 — Sharing Skills
+───────────────────────────────────────── -->
+<section class="module-section m5" id="m5">
+  <div class="module-header">
+    <div class="module-num-big">06</div>
+    <div class="module-header-text">
+      <div class="module-tag">Module 06</div>
+      <h2 class="module-title">Sharing Skills</h2>
+      <p class="module-desc">Personal vs project scope, the priority system, and publishing to the marketplace.</p>
+    </div>
+  </div>
+
+  <div class="lesson" id="m5-l0">
+    <div class="lesson-header"><span class="lesson-num">06.01</span><h3>Four locations, four scopes</h3></div>
+    <div class="lesson-body">
+      <table>
+        <tr><th>Location</th><th>Scope</th><th>Use for</th></tr>
+        <tr><td><code>~/.claude/skills/</code></td><td>Personal — all your projects</td><td>Your individual workflow preferences</td></tr>
+        <tr><td><code>.claude/skills/</code></td><td>Project — commit to Git</td><td>Team-shared playbooks, commit to repo</td></tr>
+        <tr><td>Enterprise settings</td><td>Org-wide</td><td>Company-mandated workflows</td></tr>
+        <tr><td>Plugin marketplace</td><td>Community</td><td>Third-party and Anthropic skills</td></tr>
+      </table>
+
+      <p>When the same skill name exists in multiple locations, higher priority wins: Enterprise > Personal > Project > Plugin.</p>
+
+      <div class="callout callout-tip">
+        <div class="callout-label">Team sharing</div>
+        <p>Put skills in <code>.claude/skills/</code> and commit to Git. Every teammate who clones the repo gets the same skills automatically. This is how you standardise AI-assisted workflows across a team.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m5-l1">
+    <div class="lesson-header"><span class="lesson-num">06.02</span><h3>Installing from the marketplace</h3></div>
+    <div class="lesson-body">
+<pre><span class="c-comment"># Browse available skills</span>
+/plugin marketplace
+
+<span class="c-comment"># Install Anthropic's official skill pack</span>
+/plugin marketplace add anthropics/skills
+
+<span class="c-comment"># Install the Skill Creator (helps you build better skills)</span>
+/plugin marketplace add anthropics/skill-creator
+
+<span class="c-comment"># See what's installed</span>
+/plugin list</pre>
+
+      <div class="callout callout-warn">
+        <div class="callout-label">Security note</div>
+        <p>Plugin skills run shell commands on your machine. Only install skills from sources you fully trust. Review any <code>.claude/settings.json</code> before running <code>claude</code> in an unfamiliar repo.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m5-l2">
+    <div class="lesson-header"><span class="lesson-num">06.03</span><h3>Using Skill Creator to improve your skills</h3></div>
+    <div class="lesson-body">
+      <p>Once you install <code>anthropics/skill-creator</code>, use it to evaluate and improve your own skills:</p>
+<pre><span class="c-comment"># After installing skill-creator:</span>
+
+<span class="c-str">"Evaluate the description of my audit skill and suggest
+ improvements to make it trigger more reliably"</span>
+
+<span class="c-str">"Generate 20 eval queries for my write-test skill"</span>
+
+<span class="c-str">"Help me create a new /refactor skill for my todo app"</span></pre>
+
+      <p>The Skill Creator generates eval queries automatically, analyses undertriggering patterns, and rewrites descriptions to hit your target accuracy.</p>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ─────────────────────────────────────────
+     MODULE 6 — Troubleshooting
+───────────────────────────────────────── -->
+<section class="module-section m6" id="m6">
+  <div class="module-header">
+    <div class="module-num-big">07</div>
+    <div class="module-header-text">
+      <div class="module-tag">Module 07</div>
+      <h2 class="module-title">Troubleshooting Skills</h2>
+      <p class="module-desc">Every failure mode, how to diagnose it, and how to fix it.</p>
+    </div>
+  </div>
+
+  <div class="lesson" id="m6-l0">
+    <div class="lesson-header"><span class="lesson-num">07.01</span><h3>Skill not appearing at all</h3></div>
+    <div class="lesson-body">
+      <p>Run <code>/help</code> inside Claude Code. If your skill doesn't appear, work through this checklist:</p>
+      <ul>
+        <li>Is the file named exactly <code>SKILL.md</code> (not <code>skill.md</code> or <code>Skill.md</code>)?</li>
+        <li>Is it inside a folder inside <code>.claude/skills/</code> — not directly in <code>.claude/skills/</code>?</li>
+        <li>Does the frontmatter have both <code>name</code> and <code>description</code> fields?</li>
+        <li>Is the <code>name</code> value valid — lowercase, hyphens only, under 64 chars?</li>
+        <li>Are the <code>---</code> delimiters present on their own lines with no trailing spaces?</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m6-l1">
+    <div class="lesson-header"><span class="lesson-num">07.02</span><h3>Skill exists but never auto-triggers</h3></div>
+    <div class="lesson-body">
+      <p>The skill appears in <code>/help</code> but Claude never loads it automatically. This is an undertriggering problem — the description isn't matching your natural language well enough.</p>
+      <ul>
+        <li>Add the "Use when asked to..." clause if missing</li>
+        <li>Add "even if..." edge case clauses</li>
+        <li>Include more synonyms in the verb list</li>
+        <li>Check you're writing in third person</li>
+        <li>Use the 20-query eval method to find the gaps</li>
+      </ul>
+<pre><span class="c-comment"># Before — undertriggering</span>
+description: Audits Python code.
+
+<span class="c-comment"># After — reliable triggering</span>
+description: Audits Python code for bugs, security issues,
+             and test coverage. Use when asked to review,
+             audit, check, inspect, or analyse code — even
+             if the user just says "something looks off"
+             or "can you look at this file".</pre>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m6-l2">
+    <div class="lesson-header"><span class="lesson-num">07.03</span><h3>Skill triggers on everything (overtriggering)</h3></div>
+    <div class="lesson-body">
+      <p>Claude loads the skill even when it's not needed. Narrow the description:</p>
+      <ul>
+        <li>Remove broad verbs like "use when working with code"</li>
+        <li>Add exclusion clauses: "Do not use when the user is asking questions, only when asking for changes"</li>
+        <li>Split into two more focused skills if the description is trying to cover too much</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m6-l3">
+    <div class="lesson-header"><span class="lesson-num">07.04</span><h3>Skill loads but Claude ignores the instructions</h3></div>
+    <div class="lesson-body">
+      <ul>
+        <li>Are the instructions too vague? Be specific — "check for empty titles" not "validate inputs"</li>
+        <li>Is there a conflict with CLAUDE.md? The skill body should not contradict project rules</li>
+        <li>Is <code>allowed-tools</code> blocking a tool the instructions need? e.g. instructions say "run pytest" but <code>allowed-tools: "Read"</code></li>
+        <li>Is the SKILL.md over 500 lines? Split it — large files cause important instructions to be deprioritised</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="lesson-divider">
+
+  <div class="lesson" id="m6-l4">
+    <div class="lesson-header"><span class="lesson-num">07.05</span><h3>Complete troubleshooting cheatsheet</h3></div>
+    <div class="lesson-body">
+      <table>
+        <tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+        <tr><td>Not in /help</td><td>File/folder structure wrong</td><td>Check SKILL.md name and location</td></tr>
+        <tr><td>Never auto-triggers</td><td>Description too vague</td><td>Add "Use when asked to..." formula</td></tr>
+        <tr><td>Triggers too often</td><td>Description too broad</td><td>Narrow verbs, add exclusion clause</td></tr>
+        <tr><td>Instructions ignored</td><td>Too vague or tool conflict</td><td>Be specific, check allowed-tools</td></tr>
+        <tr><td>Supporting files unused</td><td>Not referenced in SKILL.md</td><td>Explicitly mention files in body</td></tr>
+        <tr><td>Script doesn't run</td><td>Not executable</td><td><code>chmod +x scripts/file.sh</code></td></tr>
+        <tr><td>Skill overridden</td><td>Same name in higher-priority location</td><td>Check ~/.claude/skills/ for conflicts</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Final Quiz -->
+  <div class="quiz" id="m6-quiz">
+    <h4>Final assessment — Skills mastery</h4>
+
+    <div class="quiz-q">
+      <p><strong>Q1.</strong> A colleague says their skill "works fine when I type /audit but never triggers when I just say 'review my code'". What's the problem?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,false)">The skill folder is in the wrong location</div>
+        <div class="quiz-opt" onclick="answer(this,true)">The description doesn't match natural language — needs the "Use when asked to..." formula</div>
+        <div class="quiz-opt" onclick="answer(this,false)">disable-model-invocation is set to true</div>
+      </div>
+      <div class="quiz-explain">Manual invocation always works. Auto-trigger depends entirely on description quality. "Review my code" isn't matching their description — they need to add trigger phrases that match how they naturally speak.</div>
+    </div>
+
+    <div class="quiz-q">
+      <p><strong>Q2.</strong> You have a /send-report skill that emails a weekly summary. Which frontmatter field should you set?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,true)">disable-model-invocation: true</div>
+        <div class="quiz-opt" onclick="answer(this,false)">user-invocable: false</div>
+        <div class="quiz-opt" onclick="answer(this,false)">allowed-tools: "none"</div>
+      </div>
+      <div class="quiz-explain">You don't want Claude auto-sending emails. disable-model-invocation: true ensures only /send-report (manual) fires it — never auto-trigger.</div>
+    </div>
+
+    <div class="quiz-q">
+      <p><strong>Q3.</strong> Your write-test skill has a references/pytest_patterns.md file. When does it load?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,false)">At session start, always</div>
+        <div class="quiz-opt" onclick="answer(this,false)">When the skill triggers</div>
+        <div class="quiz-opt" onclick="answer(this,true)">Only when Claude decides to read it during the task</div>
+      </div>
+      <div class="quiz-explain">This is progressive disclosure Level 3. Supporting files in references/ and assets/ load on demand — only when Claude reads them with the Read tool. Zero token cost otherwise.</div>
+    </div>
+
+    <div class="quiz-q">
+      <p><strong>Q4.</strong> Which feature guarantees pytest runs after every file edit?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,false)">A write-test Skill with "run pytest" in instructions</div>
+        <div class="quiz-opt" onclick="answer(this,false)">A rule in CLAUDE.md: "always run pytest after editing"</div>
+        <div class="quiz-opt" onclick="answer(this,true)">A PostToolUse Hook with matcher "Edit|Write"</div>
+      </div>
+      <div class="quiz-explain">Only Hooks guarantee execution. Skills and CLAUDE.md are guidance — Claude follows them most of the time but there's no enforcement. A PostToolUse Hook runs the command every time a file is edited, no exceptions.</div>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <h4>Course complete — what you now know</h4>
+    <ul>
+      <li><strong>Architecture:</strong> three-level loading (metadata → instructions → resources), the available_skills system prompt injection, ~100 token session cost per skill.</li>
+      <li><strong>Creating:</strong> folder structure, SKILL.md frontmatter + body, the description formula, 20-query eval testing.</li>
+      <li><strong>Configuration:</strong> all frontmatter fields, disable-model-invocation for side effects, user-invocable for background knowledge, allowed-tools for safety, multi-file supporting folders.</li>
+      <li><strong>Positioning:</strong> Skills vs CLAUDE.md (on-demand vs always-on), Skills vs Hooks (guidance vs enforcement), Skills vs MCP (behaviour vs tools).</li>
+      <li><strong>Sharing:</strong> project Git vs personal global, priority order, marketplace installation, Skill Creator for improvement.</li>
+      <li><strong>Troubleshooting:</strong> seven failure modes with root causes and fixes.</li>
+    </ul>
+  </div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+const MODULES = [
+  { title: "Course Overview", lessons: ["What this course teaches","How to read this course","Why Skills — the 30-second case"] },
+  { title: "What are Skills?", lessons: ["The mental model","Three-level loading architecture","What Claude actually sees","Auto-trigger vs manual","Skills vs instructions"] },
+  { title: "Creating Your First Skill", lessons: ["The folder structure","SKILL.md structure","Writing descriptions","Testing with 20-query eval","Migrate audit.md to a Skill"] },
+  { title: "Configuration & Multi-file", lessons: ["Every frontmatter field","disable-model-invocation","user-invocable: false","allowed-tools","Adding supporting files"] },
+  { title: "Skills vs Other Features", lessons: ["Decision framework","Skills vs CLAUDE.md","Skills vs Hooks","Everything working together"] },
+  { title: "Sharing Skills", lessons: ["Four locations, four scopes","Installing from marketplace","Using Skill Creator"] },
+  { title: "Troubleshooting", lessons: ["Skill not appearing","Never auto-triggers","Overtriggering","Instructions ignored","Troubleshooting cheatsheet"] }
+];
+
+const STORAGE_KEY = 'cc_skills_course_v1';
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch {}
+
+function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch {} }
+
+function totalLessons() { return MODULES.reduce((a,m) => a + m.lessons.length, 0); }
+function completedCount() { return Object.values(progress).filter(Boolean).length; }
+
+function updateProgress() {
+  const pct = Math.round(completedCount() / totalLessons() * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('ptext').textContent = pct + '% complete';
+}
+
+function buildNav() {
+  const nav = document.getElementById('nav-modules');
+  nav.innerHTML = '';
+  MODULES.forEach((mod, mi) => {
+    const div = document.createElement('div');
+    div.className = 'nav-module';
+
+    const title = document.createElement('div');
+    title.className = 'nav-mod-title';
+    title.innerHTML = `<span class="nav-mod-num">0${mi+1}</span>${mod.title}`;
+    title.onclick = () => {
+      const ls = div.querySelector('.nav-lessons');
+      ls.classList.toggle('open');
+      title.classList.toggle('active-section');
+    };
+
+    const lessons = document.createElement('div');
+    lessons.className = 'nav-lessons';
+
+    mod.lessons.forEach((lesson, li) => {
+      const key = `${mi}-${li}`;
+      const a = document.createElement('a');
+      a.className = 'nav-lesson' + (progress[key] ? ' done' : '');
+      a.textContent = lesson;
+      a.href = `#m${mi}-l${li}`;
+      a.onclick = (e) => {
+        e.preventDefault();
+        progress[key] = true;
+        a.classList.add('done');
+        save();
+        updateProgress();
+        buildNav();
+        document.getElementById(`m${mi}-l${li}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      lessons.appendChild(a);
+    });
+
+    div.appendChild(title);
+    div.appendChild(lessons);
+    nav.appendChild(div);
+  });
+}
+
+function answer(el, correct) {
+  const parent = el.closest('.quiz-q');
+  if (parent.querySelector('.correct, .wrong')) return;
+  el.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    parent.querySelectorAll('.quiz-opt').forEach(o => {
+      if (o !== el) o.style.opacity = '0.4';
+    });
+  }
+  parent.querySelector('.quiz-explain').classList.add('show');
+}
+
+buildNav();
+updateProgress();
+</script>
+</body>
+</html>

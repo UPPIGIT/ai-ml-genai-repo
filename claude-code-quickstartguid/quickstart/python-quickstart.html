@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python — Complete Quick Start</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Martian+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090f;
+  --bg2:#0b0f1a;
+  --surface:#0f1420;
+  --surface2:#141c2e;
+  --border:#1e2d47;
+  --border2:#263650;
+  --py:#3fb950;       /* python green  */
+  --py2:#58d68d;
+  --amber:#f0c040;    /* amber accent  */
+  --blue:#4d9de0;
+  --red:#ff6b6b;
+  --purple:#c084fc;
+  --teal:#2dd4bf;
+  --text:#d0e8ff;
+  --muted:#4a6a8a;
+  --code-bg:#060a10;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Martian Mono',monospace;
+  overflow-x:hidden;
+  cursor:none;
+}
+/* scanline overlay */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events:none;z-index:9000;
+}
+
+/* ── cursor ── */
+.cur{width:4px;height:18px;background:var(--py);position:fixed;pointer-events:none;z-index:9999;animation:curBlink 1s step-end infinite}
+@keyframes curBlink{0%,100%{opacity:1}50%{opacity:0}}
+.cur-outline{width:32px;height:32px;border:1px solid rgba(63,185,80,.45);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:transform .22s ease}
+
+/* ── progress ── */
+#pgbar{position:fixed;top:0;left:0;height:2px;background:var(--py);z-index:500;width:0;box-shadow:0 0 8px var(--py);transition:width .1s}
+
+/* ── nav ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(7,9,15,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:10px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  transform:translateY(-100%);transition:transform .4s ease;
+}
+nav.show{transform:translateY(0)}
+.nav-brand{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--py);letter-spacing:2px}
+.nav-brand span{color:var(--amber)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-links a{
+  font-size:9px;letter-spacing:1px;color:var(--muted);text-decoration:none;
+  padding:4px 8px;border-radius:2px;text-transform:uppercase;transition:all .2s
+}
+.nav-links a:hover{background:var(--surface2);color:var(--py)}
+.nav-links a.on{color:var(--py);background:rgba(63,185,80,.1)}
+
+/* ── hero ── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:100px 72px 80px;
+  position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 120% 80% at 10% 50%,rgba(63,185,80,.06) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 80% at 90% 20%,rgba(77,157,224,.05) 0%,transparent 50%),
+             var(--bg);
+}
+/* big bg python logo */
+.hero-bg-py{
+  position:absolute;right:-60px;top:50%;transform:translateY(-50%);
+  font-size:520px;line-height:1;
+  font-family:'Syne',sans-serif;font-weight:800;
+  color:rgba(63,185,80,.03);
+  pointer-events:none;letter-spacing:-20px;
+  user-select:none
+}
+.hero-eyebrow{
+  font-size:10px;letter-spacing:5px;color:var(--py);text-transform:uppercase;
+  margin-bottom:24px;display:flex;align-items:center;gap:14px;
+  animation:fadeUp .7s .1s both
+}
+.hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--py)}
+.hero-title{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(68px,11vw,136px);
+  line-height:.88;letter-spacing:-4px;
+  margin-bottom:32px;
+  animation:fadeUp .7s .2s both
+}
+.hero-title .gy{color:var(--py);text-shadow:0 0 40px rgba(63,185,80,.35)}
+.hero-title .sm{font-size:.38em;letter-spacing:6px;color:var(--muted);display:block;font-weight:400;text-shadow:none}
+.hero-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;
+  margin-top:16px;max-width:960px;
+  animation:fadeUp .7s .35s both
+}
+.hero-desc{
+  font-size:14px;line-height:1.9;color:var(--muted);
+  border-left:2px solid var(--border);padding-left:20px
+}
+.hero-desc strong{color:var(--text)}
+.hero-badges{display:flex;flex-direction:column;gap:8px;justify-content:center}
+.badge{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;border:1px solid var(--border);border-radius:3px;
+  font-size:11px;color:var(--muted);background:var(--surface);
+  transition:all .2s;text-decoration:none
+}
+.badge:hover{border-color:var(--py);color:var(--text);transform:translateX(6px)}
+.badge-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.hero-scroll{
+  margin-top:52px;font-size:9px;letter-spacing:4px;color:var(--muted);
+  text-transform:uppercase;animation:fadeUp .7s .5s both
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── section wrapper ── */
+section.block{
+  max-width:1040px;margin:0 auto;padding:0 40px 100px;
+  opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease
+}
+section.block.vis{opacity:1;transform:translateY(0)}
+
+/* section header */
+.sec-hd{
+  display:flex;align-items:flex-start;gap:20px;
+  padding:48px 0 36px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:40px;
+}
+.sec-n{
+  font-family:'Syne',sans-serif;font-size:64px;font-weight:800;
+  color:var(--border2);line-height:1;min-width:80px;
+  transition:color .3s
+}
+.block:hover .sec-n{color:var(--py)}
+.sec-info{}
+.sec-tag{font-size:9px;letter-spacing:3px;color:var(--py);text-transform:uppercase;margin-bottom:6px}
+.sec-title{
+  font-family:'Syne',sans-serif;font-size:clamp(26px,3.5vw,44px);
+  font-weight:800;line-height:1;letter-spacing:-1px
+}
+.sec-title em{color:var(--amber);font-style:normal}
+.sec-sub{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+
+/* ── code blocks ── */
+.cb{
+  background:var(--code-bg);border:1px solid var(--border);
+  border-radius:5px;overflow:hidden;margin:16px 0;position:relative;
+  box-shadow:0 8px 32px rgba(0,0,0,.5)
+}
+.cb-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--border)
+}
+.cb-dots{display:flex;gap:5px}
+.cb-d{width:9px;height:9px;border-radius:50%}
+.cb-d:nth-child(1){background:#ff5f57}.cb-d:nth-child(2){background:#febc2e}.cb-d:nth-child(3){background:#28c840}
+.cb-label{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.cb-body{
+  padding:20px 22px;font-size:12.5px;line-height:1.95;
+  overflow-x:auto;white-space:pre
+}
+.cpbtn{
+  position:absolute;top:38px;right:12px;
+  background:rgba(255,255,255,.05);border:1px solid var(--border2);
+  color:var(--muted);font-family:'Martian Mono',monospace;font-size:9px;
+  letter-spacing:1px;padding:4px 10px;border-radius:2px;cursor:pointer;
+  transition:all .2s
+}
+.cpbtn:hover{border-color:var(--py);color:var(--py)}
+.cpbtn.ok{color:var(--py);border-color:rgba(63,185,80,.4)}
+
+/* syntax tokens */
+.k{color:#c792ea}.s{color:#c3e88d}.cm{color:#3a5068;font-style:italic}
+.fn{color:#82aaff}.n{color:#f78c6c}.p{color:var(--amber)}
+.op{color:var(--teal)}.bi{color:#89ddff}.cls{color:#ffcb6b}
+.deco{color:#ff6b6b}.ok{color:var(--py)}.er{color:var(--red)}
+.hl{background:rgba(63,185,80,.08);display:block}
+
+/* ── grid helpers ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* ── cards ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;padding:22px;
+  transition:border-color .3s,transform .3s;position:relative;overflow:hidden
+}
+.card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--py),var(--blue));
+  transform:scaleX(0);transition:transform .4s ease;transform-origin:left
+}
+.card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.card:hover::after{transform:scaleX(1)}
+.card-tag{font-size:8px;letter-spacing:3px;color:var(--py);text-transform:uppercase;margin-bottom:8px}
+.card-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;letter-spacing:-.3px}
+.card-body{font-size:11.5px;line-height:1.8;color:var(--muted)}
+.card-body strong{color:var(--text)}
+
+/* ── callouts ── */
+.note{
+  border-left:2px solid;padding:14px 18px;border-radius:0 3px 3px 0;
+  margin:16px 0;font-size:12px;line-height:1.7
+}
+.note-g{border-color:var(--py);background:rgba(63,185,80,.05)}
+.note-a{border-color:var(--amber);background:rgba(240,192,64,.05)}
+.note-b{border-color:var(--blue);background:rgba(77,157,224,.05)}
+.note-r{border-color:var(--red);background:rgba(255,107,107,.05)}
+.note-p{border-color:var(--purple);background:rgba(192,132,252,.05)}
+.note .lbl{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px}
+.note-g .lbl{color:var(--py)}.note-a .lbl{color:var(--amber)}
+.note-b .lbl{color:var(--blue)}.note-r .lbl{color:var(--red)}.note-p .lbl{color:var(--purple)}
+.note .txt{color:var(--muted)}.note .txt strong{color:var(--text)}
+code{
+  font-family:'Martian Mono',monospace;font-size:11px;
+  background:var(--surface2);border:1px solid var(--border);
+  padding:2px 6px;border-radius:2px;color:var(--amber)
+}
+
+/* ── type chips ── */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.chip{
+  font-size:10px;letter-spacing:1px;padding:6px 14px;
+  border-radius:2px;border:1px solid;cursor:default;transition:all .2s
+}
+.chip-g{border-color:rgba(63,185,80,.4);color:var(--py);background:rgba(63,185,80,.07)}
+.chip-a{border-color:rgba(240,192,64,.4);color:var(--amber);background:rgba(240,192,64,.07)}
+.chip-b{border-color:rgba(77,157,224,.4);color:var(--blue);background:rgba(77,157,224,.07)}
+.chip-r{border-color:rgba(255,107,107,.4);color:var(--red);background:rgba(255,107,107,.07)}
+.chip-p{border-color:rgba(192,132,252,.4);color:var(--purple);background:rgba(192,132,252,.07)}
+.chip-t{border-color:rgba(45,212,191,.4);color:var(--teal);background:rgba(45,212,191,.07)}
+.chip:hover{transform:translateY(-2px)}
+
+/* ── table ── */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin:16px 0}
+.tbl th{
+  padding:10px 14px;text-align:left;font-size:8px;letter-spacing:2px;
+  color:var(--py);text-transform:uppercase;border-bottom:2px solid var(--border)
+}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top}
+.tbl tr:hover td{background:var(--surface)}
+.tbl .op{color:var(--teal)}.tbl .eg{color:var(--py)}.tbl .res{color:var(--amber)}
+
+/* ── divider ── */
+.div{text-align:center;margin:20px 0 0;padding-left:80px;display:flex;align-items:center;gap:16px}
+.div-line{flex:1;height:1px;background:var(--border)}
+.div-lbl{font-size:8px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+
+/* ── progress list ── */
+.plist{display:flex;flex-direction:column;gap:0}
+.pi{
+  display:flex;gap:16px;position:relative;
+  padding-bottom:24px
+}
+.pi::before{
+  content:'';position:absolute;left:14px;top:32px;bottom:0;
+  width:1px;background:var(--border)
+}
+.pi:last-child::before{display:none}
+.pi-dot{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--muted);flex-shrink:0;z-index:1;
+  transition:all .3s
+}
+.pi:hover .pi-dot{background:var(--py);border-color:var(--py);color:var(--bg)}
+.pi-body{padding-top:6px}
+.pi-t{font-size:12px;color:var(--text);margin-bottom:3px}
+.pi-d{font-size:11px;color:var(--muted);line-height:1.6;font-style:italic}
+
+/* ── method table ── */
+.mtbl{width:100%;border-collapse:collapse;font-size:11.5px;margin:12px 0}
+.mtbl th{padding:8px 12px;font-size:8px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;border-bottom:1px solid var(--border);text-align:left}
+.mtbl td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+.mtbl tr:hover td{background:var(--surface)}
+.mtbl .mname{color:var(--py);font-weight:500}
+.mtbl .mdesc{color:var(--muted)}
+.mtbl .mex{color:var(--teal)}
+
+/* ── big quote ── */
+.bq{
+  font-family:'Syne',sans-serif;font-size:clamp(18px,2.5vw,28px);
+  font-weight:700;color:var(--text);
+  border-left:3px solid var(--py);
+  padding:20px 28px;margin:28px 0;
+  background:rgba(63,185,80,.04);border-radius:0 4px 4px 0
+}
+.bq span{color:var(--py)}
+
+/* ── shortcut kbd ── */
+.kbdrow{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:3px;margin:5px 0;transition:all .2s}
+.kbdrow:hover{border-color:var(--border2);transform:translateX(4px)}
+.kbd{font-family:'Martian Mono',monospace;font-size:10px;background:var(--bg);border:1px solid var(--border2);padding:4px 10px;border-radius:3px;color:var(--amber);white-space:nowrap;flex-shrink:0}
+.kbddesc{font-size:11px;color:var(--muted)}
+
+/* ── finale ── */
+.finale{
+  background:linear-gradient(135deg,rgba(63,185,80,.12) 0%,rgba(77,157,224,.08) 50%,rgba(192,132,252,.1) 100%);
+  border:1px solid var(--border2);border-radius:8px;
+  padding:80px;text-align:center;margin:0 40px 80px;position:relative;overflow:hidden
+}
+.finale-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%,rgba(63,185,80,.05) 0%,transparent 70%);
+  pointer-events:none
+}
+.finale-bignum{
+  position:absolute;font-family:'Syne',sans-serif;font-size:400px;font-weight:800;
+  color:rgba(63,185,80,.04);top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;letter-spacing:-20px
+}
+.finale-tag{font-size:9px;letter-spacing:5px;color:var(--py);text-transform:uppercase;margin-bottom:16px}
+.finale-title{font-family:'Syne',sans-serif;font-size:clamp(36px,6vw,68px);font-weight:800;line-height:1;margin-bottom:20px}
+.finale-title em{color:var(--amber);font-style:normal}
+.finale-desc{font-size:12px;color:var(--muted);max-width:480px;margin:0 auto 40px;line-height:1.9}
+.finale-cmd{
+  font-size:18px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);
+  padding:16px 36px;border-radius:4px;color:var(--py);display:inline-block;
+  letter-spacing:2px;margin-bottom:36px
+}
+.finale-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.fpill{
+  font-size:9px;letter-spacing:1px;padding:6px 14px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:100px;color:var(--muted);transition:all .2s
+}
+.fpill:hover{color:var(--py);border-color:rgba(63,185,80,.3)}
+
+footer{
+  text-align:center;padding:40px;border-top:1px solid var(--border);
+  font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase
+}
+footer span{color:var(--py)}
+
+@media(max-width:768px){
+  .hero{padding:80px 28px 60px}
+  .hero-row{grid-template-columns:1fr}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  section.block{padding:0 24px 80px}
+  .finale{padding:48px 28px;margin:0 24px 60px}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-outline" id="curO"></div>
+<div id="pgbar"></div>
+
+<nav id="nav">
+  <div class="nav-brand">PY<span>THON</span> // QS</div>
+  <div class="nav-links" id="navlinks">
+    <a href="#s1">Install</a><a href="#s2">Basics</a><a href="#s3">Strings</a>
+    <a href="#s4">Control</a><a href="#s5">Functions</a><a href="#s6">Data Structs</a>
+    <a href="#s7">Comprehensions</a><a href="#s8">OOP</a><a href="#s9">Modules</a>
+    <a href="#s10">Files & Errors</a><a href="#s11">Advanced</a><a href="#s12">Async</a>
+    <a href="#s13">Testing</a><a href="#s14">Venvs</a><a href="#s15">Ref</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════ HERO -->
+<section class="hero">
+  <div class="hero-bg-py">Py</div>
+  <div class="hero-eyebrow">Complete Quick Start · 2026 Edition</div>
+  <h1 class="hero-title">
+    <span class="gy">PYTHON</span><br>
+    QUICK START<br>
+    <span class="sm">Zero to Production — Every Concept Covered</span>
+  </h1>
+  <div class="hero-row">
+    <div class="hero-desc">
+      From <strong>installation</strong> to <strong>async programming</strong>, <strong>OOP</strong>, <strong>decorators</strong>, <strong>generators</strong>, <strong>testing</strong>, and <strong>virtual environments</strong> — every essential Python concept in one place, with real runnable examples at every step.
+    </div>
+    <div class="hero-badges">
+      <a href="#s1" class="badge"><div class="badge-dot" style="background:var(--py)"></div> 01 — Install &amp; Setup</a>
+      <a href="#s5" class="badge"><div class="badge-dot" style="background:var(--amber)"></div> 05 — Functions &amp; Decorators</a>
+      <a href="#s8" class="badge"><div class="badge-dot" style="background:var(--blue)"></div> 08 — Object-Oriented Python</a>
+      <a href="#s11" class="badge"><div class="badge-dot" style="background:var(--purple)"></div> 11 — Generators &amp; Advanced</a>
+      <a href="#s12" class="badge"><div class="badge-dot" style="background:var(--teal)"></div> 12 — Async / Await</a>
+      <a href="#s15" class="badge"><div class="badge-dot" style="background:var(--red)"></div> 15 — Quick Reference</a>
+    </div>
+  </div>
+  <div class="hero-scroll">↓ scroll to start</div>
+</section>
+
+<!-- ══════════════════════════════════════════ S1: INSTALL -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 01</div><div class="div-line"></div></div>
+<section class="block" id="s1">
+  <div class="sec-hd">
+    <div class="sec-n">01</div>
+    <div class="sec-info">
+      <div class="sec-tag">Foundation</div>
+      <h2 class="sec-title">Install &amp; <em>Setup</em></h2>
+      <div class="sec-sub">Get Python running, configure your environment, and create your first virtual environment.</div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-tag">macOS</div>
+      <div class="card-title">Homebrew</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">bash</div></div><div class="cb-body"><span class="fn">brew</span> install python@3.12
+<span class="fn">python3</span> --version</div></div>
+    </div>
+    <div class="card">
+      <div class="card-tag">Windows</div>
+      <div class="card-title">winget / installer</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">powershell</div></div><div class="cb-body"><span class="fn">winget</span> install Python.Python.3
+<span class="cm"># or download from python.org</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-tag">Linux</div>
+      <div class="card-title">apt / pyenv</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">bash</div></div><div class="cb-body"><span class="fn">sudo apt</span> install python3.12
+<span class="cm"># or use pyenv (recommended)</span></div></div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">bash — Virtual Environment (always do this first)</div></div>
+    <div class="cb-body"><span class="cm"># 1. Create virtual env</span>
+python3 -m <span class="fn">venv</span> .venv
+
+<span class="cm"># 2. Activate it</span>
+source .venv/bin/activate         <span class="cm"># macOS/Linux</span>
+.venv\Scripts\activate            <span class="cm"># Windows</span>
+
+<span class="cm"># 3. Your prompt changes — you're inside the venv</span>
+<span class="ok">(.venv)</span> $ python --version
+<span class="ok">Python 3.12.x</span>
+
+<span class="cm"># 4. Install packages (stays isolated to this project)</span>
+pip install requests fastapi pytest
+
+<span class="cm"># 5. Freeze for reproducibility</span>
+pip freeze > requirements.txt
+pip install -r requirements.txt   <span class="cm"># restore later</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="note note-g"><div class="lbl">✓ Golden Rule</div><div class="txt">Always create a virtual environment <strong>before installing any packages</strong>. Never use <code>sudo pip install</code>. Every project gets its own isolated <code>.venv</code>.</div></div>
+</section>
+
+<!-- ══════════════════════════════════════════ S2: BASICS -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 02</div><div class="div-line"></div></div>
+<section class="block" id="s2">
+  <div class="sec-hd">
+    <div class="sec-n">02</div>
+    <div class="sec-info">
+      <div class="sec-tag">Core Language</div>
+      <h2 class="sec-title">Variables, Types &amp; <em>Operators</em></h2>
+      <div class="sec-sub">Python is dynamically typed — variables infer their type. Use type hints for clarity in larger codebases.</div>
+    </div>
+  </div>
+
+  <div class="chips">
+    <div class="chip chip-g">int</div><div class="chip chip-g">float</div><div class="chip chip-g">complex</div>
+    <div class="chip chip-a">str</div><div class="chip chip-b">bool</div><div class="chip chip-r">None</div>
+    <div class="chip chip-t">list</div><div class="chip chip-t">tuple</div><div class="chip chip-t">dict</div>
+    <div class="chip chip-t">set</div><div class="chip chip-p">bytes</div><div class="chip chip-p">bytearray</div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — variables &amp; types</div></div>
+    <div class="cb-body"><span class="cm"># ── Basic types</span>
+age: <span class="bi">int</span>     = <span class="n">30</span>
+pi:  <span class="bi">float</span>   = <span class="n">3.14159</span>
+on:  <span class="bi">bool</span>    = <span class="k">True</span>          <span class="cm"># True / False (capitalized!)</span>
+nil: <span class="bi">None</span>    = <span class="k">None</span>
+
+<span class="cm"># ── Multiple assignment</span>
+x, y, z = <span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>
+a = b = c = <span class="n">0</span>              <span class="cm"># all point to same value</span>
+
+<span class="cm"># ── Type checking &amp; conversion</span>
+<span class="fn">type</span>(age)                    <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">isinstance</span>(age, int)         <span class="cm"># True</span>
+<span class="fn">int</span>(<span class="s">"42"</span>)                    <span class="cm"># 42  — str → int</span>
+<span class="fn">float</span>(<span class="s">"3.14"</span>)                <span class="cm"># 3.14</span>
+<span class="fn">str</span>(<span class="n">100</span>)                     <span class="cm"># "100"</span>
+<span class="fn">bool</span>(<span class="n">0</span>)                      <span class="cm"># False — falsy: 0, "", [], {}, None</span>
+
+<span class="cm"># ── Arithmetic operators</span>
+<span class="n">10</span> <span class="op">+</span> <span class="n">3</span>   <span class="cm"># 13    addition</span>
+<span class="n">10</span> <span class="op">-</span> <span class="n">3</span>   <span class="cm"># 7     subtraction</span>
+<span class="n">10</span> <span class="op">*</span> <span class="n">3</span>   <span class="cm"># 30    multiplication</span>
+<span class="n">10</span> <span class="op">/</span> <span class="n">3</span>   <span class="cm"># 3.333 true division (always float)</span>
+<span class="n">10</span> <span class="op">//</span> <span class="n">3</span>  <span class="cm"># 3     floor division (integer result)</span>
+<span class="n">10</span> <span class="op">%</span> <span class="n">3</span>   <span class="cm"># 1     modulus (remainder)</span>
+<span class="n">10</span> <span class="op">**</span> <span class="n">3</span>  <span class="cm"># 1000  exponentiation</span>
+
+<span class="cm"># ── Comparison &amp; logical</span>
+<span class="n">5</span> <span class="op">==</span> <span class="n">5</span>   <span class="k">and</span>   <span class="n">3</span> <span class="op">!=</span> <span class="n">4</span>       <span class="cm"># True and True → True</span>
+<span class="n">5</span> <span class="op">&gt;</span> <span class="n">3</span>    <span class="k">or</span>    <span class="n">1</span> <span class="op">&gt;</span> <span class="n">9</span>        <span class="cm"># True  or False → True</span>
+<span class="k">not</span> (<span class="n">5</span> <span class="op">==</span> <span class="n">5</span>)                 <span class="cm"># False</span>
+<span class="n">1</span> <span class="op">&lt;</span> <span class="n">2</span> <span class="op">&lt;</span> <span class="n">3</span>                    <span class="cm"># True — chained comparison!</span>
+
+<span class="cm"># ── Walrus operator := (Python 3.8+)</span>
+<span class="k">if</span> (n := <span class="fn">len</span>(data)) <span class="op">&gt;</span> <span class="n">10</span>:
+    <span class="fn">print</span>(<span class="s">f"Too long: </span><span class="p">{n}</span><span class="s"> items"</span>)</div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="note note-a"><div class="lbl">⚡ Python Gotcha</div><div class="txt">Use <code>==</code> for value equality. Use <code>is</code> only for identity checks (<code>x is None</code>). <strong>Never write <code>x == None</code></strong> — always <code>x is None</code>.</div></div>
+</section>
+
+<!-- ══════════════════════════════════════════ S3: STRINGS -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 03</div><div class="div-line"></div></div>
+<section class="block" id="s3">
+  <div class="sec-hd">
+    <div class="sec-n">03</div>
+    <div class="sec-info">
+      <div class="sec-tag">Strings</div>
+      <h2 class="sec-title">Strings, <em>f-strings</em> &amp; Slicing</h2>
+      <div class="sec-sub">Strings are immutable sequences. Master f-strings, slicing, and the 40+ built-in methods.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — strings</div></div>
+    <div class="cb-body"><span class="cm"># ── String literals</span>
+s1 = <span class="s">'single quotes'</span>
+s2 = <span class="s">"double quotes"</span>
+s3 = <span class="s">"""multiline
+string here"""</span>
+raw = <span class="s">r"C:\Users\no\escapes"</span>         <span class="cm"># raw string</span>
+
+<span class="cm"># ── f-strings (Python 3.6+) — USE THESE</span>
+name, score = <span class="s">"Alice"</span>, <span class="n">98.5</span>
+<span class="fn">print</span>(<span class="s">f"</span><span class="p">{name}</span><span class="s"> scored </span><span class="p">{score:.1f}</span><span class="s">%"</span>)  <span class="cm"># Alice scored 98.5%</span>
+<span class="fn">print</span>(<span class="s">f"</span><span class="p">{2 + 2}</span><span class="s">"</span>)                   <span class="cm"># 4  — expressions work!</span>
+<span class="fn">print</span>(<span class="s">f"</span><span class="p">{name!r}</span><span class="s">"</span>)                  <span class="cm"># 'Alice' — repr</span>
+<span class="fn">print</span>(<span class="s">f"</span><span class="p">{score:>10.2f}</span><span class="s">"</span>)            <span class="cm"># right-align, 2 decimals</span>
+<span class="fn">print</span>(<span class="s">f"</span><span class="p">{name = }</span><span class="s">"</span>)                 <span class="cm"># name = 'Alice'  (debug mode 3.8+)</span>
+
+<span class="cm"># ── Slicing  s[start:stop:step]</span>
+s = <span class="s">"Hello, Python!"</span>
+s[<span class="n">0</span>]       <span class="cm"># 'H'       first char</span>
+s[-<span class="n">1</span>]      <span class="cm"># '!'       last char</span>
+s[<span class="n">7</span>:<span class="n">13</span>]    <span class="cm"># 'Python'  slice</span>
+s[::<span class="n">2</span>]     <span class="cm"># 'Hlo yhn' every 2nd</span>
+s[::-<span class="n">1</span>]    <span class="cm"># '!nohtyP ,olleH'  reversed!</span>
+
+<span class="cm"># ── Essential methods</span>
+<span class="s">"  hello  "</span>.<span class="fn">strip</span>()           <span class="cm"># 'hello'</span>
+<span class="s">"Hello"</span>.<span class="fn">lower</span>()               <span class="cm"># 'hello'</span>
+<span class="s">"hello"</span>.<span class="fn">upper</span>()               <span class="cm"># 'HELLO'</span>
+<span class="s">"hello world"</span>.<span class="fn">split</span>()        <span class="cm"># ['hello', 'world']</span>
+<span class="s">" "</span>.<span class="fn">join</span>([<span class="s">"a"</span>, <span class="s">"b"</span>, <span class="s">"c"</span>])   <span class="cm"># 'a b c'</span>
+<span class="s">"hello"</span>.<span class="fn">replace</span>(<span class="s">"l"</span>, <span class="s">"r"</span>)   <span class="cm"># 'herro'</span>
+<span class="s">"hello"</span>.<span class="fn">startswith</span>(<span class="s">"he"</span>)    <span class="cm"># True</span>
+<span class="s">"hello"</span>.<span class="fn">count</span>(<span class="s">"l"</span>)           <span class="cm"># 2</span>
+<span class="s">"42"</span>.<span class="fn">zfill</span>(<span class="n">5</span>)                <span class="cm"># '00042'</span>
+<span class="s">"hello"</span>.<span class="fn">center</span>(<span class="n">11</span>, <span class="s">"*"</span>)     <span class="cm"># '***hello***'</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S4: CONTROL FLOW -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 04</div><div class="div-line"></div></div>
+<section class="block" id="s4">
+  <div class="sec-hd">
+    <div class="sec-n">04</div>
+    <div class="sec-info">
+      <div class="sec-tag">Control Flow</div>
+      <h2 class="sec-title">If, Loops &amp; <em>Match</em></h2>
+      <div class="sec-sub">Conditionals, for/while loops, comprehension-friendly iteration, and Python 3.10+ structural pattern matching.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">if / elif / else</div></div>
+      <div class="cb-body"><span class="k">if</span> score <span class="op">&gt;=</span> <span class="n">90</span>:
+    grade = <span class="s">"A"</span>
+<span class="k">elif</span> score <span class="op">&gt;=</span> <span class="n">80</span>:
+    grade = <span class="s">"B"</span>
+<span class="k">else</span>:
+    grade = <span class="s">"C"</span>
+
+<span class="cm"># Ternary (one-liner)</span>
+status = <span class="s">"pass"</span> <span class="k">if</span> score <span class="op">&gt;=</span> <span class="n">50</span> <span class="k">else</span> <span class="s">"fail"</span></div>
+    </div>
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">match (Python 3.10+)</div></div>
+      <div class="cb-body"><span class="k">match</span> command:
+    <span class="k">case</span> <span class="s">"quit"</span>:
+        <span class="fn">exit</span>()
+    <span class="k">case</span> <span class="s">"hello"</span> | <span class="s">"hi"</span>:
+        <span class="fn">print</span>(<span class="s">"Hello!"</span>)
+    <span class="k">case</span> [x, y]:          <span class="cm"># sequence</span>
+        <span class="fn">print</span>(x, y)
+    <span class="k">case</span> _:               <span class="cm"># default</span>
+        <span class="fn">print</span>(<span class="s">"unknown"</span>)</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — loops</div></div>
+    <div class="cb-body"><span class="cm"># ── for loop — iterates any iterable</span>
+<span class="k">for</span> fruit <span class="k">in</span> [<span class="s">"apple"</span>, <span class="s">"banana"</span>, <span class="s">"cherry"</span>]:
+    <span class="fn">print</span>(fruit)
+
+<span class="cm"># enumerate() — get index + value</span>
+<span class="k">for</span> i, val <span class="k">in</span> <span class="fn">enumerate</span>([<span class="s">"a"</span>, <span class="s">"b"</span>, <span class="s">"c"</span>]):
+    <span class="fn">print</span>(<span class="s">f"</span><span class="p">{i}</span><span class="s">: </span><span class="p">{val}</span><span class="s">"</span>)
+
+<span class="cm"># zip() — iterate two together</span>
+<span class="k">for</span> name, score <span class="k">in</span> <span class="fn">zip</span>(names, scores):
+    <span class="fn">print</span>(<span class="s">f"</span><span class="p">{name}</span><span class="s">: </span><span class="p">{score}</span><span class="s">"</span>)
+
+<span class="cm"># range()</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="fn">range</span>(<span class="n">5</span>):       <span class="cm"># 0 1 2 3 4</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="fn">range</span>(<span class="n">1</span>, <span class="n">6</span>):    <span class="cm"># 1 2 3 4 5</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="fn">range</span>(<span class="n">10</span>, <span class="n">0</span>, -<span class="n">2</span>):  <span class="cm"># 10 8 6 4 2</span>
+
+<span class="cm"># ── while loop</span>
+count = <span class="n">0</span>
+<span class="k">while</span> count <span class="op">&lt;</span> <span class="n">5</span>:
+    count <span class="op">+=</span> <span class="n">1</span>
+
+<span class="cm"># ── break / continue / else on loops</span>
+<span class="k">for</span> n <span class="k">in</span> <span class="fn">range</span>(<span class="n">10</span>):
+    <span class="k">if</span> n <span class="op">%</span> <span class="n">2</span> <span class="op">==</span> <span class="n">0</span>:
+        <span class="k">continue</span>           <span class="cm"># skip even</span>
+    <span class="k">if</span> n <span class="op">&gt;</span> <span class="n">7</span>:
+        <span class="k">break</span>              <span class="cm"># stop at 7</span>
+    <span class="fn">print</span>(n)               <span class="cm"># 1 3 5 7</span>
+<span class="k">else</span>:
+    <span class="fn">print</span>(<span class="s">"loop ended naturally"</span>)  <span class="cm"># runs if no break!</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S5: FUNCTIONS -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 05</div><div class="div-line"></div></div>
+<section class="block" id="s5">
+  <div class="sec-hd">
+    <div class="sec-n">05</div>
+    <div class="sec-info">
+      <div class="sec-tag">Functions</div>
+      <h2 class="sec-title">Functions &amp; <em>Decorators</em></h2>
+      <div class="sec-sub">Functions are first-class objects. Master args, kwargs, lambdas, closures, and decorators — the backbone of Python abstraction.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — functions deep dive</div></div>
+    <div class="cb-body"><span class="cm"># ── Basic function with type hints</span>
+<span class="k">def</span> <span class="fn">greet</span>(name: <span class="bi">str</span>, greeting: <span class="bi">str</span> = <span class="s">"Hello"</span>) -> <span class="bi">str</span>:
+    <span class="s">"""Return a greeting string."""</span>
+    <span class="k">return</span> <span class="s">f"</span><span class="p">{greeting}</span><span class="s">, </span><span class="p">{name}</span><span class="s">!"</span>
+
+greet(<span class="s">"Alice"</span>)                   <span class="cm"># 'Hello, Alice!'</span>
+greet(<span class="s">"Bob"</span>, greeting=<span class="s">"Hi"</span>)      <span class="cm"># keyword arg</span>
+
+<span class="cm"># ── *args — variable positional args</span>
+<span class="k">def</span> <span class="fn">add</span>(*numbers: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="k">return</span> <span class="fn">sum</span>(numbers)
+add(<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>)                  <span class="cm"># 10</span>
+
+<span class="cm"># ── **kwargs — variable keyword args</span>
+<span class="k">def</span> <span class="fn">profile</span>(**kwargs) -> <span class="bi">dict</span>:
+    <span class="k">return</span> kwargs
+profile(name=<span class="s">"Alice"</span>, age=<span class="n">30</span>)    <span class="cm"># {'name': 'Alice', 'age': 30}</span>
+
+<span class="cm"># ── Keyword-only args (after *)</span>
+<span class="k">def</span> <span class="fn">connect</span>(host: <span class="bi">str</span>, *, port: <span class="bi">int</span> = <span class="n">8080</span>, ssl: <span class="bi">bool</span> = <span class="k">False</span>):
+    <span class="fn">print</span>(<span class="s">f"</span><span class="p">{host}</span><span class="s">:</span><span class="p">{port}</span><span class="s"> ssl=</span><span class="p">{ssl}</span><span class="s">"</span>)
+connect(<span class="s">"localhost"</span>, port=<span class="n">3000</span>)   <span class="cm"># port &amp; ssl must be keyword</span>
+
+<span class="cm"># ── Lambda — anonymous one-liner</span>
+square  = <span class="k">lambda</span> x: x <span class="op">**</span> <span class="n">2</span>
+add     = <span class="k">lambda</span> a, b: a <span class="op">+</span> b
+sorted([<span class="s">"banana"</span>,<span class="s">"apple"</span>,<span class="s">"cherry"</span>], key=<span class="k">lambda</span> x: x[-<span class="n">1</span>])
+
+<span class="cm"># ── Closures — inner function captures outer scope</span>
+<span class="k">def</span> <span class="fn">multiplier</span>(factor: <span class="bi">int</span>):
+    <span class="k">def</span> <span class="fn">multiply</span>(x: <span class="bi">int</span>) -> <span class="bi">int</span>:
+        <span class="k">return</span> x <span class="op">*</span> factor          <span class="cm"># captures 'factor'</span>
+    <span class="k">return</span> multiply
+
+triple = multiplier(<span class="n">3</span>)
+triple(<span class="n">7</span>)                          <span class="cm"># 21</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="bq">Decorators are <span>functions that wrap other functions</span>. They're syntactic sugar for <code>func = decorator(func)</code>.</div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — decorators (essential pattern)</div></div>
+    <div class="cb-body"><span class="k">import</span> functools, time
+
+<span class="cm"># ── Build a decorator from scratch</span>
+<span class="k">def</span> <span class="fn">timer</span>(func):
+    <span class="s">"""Measures and prints function execution time."""</span>
+    <span class="op">@</span><span class="fn">functools.wraps</span>(func)          <span class="cm"># preserves __name__, __doc__</span>
+    <span class="k">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+        start = time.<span class="fn">perf_counter</span>()
+        result = <span class="fn">func</span>(*args, **kwargs)
+        elapsed = time.<span class="fn">perf_counter</span>() <span class="op">-</span> start
+        <span class="fn">print</span>(<span class="s">f"</span><span class="p">{func.__name__}</span><span class="s"> ran in </span><span class="p">{elapsed:.4f}</span><span class="s">s"</span>)
+        <span class="k">return</span> result
+    <span class="k">return</span> wrapper
+
+<span class="op">@</span><span class="fn">timer</span>
+<span class="k">def</span> <span class="fn">slow_task</span>():
+    time.<span class="fn">sleep</span>(<span class="n">0.5</span>)
+    <span class="k">return</span> <span class="s">"done"</span>
+
+slow_task()   <span class="cm"># slow_task ran in 0.5002s</span>
+
+<span class="cm"># ── Decorator with arguments (factory pattern)</span>
+<span class="k">def</span> <span class="fn">retry</span>(max_attempts: <span class="bi">int</span> = <span class="n">3</span>, delay: <span class="bi">float</span> = <span class="n">1.0</span>):
+    <span class="k">def</span> <span class="fn">decorator</span>(func):
+        <span class="op">@</span><span class="fn">functools.wraps</span>(func)
+        <span class="k">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+            <span class="k">for</span> attempt <span class="k">in</span> <span class="fn">range</span>(max_attempts):
+                <span class="k">try</span>:
+                    <span class="k">return</span> <span class="fn">func</span>(*args, **kwargs)
+                <span class="k">except</span> <span class="bi">Exception</span> <span class="k">as</span> e:
+                    <span class="k">if</span> attempt <span class="op">==</span> max_attempts <span class="op">-</span> <span class="n">1</span>:
+                        <span class="k">raise</span>
+                    time.<span class="fn">sleep</span>(delay)
+        <span class="k">return</span> wrapper
+    <span class="k">return</span> decorator
+
+<span class="op">@</span><span class="fn">retry</span>(max_attempts=<span class="n">3</span>, delay=<span class="n">0.5</span>)
+<span class="k">def</span> <span class="fn">fetch_data</span>(url: <span class="bi">str</span>):
+    <span class="k">return</span> requests.<span class="fn">get</span>(url).</div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S6: DATA STRUCTURES -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 06</div><div class="div-line"></div></div>
+<section class="block" id="s6">
+  <div class="sec-hd">
+    <div class="sec-n">06</div>
+    <div class="sec-info">
+      <div class="sec-tag">Data Structures</div>
+      <h2 class="sec-title">List, Dict, Tuple &amp; <em>Set</em></h2>
+      <div class="sec-sub">Python's four core data structures. Know their time complexities and when to use each.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="note note-g"><div class="lbl">LIST</div><div class="txt"><strong>Ordered, mutable, duplicates allowed.</strong> O(1) append, O(n) insert/search.</div></div>
+      <div class="cb">
+        <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">list</div></div>
+        <div class="cb-body">nums = [<span class="n">3</span>, <span class="n">1</span>, <span class="n">4</span>, <span class="n">1</span>, <span class="n">5</span>]
+nums.<span class="fn">append</span>(<span class="n">9</span>)        <span class="cm"># [3,1,4,1,5,9]</span>
+nums.<span class="fn">insert</span>(<span class="n">0</span>, <span class="n">0</span>)     <span class="cm"># [0,3,1,4,1,5,9]</span>
+nums.<span class="fn">pop</span>()            <span class="cm"># removes &amp; returns 9</span>
+nums.<span class="fn">sort</span>()           <span class="cm"># in-place sort</span>
+nums.<span class="fn">reverse</span>()        <span class="cm"># in-place reverse</span>
+<span class="fn">sorted</span>(nums)          <span class="cm"># new sorted copy</span>
+<span class="n">5</span> <span class="k">in</span> nums             <span class="cm"># True — membership</span>
+nums.<span class="fn">index</span>(<span class="n">4</span>)         <span class="cm"># 2 — first index</span>
+nums.<span class="fn">count</span>(<span class="n">1</span>)         <span class="cm"># 2 — occurrences</span>
+<span class="fn">len</span>(nums)             <span class="cm"># length</span>
+nums[<span class="n">1</span>:<span class="n">4</span>]             <span class="cm"># slice → sublist</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="note note-a"><div class="lbl">DICT</div><div class="txt"><strong>Key-value pairs, ordered (3.7+), mutable.</strong> O(1) get/set/delete.</div></div>
+      <div class="cb">
+        <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">dict</div></div>
+        <div class="cb-body">d = {<span class="s">"name"</span>: <span class="s">"Alice"</span>, <span class="s">"age"</span>: <span class="n">30</span>}
+d[<span class="s">"city"</span>] = <span class="s">"Paris"</span>    <span class="cm"># add key</span>
+d.<span class="fn">get</span>(<span class="s">"x"</span>, <span class="s">"default"</span>) <span class="cm"># safe get</span>
+d.<span class="fn">pop</span>(<span class="s">"age"</span>)           <span class="cm"># remove + return</span>
+<span class="k">del</span> d[<span class="s">"city"</span>]          <span class="cm"># delete key</span>
+d.<span class="fn">keys</span>()               <span class="cm"># dict_keys([...])</span>
+d.<span class="fn">values</span>()             <span class="cm"># dict_values([...])</span>
+d.<span class="fn">items</span>()              <span class="cm"># dict_items([...])</span>
+d.<span class="fn">update</span>({<span class="s">"x"</span>: <span class="n">1</span>})    <span class="cm"># merge in-place</span>
+merged = {**d, **other} <span class="cm"># spread merge</span>
+d.<span class="fn">setdefault</span>(<span class="s">"y"</span>, <span class="n">0</span>)  <span class="cm"># add if missing</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="note note-b"><div class="lbl">TUPLE</div><div class="txt"><strong>Ordered, immutable, hashable.</strong> Use as dict keys, named results. Faster than list.</div></div>
+      <div class="cb">
+        <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">tuple + namedtuple</div></div>
+        <div class="cb-body">pt = (<span class="n">3</span>, <span class="n">4</span>)
+x, y = pt             <span class="cm"># unpacking</span>
+a, *rest = (<span class="n">1</span>,<span class="n">2</span>,<span class="n">3</span>,<span class="n">4</span>)  <span class="cm"># a=1, rest=[2,3,4]</span>
+
+<span class="k">from</span> collections <span class="k">import</span> namedtuple
+Point = <span class="fn">namedtuple</span>(<span class="s">"Point"</span>, [<span class="s">"x"</span>,<span class="s">"y"</span>])
+p = Point(<span class="n">3</span>, <span class="n">4</span>)
+p.x, p.y              <span class="cm"># 3, 4</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="note note-p"><div class="lbl">SET</div><div class="txt"><strong>Unordered, unique elements.</strong> O(1) add/remove/membership. Great for deduplication.</div></div>
+      <div class="cb">
+        <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">set</div></div>
+        <div class="cb-body">s = {<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">2</span>, <span class="n">1</span>}    <span class="cm"># {1, 2, 3}</span>
+s.<span class="fn">add</span>(<span class="n">4</span>)
+s.<span class="fn">discard</span>(<span class="n">9</span>)          <span class="cm"># safe remove</span>
+a | b                  <span class="cm"># union</span>
+a &amp; b                  <span class="cm"># intersection</span>
+a - b                  <span class="cm"># difference</span>
+a ^ b                  <span class="cm"># symmetric diff</span>
+<span class="cm"># Deduplicate a list:</span>
+unique = <span class="fn">list</span>(<span class="fn">set</span>(my_list))</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S7: COMPREHENSIONS -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 07</div><div class="div-line"></div></div>
+<section class="block" id="s7">
+  <div class="sec-hd">
+    <div class="sec-n">07</div>
+    <div class="sec-info">
+      <div class="sec-tag">Pythonic Power</div>
+      <h2 class="sec-title">List, Dict &amp; <em>Set Comprehensions</em></h2>
+      <div class="sec-sub">The most Pythonic way to build collections. Faster than loops, readable when kept simple.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — all comprehension types</div></div>
+    <div class="cb-body"><span class="cm"># ── List comprehension  [expr for x in iter if cond]</span>
+squares  = [x<span class="op">**</span><span class="n">2</span> <span class="k">for</span> x <span class="k">in</span> <span class="fn">range</span>(<span class="n">10</span>)]         <span class="cm"># [0,1,4,9,...]</span>
+evens    = [x    <span class="k">for</span> x <span class="k">in</span> <span class="fn">range</span>(<span class="n">20</span>) <span class="k">if</span> x<span class="op">%</span><span class="n">2</span><span class="op">==</span><span class="n">0</span>] <span class="cm"># [0,2,4,...]</span>
+flat     = [n    <span class="k">for</span> row <span class="k">in</span> matrix <span class="k">for</span> n <span class="k">in</span> row] <span class="cm"># flatten 2D</span>
+upper    = [s.<span class="fn">upper</span>() <span class="k">for</span> s <span class="k">in</span> words]
+
+<span class="cm"># ── Dict comprehension  {k: v for ...}</span>
+word_len = {word: <span class="fn">len</span>(word) <span class="k">for</span> word <span class="k">in</span> [<span class="s">"apple"</span>, <span class="s">"fig"</span>]}
+           <span class="cm"># {'apple': 5, 'fig': 3}</span>
+inverted = {v: k <span class="k">for</span> k, v <span class="k">in</span> d.<span class="fn">items</span>()}      <span class="cm"># swap keys &lt;→ values</span>
+
+<span class="cm"># ── Set comprehension  {expr for ...}</span>
+vowels = {c <span class="k">for</span> c <span class="k">in</span> <span class="s">"hello world"</span> <span class="k">if</span> c <span class="k">in</span> <span class="s">"aeiou"</span>}
+         <span class="cm"># {'e', 'o'}</span>
+
+<span class="cm"># ── Generator expression  (expr for ...)  — lazy, memory-efficient</span>
+total = <span class="fn">sum</span>(x<span class="op">**</span><span class="n">2</span> <span class="k">for</span> x <span class="k">in</span> <span class="fn">range</span>(<span class="n">1_000_000</span>))  <span class="cm"># never builds list!</span>
+
+<span class="cm"># ── Conditional expression in comprehension</span>
+labels = [<span class="s">"even"</span> <span class="k">if</span> x<span class="op">%</span><span class="n">2</span><span class="op">==</span><span class="n">0</span> <span class="k">else</span> <span class="s">"odd"</span> <span class="k">for</span> x <span class="k">in</span> <span class="fn">range</span>(<span class="n">6</span>)]
+         <span class="cm"># ['even','odd','even','odd','even','odd']</span>
+
+<span class="cm"># ── Walrus in comprehension (Python 3.8+)</span>
+results = [y <span class="k">for</span> x <span class="k">in</span> data <span class="k">if</span> (y := expensive(x)) <span class="k">is not</span> <span class="k">None</span>]</div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="note note-a"><div class="lbl">⚡ When to use what</div><div class="txt"><strong>List comprehension</strong> for building lists. <strong>Generator expression</strong> when iterating once (saves memory). <strong>Keep them under one line</strong> — if it needs two lines, write a loop instead.</div></div>
+</section>
+
+<!-- ══════════════════════════════════════════ S8: OOP -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 08</div><div class="div-line"></div></div>
+<section class="block" id="s8">
+  <div class="sec-hd">
+    <div class="sec-n">08</div>
+    <div class="sec-info">
+      <div class="sec-tag">OOP</div>
+      <h2 class="sec-title">Object-Oriented <em>Python</em></h2>
+      <div class="sec-sub">Classes, inheritance, dunder methods, @property, @classmethod, @staticmethod, and dataclasses.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — classes complete</div></div>
+    <div class="cb-body"><span class="k">from</span> dataclasses <span class="k">import</span> dataclass, field
+<span class="k">from</span> typing <span class="k">import</span> ClassVar
+
+<span class="k">class</span> <span class="cls">Animal</span>:
+    <span class="cm"># Class variable — shared by all instances</span>
+    kingdom: <span class="bi">ClassVar</span>[<span class="bi">str</span>] = <span class="s">"Animalia"</span>
+
+    <span class="k">def</span> <span class="fn">__init__</span>(self, name: <span class="bi">str</span>, sound: <span class="bi">str</span>):
+        self.name  = name      <span class="cm"># instance attribute</span>
+        self.sound = sound
+        self._age  = <span class="n">0</span>        <span class="cm"># "private" by convention</span>
+
+    <span class="cm"># ── @property — computed attribute with getter/setter</span>
+    <span class="op">@</span>property
+    <span class="k">def</span> <span class="fn">age</span>(self) -> <span class="bi">int</span>:
+        <span class="k">return</span> self._age
+
+    <span class="op">@</span>age.setter
+    <span class="k">def</span> <span class="fn">age</span>(self, value: <span class="bi">int</span>):
+        <span class="k">if</span> value <span class="op">&lt;</span> <span class="n">0</span>:
+            <span class="k">raise</span> <span class="bi">ValueError</span>(<span class="s">"Age cannot be negative"</span>)
+        self._age = value
+
+    <span class="cm"># ── @classmethod — constructor factory pattern</span>
+    <span class="op">@</span>classmethod
+    <span class="k">def</span> <span class="fn">from_dict</span>(cls, data: <span class="bi">dict</span>) -> <span class="s">"Animal"</span>:
+        <span class="k">return</span> <span class="fn">cls</span>(data[<span class="s">"name"</span>], data[<span class="s">"sound"</span>])
+
+    <span class="cm"># ── @staticmethod — utility, no self/cls</span>
+    <span class="op">@</span>staticmethod
+    <span class="k">def</span> <span class="fn">is_valid_name</span>(name: <span class="bi">str</span>) -> <span class="bi">bool</span>:
+        <span class="k">return</span> <span class="fn">bool</span>(name) <span class="k">and</span> name.<span class="fn">isalpha</span>()
+
+    <span class="cm"># ── Dunder (magic) methods</span>
+    <span class="k">def</span> <span class="fn">__str__</span>(self) -> <span class="bi">str</span>:       <span class="cm"># str(obj) / print(obj)</span>
+        <span class="k">return</span> <span class="s">f"</span><span class="p">{self.name}</span><span class="s">"</span>
+    <span class="k">def</span> <span class="fn">__repr__</span>(self) -> <span class="bi">str</span>:      <span class="cm"># repr(obj) — developer view</span>
+        <span class="k">return</span> <span class="s">f"Animal(</span><span class="p">{self.name!r}</span><span class="s">, </span><span class="p">{self.sound!r}</span><span class="s">)"</span>
+    <span class="k">def</span> <span class="fn">__len__</span>(self) -> <span class="bi">int</span>:       <span class="cm"># len(obj)</span>
+        <span class="k">return</span> <span class="fn">len</span>(self.name)
+    <span class="k">def</span> <span class="fn">__eq__</span>(self, other) -> <span class="bi">bool</span>: <span class="cm"># obj == other</span>
+        <span class="k">return</span> self.name <span class="op">==</span> other.name
+    <span class="k">def</span> <span class="fn">speak</span>(self) -> <span class="bi">str</span>:
+        <span class="k">return</span> <span class="s">f"</span><span class="p">{self.name}</span><span class="s"> says </span><span class="p">{self.sound}</span><span class="s">!"</span>
+
+
+<span class="cm"># ── Inheritance</span>
+<span class="k">class</span> <span class="cls">Dog</span>(<span class="cls">Animal</span>):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, name: <span class="bi">str</span>, breed: <span class="bi">str</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(name, <span class="s">"Woof"</span>)  <span class="cm"># call parent</span>
+        self.breed = breed
+
+    <span class="k">def</span> <span class="fn">speak</span>(self) -> <span class="bi">str</span>:             <span class="cm"># override</span>
+        <span class="k">return</span> <span class="s">f"</span><span class="p">{self.name}</span><span class="s"> barks loudly!"</span>
+
+rex = Dog(<span class="s">"Rex"</span>, <span class="s">"Labrador"</span>)
+rex.age = <span class="n">3</span>
+<span class="fn">isinstance</span>(rex, Animal)              <span class="cm"># True</span>
+
+
+<span class="cm"># ── @dataclass — auto-generates __init__, __repr__, __eq__</span>
+<span class="op">@</span>dataclass
+<span class="k">class</span> <span class="cls">Point</span>:
+    x: <span class="bi">float</span>
+    y: <span class="bi">float</span>
+    label: <span class="bi">str</span> = <span class="s">""</span>
+    tags: <span class="bi">list</span>[<span class="bi">str</span>] = field(default_factory=<span class="fn">list</span>)
+
+    <span class="k">def</span> <span class="fn">distance</span>(self) -> <span class="bi">float</span>:
+        <span class="k">import</span> math
+        <span class="k">return</span> math.<span class="fn">hypot</span>(self.x, self.y)
+
+p = Point(<span class="n">3.0</span>, <span class="n">4.0</span>, label=<span class="s">"origin"</span>)
+p.distance()                         <span class="cm"># 5.0</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S9: MODULES -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 09</div><div class="div-line"></div></div>
+<section class="block" id="s9">
+  <div class="sec-hd">
+    <div class="sec-n">09</div>
+    <div class="sec-info">
+      <div class="sec-tag">Modules &amp; Packages</div>
+      <h2 class="sec-title">Import System &amp; <em>Package Structure</em></h2>
+      <div class="sec-sub">Organise code into modules and packages. Understand absolute vs relative imports, __all__, and __init__.py.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">imports</div></div>
+      <div class="cb-body"><span class="k">import</span> os                   <span class="cm"># standard lib</span>
+<span class="k">import</span> os.path             <span class="cm"># submodule</span>
+<span class="k">from</span> os <span class="k">import</span> getcwd      <span class="cm"># specific name</span>
+<span class="k">from</span> os <span class="k">import</span> path <span class="k">as</span> p  <span class="cm"># alias</span>
+<span class="k">import</span> numpy <span class="k">as</span> np         <span class="cm"># convention</span>
+<span class="k">import</span> pandas <span class="k">as</span> pd
+
+<span class="cm"># Relative imports (inside packages)</span>
+<span class="k">from</span> . <span class="k">import</span> utils         <span class="cm"># same pkg</span>
+<span class="k">from</span> .. <span class="k">import</span> config       <span class="cm"># parent pkg</span>
+<span class="k">from</span> .models <span class="k">import</span> User   <span class="cm"># sibling</span></div>
+    </div>
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">package layout</div></div>
+      <div class="cb-body"><span class="fn">mypackage/</span>
+├── <span class="ok">__init__.py</span>     <span class="cm"># makes it a package</span>
+├── models.py
+├── utils.py
+└── <span class="fn">api/</span>
+    ├── <span class="ok">__init__.py</span>
+    └── routes.py
+
+<span class="cm"># __init__.py — control public API</span>
+<span class="k">from</span> .models <span class="k">import</span> User, Post
+__all__ = [<span class="s">"User"</span>, <span class="s">"Post"</span>]</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — standard library essentials</div></div>
+    <div class="cb-body"><span class="k">import</span> os, sys, json, re, datetime, pathlib
+<span class="k">from</span> collections <span class="k">import</span> Counter, defaultdict, deque, OrderedDict
+<span class="k">from</span> itertools   <span class="k">import</span> chain, product, groupby, islice, cycle
+<span class="k">from</span> functools   <span class="k">import</span> partial, reduce, lru_cache, cache
+<span class="k">from</span> pathlib     <span class="k">import</span> Path
+<span class="k">from</span> typing      <span class="k">import</span> Optional, Union, Any, Callable, TypeVar
+
+<span class="cm"># Counter — frequency count</span>
+words = [<span class="s">"a"</span>,<span class="s">"b"</span>,<span class="s">"a"</span>,<span class="s">"c"</span>,<span class="s">"a"</span>]
+Counter(words)           <span class="cm"># Counter({'a':3,'b':1,'c':1})</span>
+
+<span class="cm"># defaultdict — default value on missing key</span>
+dd = defaultdict(<span class="fn">list</span>)
+dd[<span class="s">"x"</span>].<span class="fn">append</span>(<span class="n">1</span>)       <span class="cm"># no KeyError!</span>
+
+<span class="cm"># lru_cache — memoize expensive functions</span>
+<span class="op">@</span>lru_cache(maxsize=<span class="n">128</span>)
+<span class="k">def</span> <span class="fn">fib</span>(n: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="k">return</span> n <span class="k">if</span> n <span class="op">&lt;</span> <span class="n">2</span> <span class="k">else</span> <span class="fn">fib</span>(n-<span class="n">1</span>) <span class="op">+</span> <span class="fn">fib</span>(n-<span class="n">2</span>)
+
+<span class="cm"># pathlib — modern file paths</span>
+p = Path(<span class="s">"data"</span>) / <span class="s">"output.csv"</span>
+p.<span class="fn">exists</span>()                <span class="cm"># bool</span>
+p.<span class="fn">read_text</span>()             <span class="cm"># file content</span>
+p.<span class="fn">write_text</span>(<span class="s">"data"</span>)     <span class="cm"># write file</span>
+<span class="fn">list</span>(p.parent.<span class="fn">glob</span>(<span class="s">"*.csv"</span>))  <span class="cm"># glob pattern</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S10: FILES & ERRORS -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 10</div><div class="div-line"></div></div>
+<section class="block" id="s10">
+  <div class="sec-hd">
+    <div class="sec-n">10</div>
+    <div class="sec-info">
+      <div class="sec-tag">I/O &amp; Safety</div>
+      <h2 class="sec-title">Files, Errors &amp; <em>Context Managers</em></h2>
+      <div class="sec-sub">Read/write files safely, handle exceptions gracefully, and build your own context managers.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">file I/O</div></div>
+      <div class="cb-body"><span class="cm"># Always use 'with' — auto-closes the file</span>
+<span class="k">with</span> <span class="fn">open</span>(<span class="s">"data.txt"</span>, <span class="s">"r"</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> f:
+    content  = f.<span class="fn">read</span>()        <span class="cm"># whole file</span>
+    lines    = f.<span class="fn">readlines</span>()   <span class="cm"># list of lines</span>
+    <span class="k">for</span> line <span class="k">in</span> f:              <span class="cm"># line by line (memory-safe)</span>
+        <span class="fn">print</span>(line.<span class="fn">strip</span>())
+
+<span class="cm"># Write modes: 'w' overwrite, 'a' append, 'x' exclusive</span>
+<span class="k">with</span> <span class="fn">open</span>(<span class="s">"out.txt"</span>, <span class="s">"w"</span>) <span class="k">as</span> f:
+    f.<span class="fn">write</span>(<span class="s">"Hello\n"</span>)
+    f.<span class="fn">writelines</span>([<span class="s">"a\n"</span>, <span class="s">"b\n"</span>])
+
+<span class="cm"># JSON</span>
+<span class="k">import</span> json
+<span class="k">with</span> <span class="fn">open</span>(<span class="s">"data.json"</span>) <span class="k">as</span> f:
+    data = json.<span class="fn">load</span>(f)
+<span class="k">with</span> <span class="fn">open</span>(<span class="s">"out.json"</span>, <span class="s">"w"</span>) <span class="k">as</span> f:
+    json.<span class="fn">dump</span>(data, f, indent=<span class="n">2</span>)</div>
+    </div>
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">exception handling</div></div>
+      <div class="cb-body"><span class="k">try</span>:
+    result = risky_operation()
+<span class="k">except</span> <span class="bi">FileNotFoundError</span>:
+    <span class="fn">print</span>(<span class="s">"File not found"</span>)
+<span class="k">except</span> (<span class="bi">TypeError</span>, <span class="bi">ValueError</span>) <span class="k">as</span> e:
+    <span class="fn">print</span>(<span class="s">f"Bad input: </span><span class="p">{e}</span><span class="s">"</span>)
+<span class="k">except</span> <span class="bi">Exception</span> <span class="k">as</span> e:
+    <span class="fn">print</span>(<span class="s">f"Unexpected: </span><span class="p">{e}</span><span class="s">"</span>)
+    <span class="k">raise</span>                 <span class="cm"># re-raise!</span>
+<span class="k">else</span>:
+    <span class="fn">print</span>(<span class="s">"No error — runs if try succeeded"</span>)
+<span class="k">finally</span>:
+    <span class="fn">print</span>(<span class="s">"Always runs — cleanup here"</span>)
+
+<span class="cm"># Custom exceptions</span>
+<span class="k">class</span> <span class="cls">AppError</span>(<span class="bi">Exception</span>):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, msg: <span class="bi">str</span>, code: <span class="bi">int</span> = <span class="n">0</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(msg)
+        self.code = code
+
+<span class="k">raise</span> <span class="cls">AppError</span>(<span class="s">"Not found"</span>, code=<span class="n">404</span>)</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — custom context managers</div></div>
+    <div class="cb-body"><span class="k">from</span> contextlib <span class="k">import</span> contextmanager
+<span class="k">import</span> time
+
+<span class="cm"># ── Method 1: contextmanager decorator (simplest)</span>
+<span class="op">@</span>contextmanager
+<span class="k">def</span> <span class="fn">timer</span>(label: <span class="bi">str</span>):
+    start = time.<span class="fn">perf_counter</span>()
+    <span class="k">try</span>:
+        <span class="k">yield</span>                          <span class="cm"># ← code in 'with' block runs here</span>
+    <span class="k">finally</span>:
+        elapsed = time.<span class="fn">perf_counter</span>() <span class="op">-</span> start
+        <span class="fn">print</span>(<span class="s">f"</span><span class="p">{label}</span><span class="s">: </span><span class="p">{elapsed:.4f}</span><span class="s">s"</span>)
+
+<span class="k">with</span> timer(<span class="s">"DB query"</span>):
+    results = db.<span class="fn">fetchall</span>()
+
+<span class="cm"># ── Method 2: __enter__ / __exit__ class</span>
+<span class="k">class</span> <span class="cls">TempDir</span>:
+    <span class="k">def</span> <span class="fn">__enter__</span>(self):
+        self.path = Path(tempfile.<span class="fn">mkdtemp</span>())
+        <span class="k">return</span> self.path
+
+    <span class="k">def</span> <span class="fn">__exit__</span>(self, exc_type, exc_val, exc_tb):
+        shutil.<span class="fn">rmtree</span>(self.path)
+        <span class="k">return</span> <span class="k">False</span>               <span class="cm"># don't suppress exceptions</span>
+
+<span class="k">with</span> TempDir() <span class="k">as</span> tmp:
+    (tmp / <span class="s">"file.txt"</span>).<span class="fn">write_text</span>(<span class="s">"hello"</span>)
+<span class="cm"># directory auto-deleted after block</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S11: ADVANCED -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 11</div><div class="div-line"></div></div>
+<section class="block" id="s11">
+  <div class="sec-hd">
+    <div class="sec-n">11</div>
+    <div class="sec-info">
+      <div class="sec-tag">Advanced Python</div>
+      <h2 class="sec-title">Generators, Type Hints &amp; <em>Protocols</em></h2>
+      <div class="sec-sub">Write memory-efficient iterators with generators, add full type annotations, and use structural subtyping with Protocol.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — generators &amp; iterators</div></div>
+    <div class="cb-body"><span class="cm"># ── Generator function — uses yield, lazy evaluation</span>
+<span class="k">def</span> <span class="fn">fibonacci</span>() -> <span class="bi">Generator</span>[<span class="bi">int</span>, <span class="k">None</span>, <span class="k">None</span>]:
+    a, b = <span class="n">0</span>, <span class="n">1</span>
+    <span class="k">while</span> <span class="k">True</span>:
+        <span class="k">yield</span> a             <span class="cm"># suspends here, returns value</span>
+        a, b = b, a <span class="op">+</span> b    <span class="cm"># resumes on next()</span>
+
+fib = fibonacci()
+[<span class="fn">next</span>(fib) <span class="k">for</span> _ <span class="k">in</span> <span class="fn">range</span>(<span class="n">8</span>)]  <span class="cm"># [0,1,1,2,3,5,8,13]</span>
+
+<span class="cm"># ── Reading a huge file — never loads into RAM</span>
+<span class="k">def</span> <span class="fn">read_chunks</span>(path: <span class="bi">str</span>, size: <span class="bi">int</span> = <span class="n">4096</span>):
+    <span class="k">with</span> <span class="fn">open</span>(path, <span class="s">"rb"</span>) <span class="k">as</span> f:
+        <span class="k">while</span> chunk := f.<span class="fn">read</span>(size):
+            <span class="k">yield</span> chunk
+
+<span class="cm"># ── yield from — delegate to sub-generator</span>
+<span class="k">def</span> <span class="fn">flatten</span>(nested):
+    <span class="k">for</span> item <span class="k">in</span> nested:
+        <span class="k">if</span> <span class="fn">isinstance</span>(item, <span class="fn">list</span>):
+            <span class="k">yield from</span> flatten(item)
+        <span class="k">else</span>:
+            <span class="k">yield</span> item
+
+<span class="fn">list</span>(flatten([<span class="n">1</span>, [<span class="n">2</span>, [<span class="n">3</span>, <span class="n">4</span>]], <span class="n">5</span>]))   <span class="cm"># [1, 2, 3, 4, 5]</span>
+
+<span class="cm"># ── Custom __iter__ / __next__ (iterator protocol)</span>
+<span class="k">class</span> <span class="cls">Countdown</span>:
+    <span class="k">def</span> <span class="fn">__init__</span>(self, n: <span class="bi">int</span>): self.n = n
+    <span class="k">def</span> <span class="fn">__iter__</span>(self): <span class="k">return</span> self
+    <span class="k">def</span> <span class="fn">__next__</span>(self):
+        <span class="k">if</span> self.n <span class="op">&lt;=</span> <span class="n">0</span>: <span class="k">raise</span> <span class="bi">StopIteration</span>
+        self.n <span class="op">-=</span> <span class="n">1</span>; <span class="k">return</span> self.n <span class="op">+</span> <span class="n">1</span>
+
+<span class="fn">list</span>(Countdown(<span class="n">5</span>))               <span class="cm"># [5, 4, 3, 2, 1]</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — type hints &amp; protocol (Python 3.10+)</div></div>
+    <div class="cb-body"><span class="k">from</span> typing <span class="k">import</span> Optional, Union, Any, TypeVar, Generic, Protocol
+<span class="k">from</span> collections.abc <span class="k">import</span> Sequence, Mapping, Callable, Iterator
+
+T = TypeVar(<span class="s">"T"</span>)
+
+<span class="cm"># ── Modern type hints (3.10+)</span>
+<span class="k">def</span> <span class="fn">process</span>(x: <span class="bi">int</span> | <span class="bi">str</span> | <span class="k">None</span>) -> <span class="bi">str</span>:   <span class="cm"># Union shorthand</span>
+    <span class="k">return</span> <span class="fn">str</span>(x) <span class="k">if</span> x <span class="k">is not</span> <span class="k">None</span> <span class="k">else</span> <span class="s">""</span>
+
+<span class="cm"># ── Generic class</span>
+<span class="k">class</span> <span class="cls">Stack</span>(Generic[T]):
+    <span class="k">def</span> <span class="fn">__init__</span>(self): self._items: <span class="bi">list</span>[T] = []
+    <span class="k">def</span> <span class="fn">push</span>(self, item: T): self._items.<span class="fn">append</span>(item)
+    <span class="k">def</span> <span class="fn">pop</span>(self) -> T:     <span class="k">return</span> self._items.<span class="fn">pop</span>()
+
+s: Stack[<span class="bi">int</span>] = Stack()
+s.<span class="fn">push</span>(<span class="n">42</span>)                          <span class="cm"># typed!</span>
+
+<span class="cm"># ── Protocol — structural subtyping ("duck typing" with types)</span>
+<span class="k">class</span> <span class="cls">Drawable</span>(Protocol):
+    <span class="k">def</span> <span class="fn">draw</span>(self) -> <span class="k">None</span>: ...
+
+<span class="k">def</span> <span class="fn">render</span>(obj: Drawable) -> <span class="k">None</span>:    <span class="cm"># any class with .draw() works!</span>
+    obj.<span class="fn">draw</span>()
+
+<span class="cm"># ── TypedDict — typed dicts</span>
+<span class="k">from</span> typing <span class="k">import</span> TypedDict
+<span class="k">class</span> <span class="cls">User</span>(TypedDict):
+    name: <span class="bi">str</span>
+    age: <span class="bi">int</span>
+    email: <span class="bi">str</span>
+
+user: User = {<span class="s">"name"</span>: <span class="s">"Alice"</span>, <span class="s">"age"</span>: <span class="n">30</span>, <span class="s">"email"</span>: <span class="s">"a@b.com"</span>}</div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S12: ASYNC -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 12</div><div class="div-line"></div></div>
+<section class="block" id="s12">
+  <div class="sec-hd">
+    <div class="sec-n">12</div>
+    <div class="sec-info">
+      <div class="sec-tag">Concurrency</div>
+      <h2 class="sec-title">Async / Await &amp; <em>asyncio</em></h2>
+      <div class="sec-sub">Non-blocking I/O with coroutines. Essential for FastAPI, web scraping, and high-throughput services.</div>
+    </div>
+  </div>
+
+  <div class="bq">async/await is <span>single-threaded concurrency</span>. It doesn't parallelise CPU work — it overlaps I/O waiting time. Use it for network calls, DB queries, file I/O.</div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — asyncio essentials</div></div>
+    <div class="cb-body"><span class="k">import</span> asyncio
+
+<span class="cm"># ── Basic coroutine</span>
+<span class="k">async def</span> <span class="fn">fetch</span>(url: <span class="bi">str</span>) -> <span class="bi">str</span>:
+    <span class="k">await</span> asyncio.<span class="fn">sleep</span>(<span class="n">1</span>)          <span class="cm"># simulate I/O</span>
+    <span class="k">return</span> <span class="s">f"data from </span><span class="p">{url}</span><span class="s">"</span>
+
+<span class="k">async def</span> <span class="fn">main</span>():
+    result = <span class="k">await</span> fetch(<span class="s">"https://api.example.com"</span>)
+    <span class="fn">print</span>(result)
+
+asyncio.<span class="fn">run</span>(main())               <span class="cm"># entry point</span>
+
+<span class="cm"># ── gather() — run coroutines concurrently</span>
+<span class="k">async def</span> <span class="fn">fetch_all</span>(urls: <span class="bi">list</span>[<span class="bi">str</span>]):
+    tasks = [fetch(url) <span class="k">for</span> url <span class="k">in</span> urls]
+    results = <span class="k">await</span> asyncio.<span class="fn">gather</span>(*tasks)    <span class="cm"># all run concurrently!</span>
+    <span class="k">return</span> results
+
+<span class="cm"># ── Tasks — fire and don't wait</span>
+<span class="k">async def</span> <span class="fn">background</span>():
+    task = asyncio.<span class="fn">create_task</span>(fetch(<span class="s">"url"</span>))
+    <span class="cm"># do other stuff while fetch runs...</span>
+    result = <span class="k">await</span> task
+
+<span class="cm"># ── Timeout</span>
+<span class="k">async def</span> <span class="fn">safe_fetch</span>(url: <span class="bi">str</span>):
+    <span class="k">try</span>:
+        <span class="k">async with</span> asyncio.<span class="fn">timeout</span>(<span class="n">5.0</span>):   <span class="cm"># Python 3.11+</span>
+            <span class="k">return</span> <span class="k">await</span> fetch(url)
+    <span class="k">except</span> asyncio.<span class="bi">TimeoutError</span>:
+        <span class="k">return</span> <span class="k">None</span>
+
+<span class="cm"># ── Async context manager</span>
+<span class="k">async with</span> aiohttp.<span class="fn">ClientSession</span>() <span class="k">as</span> session:
+    <span class="k">async with</span> session.<span class="fn">get</span>(url) <span class="k">as</span> resp:
+        data = <span class="k">await</span> resp.<span class="fn">json</span>()
+
+<span class="cm"># ── Async generator</span>
+<span class="k">async def</span> <span class="fn">arange</span>(n: <span class="bi">int</span>):
+    <span class="k">for</span> i <span class="k">in</span> <span class="fn">range</span>(n):
+        <span class="k">await</span> asyncio.<span class="fn">sleep</span>(<span class="n">0</span>)
+        <span class="k">yield</span> i
+
+<span class="k">async for</span> num <span class="k">in</span> arange(<span class="n">10</span>):
+    <span class="fn">print</span>(num)</div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-tag">asyncio</div>
+      <div class="card-title">asyncio.gather</div>
+      <div class="card-body">Run multiple coroutines <strong>concurrently</strong>. If one fails, all fail unless you use <code>return_exceptions=True</code>.</div>
+    </div>
+    <div class="card">
+      <div class="card-tag">threading</div>
+      <div class="card-title">ThreadPoolExecutor</div>
+      <div class="card-body">For <strong>CPU-bound</strong> tasks. Use <code>loop.run_in_executor()</code> to bridge sync/async code.</div>
+    </div>
+    <div class="card">
+      <div class="card-tag">multiprocessing</div>
+      <div class="card-title">ProcessPool</div>
+      <div class="card-body">True <strong>parallel CPU</strong> work. Bypasses the GIL. Best for numpy/pandas heavy computations.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S13: TESTING -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 13</div><div class="div-line"></div></div>
+<section class="block" id="s13">
+  <div class="sec-hd">
+    <div class="sec-n">13</div>
+    <div class="sec-info">
+      <div class="sec-tag">Quality</div>
+      <h2 class="sec-title">Testing with <em>pytest</em></h2>
+      <div class="sec-sub">pytest is the standard. Fixtures, parametrize, mocking, and async testing — all covered.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">python — pytest complete</div></div>
+    <div class="cb-body"><span class="cm"># test_math.py</span>
+<span class="k">import</span> pytest
+<span class="k">from</span> myapp <span class="k">import</span> add, divide, fetch_user
+
+<span class="cm"># ── Basic test</span>
+<span class="k">def</span> <span class="fn">test_add</span>():
+    <span class="k">assert</span> add(<span class="n">2</span>, <span class="n">3</span>) <span class="op">==</span> <span class="n">5</span>
+    <span class="k">assert</span> add(-<span class="n">1</span>, <span class="n">1</span>) <span class="op">==</span> <span class="n">0</span>
+
+<span class="cm"># ── @pytest.mark.parametrize — run one test with many inputs</span>
+<span class="op">@</span>pytest.mark.<span class="fn">parametrize</span>(<span class="s">"a,b,expected"</span>, [
+    (<span class="n">2</span>, <span class="n">3</span>, <span class="n">5</span>), (<span class="n">0</span>, <span class="n">0</span>, <span class="n">0</span>), (-<span class="n">1</span>, -<span class="n">2</span>, -<span class="n">3</span>), (<span class="n">100</span>, <span class="n">200</span>, <span class="n">300</span>)
+])
+<span class="k">def</span> <span class="fn">test_add_param</span>(a, b, expected):
+    <span class="k">assert</span> add(a, b) <span class="op">==</span> expected     <span class="cm"># runs 4× automatically</span>
+
+<span class="cm"># ── Test exceptions</span>
+<span class="k">def</span> <span class="fn">test_divide_by_zero</span>():
+    <span class="k">with</span> pytest.<span class="fn">raises</span>(<span class="bi">ZeroDivisionError</span>):
+        divide(<span class="n">10</span>, <span class="n">0</span>)
+
+<span class="cm"># ── Fixture — shared setup, injected by name</span>
+<span class="op">@</span>pytest.fixture
+<span class="k">def</span> <span class="fn">db</span>():
+    conn = create_test_db()
+    <span class="k">yield</span> conn                         <span class="cm"># test runs here</span>
+    conn.<span class="fn">close</span>()                       <span class="cm"># teardown</span>
+
+<span class="k">def</span> <span class="fn">test_user_creation</span>(db):           <span class="cm"># fixture injected!</span>
+    user = db.<span class="fn">create_user</span>(<span class="s">"Alice"</span>)
+    <span class="k">assert</span> user.id <span class="k">is not</span> <span class="k">None</span>
+
+<span class="cm"># ── Mocking with pytest-mock</span>
+<span class="k">def</span> <span class="fn">test_fetch_user</span>(mocker):
+    mocker.<span class="fn">patch</span>(<span class="s">"myapp.requests.get"</span>, return_value=MagicMock(
+        json=<span class="k">lambda</span>: {<span class="s">"id"</span>: <span class="n">1</span>, <span class="s">"name"</span>: <span class="s">"Alice"</span>}
+    ))
+    user = fetch_user(<span class="n">1</span>)
+    <span class="k">assert</span> user[<span class="s">"name"</span>] <span class="op">==</span> <span class="s">"Alice"</span>
+
+<span class="cm"># ── Async test</span>
+<span class="op">@</span>pytest.mark.asyncio
+<span class="k">async def</span> <span class="fn">test_async_fetch</span>():
+    result = <span class="k">await</span> async_fetch(<span class="s">"url"</span>)
+    <span class="k">assert</span> result <span class="k">is not</span> <span class="k">None</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="g2">
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">run tests</div></div>
+      <div class="cb-body">pytest                    <span class="cm"># run all tests</span>
+pytest -v                 <span class="cm"># verbose output</span>
+pytest -k "test_add"      <span class="cm"># filter by name</span>
+pytest --cov=myapp        <span class="cm"># coverage report</span>
+pytest -x                 <span class="cm"># stop at first fail</span>
+pytest tests/test_math.py <span class="cm"># specific file</span></div>
+    </div>
+    <div class="cb">
+      <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">pytest.ini / pyproject.toml</div></div>
+      <div class="cb-body"><span class="cm"># pyproject.toml</span>
+[tool.pytest.ini_options]
+testpaths = [<span class="s">"tests"</span>]
+addopts   = <span class="s">"-v --tb=short"</span>
+asyncio_mode = <span class="s">"auto"</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S14: VENVS & TOOLS -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 14</div><div class="div-line"></div></div>
+<section class="block" id="s14">
+  <div class="sec-hd">
+    <div class="sec-n">14</div>
+    <div class="sec-info">
+      <div class="sec-tag">Tooling</div>
+      <h2 class="sec-title">Virtual Envs, pip &amp; <em>Project Setup</em></h2>
+      <div class="sec-sub">Modern Python tooling: pyenv, venv, pip, uv, ruff, mypy — a production-ready dev environment.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">bash — full project bootstrap</div></div>
+    <div class="cb-body"><span class="cm"># ── pyproject.toml (modern standard, replaces setup.py)</span>
+<span class="cm"># ── 1. Create project structure</span>
+mkdir my_project &amp;&amp; cd my_project
+python3 -m venv .venv
+source .venv/bin/activate
+
+<span class="cm"># ── 2. Install dev dependencies</span>
+pip install pytest pytest-cov ruff mypy
+
+<span class="cm"># ── 3. Freeze all deps</span>
+pip freeze > requirements.txt
+
+<span class="cm"># ── OR: use uv (10-100x faster than pip)</span>
+pip install uv
+uv venv
+uv pip install fastapi pytest ruff
+
+<span class="cm"># ── Linting + formatting with ruff (replaces flake8 + black)</span>
+ruff check .              <span class="cm"># lint</span>
+ruff check --fix .        <span class="cm"># auto-fix</span>
+ruff format .             <span class="cm"># format (like black)</span>
+
+<span class="cm"># ── Type checking with mypy</span>
+mypy src/ --strict        <span class="cm"># strict type checking</span>
+
+<span class="cm"># ── pre-commit hooks (run before every git commit)</span>
+pip install pre-commit
+pre-commit install</div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="cb">
+    <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">pyproject.toml — complete template</div></div>
+    <div class="cb-body">[project]
+name            = <span class="s">"my-project"</span>
+version         = <span class="s">"0.1.0"</span>
+requires-python = <span class="s">">=3.12"</span>
+dependencies    = [<span class="s">"fastapi>=0.110"</span>, <span class="s">"pydantic>=2.0"</span>]
+
+[project.optional-dependencies]
+dev = [<span class="s">"pytest"</span>, <span class="s">"pytest-cov"</span>, <span class="s">"ruff"</span>, <span class="s">"mypy"</span>]
+
+[tool.ruff]
+line-length = <span class="n">88</span>
+select = [<span class="s">"E"</span>, <span class="s">"F"</span>, <span class="s">"I"</span>, <span class="s">"N"</span>, <span class="s">"UP"</span>]
+
+[tool.mypy]
+strict = <span class="k">true</span>
+python_version = <span class="s">"3.12"</span>
+
+[tool.pytest.ini_options]
+testpaths = [<span class="s">"tests"</span>]
+addopts   = <span class="s">"--cov=src --cov-report=term-missing"</span></div>
+    <button class="cpbtn" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="g4">
+    <div class="card"><div class="card-tag">Package</div><div class="card-title">fastapi</div><div class="card-body">Fast async web API framework. Auto OpenAPI docs.</div></div>
+    <div class="card"><div class="card-tag">Package</div><div class="card-title">pydantic</div><div class="card-body">Data validation via type hints. Schema from model.</div></div>
+    <div class="card"><div class="card-tag">Package</div><div class="card-title">sqlalchemy</div><div class="card-body">SQL ORM + core. Works with every major DB.</div></div>
+    <div class="card"><div class="card-tag">Package</div><div class="card-title">httpx</div><div class="card-body">Async-first HTTP client. Drop-in requests alternative.</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ S15: QUICK REF -->
+<div class="div"><div class="div-line"></div><div class="div-lbl">Section 15</div><div class="div-line"></div></div>
+<section class="block" id="s15">
+  <div class="sec-hd">
+    <div class="sec-n">15</div>
+    <div class="sec-info">
+      <div class="sec-tag">Cheatsheet</div>
+      <h2 class="sec-title">Quick <em>Reference</em></h2>
+      <div class="sec-sub">The most-used Python patterns, builtins, and idioms at a glance.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="note note-g"><div class="lbl">Built-in Functions</div></div>
+      <table class="mtbl">
+        <thead><tr><th>Function</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td class="mname">len(x)</td><td class="mdesc">Length of sequence/mapping</td></tr>
+          <tr><td class="mname">range(n)</td><td class="mdesc">Integer range iterator</td></tr>
+          <tr><td class="mname">enumerate(it)</td><td class="mdesc">Index + value pairs</td></tr>
+          <tr><td class="mname">zip(a, b)</td><td class="mdesc">Pairs from two iterables</td></tr>
+          <tr><td class="mname">map(fn, it)</td><td class="mdesc">Apply fn to each element</td></tr>
+          <tr><td class="mname">filter(fn, it)</td><td class="mdesc">Keep items where fn is True</td></tr>
+          <tr><td class="mname">sorted(it)</td><td class="mdesc">New sorted list</td></tr>
+          <tr><td class="mname">reversed(it)</td><td class="mdesc">Reverse iterator</td></tr>
+          <tr><td class="mname">any(it) / all(it)</td><td class="mdesc">Boolean over iterable</td></tr>
+          <tr><td class="mname">max/min/sum</td><td class="mdesc">Aggregates</td></tr>
+          <tr><td class="mname">repr/str/type</td><td class="mdesc">Introspection</td></tr>
+          <tr><td class="mname">vars(obj)</td><td class="mdesc">Object's __dict__</td></tr>
+          <tr><td class="mname">dir(obj)</td><td class="mdesc">All attributes &amp; methods</td></tr>
+          <tr><td class="mname">getattr/setattr</td><td class="mdesc">Dynamic attribute access</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="note note-a"><div class="lbl">Pythonic Patterns</div></div>
+      <div class="cb">
+        <div class="cb-hd"><div class="cb-dots"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div><div class="cb-label">idioms</div></div>
+        <div class="cb-body"><span class="cm"># Swap without temp</span>
+a, b = b, a
+
+<span class="cm"># Check membership</span>
+<span class="k">if</span> x <span class="k">in</span> {<span class="s">"a"</span>, <span class="s">"b"</span>, <span class="s">"c"</span>}:      <span class="cm"># O(1) set lookup</span>
+
+<span class="cm"># Merge dicts (3.9+)</span>
+merged = dict1 | dict2
+
+<span class="cm"># Default in dict</span>
+count = d.<span class="fn">get</span>(key, <span class="n">0</span>) <span class="op">+</span> <span class="n">1</span>
+
+<span class="cm"># Unpack with *</span>
+first, *rest = [<span class="n">1</span>,<span class="n">2</span>,<span class="n">3</span>,<span class="n">4</span>]
+*init, last = [<span class="n">1</span>,<span class="n">2</span>,<span class="n">3</span>,<span class="n">4</span>]
+
+<span class="cm"># Conditional import</span>
+<span class="k">try</span>:
+    <span class="k">import</span> ujson <span class="k">as</span> json
+<span class="k">except</span> <span class="bi">ImportError</span>:
+    <span class="k">import</span> json
+
+<span class="cm"># Suppress exceptions</span>
+<span class="k">from</span> contextlib <span class="k">import</span> suppress
+<span class="k">with</span> suppress(<span class="bi">FileNotFoundError</span>):
+    os.<span class="fn">remove</span>(<span class="s">"tmp.txt"</span>)
+
+<span class="cm"># Flatten nested list</span>
+flat = [x <span class="k">for</span> sub <span class="k">in</span> nested <span class="k">for</span> x <span class="k">in</span> sub]
+
+<span class="cm"># Named tuple as lightweight struct</span>
+Color = namedtuple(<span class="s">"Color"</span>, [<span class="s">"r"</span>,<span class="s">"g"</span>,<span class="s">"b"</span>])
+
+<span class="cm"># Memoize with cache (3.9+)</span>
+<span class="op">@</span>cache
+<span class="k">def</span> <span class="fn">expensive</span>(n): ...</div>
+        <button class="cpbtn" onclick="cp(this)">copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="note note-b"><div class="lbl">The Zen of Python — import this</div><div class="txt"><strong>Beautiful is better than ugly.</strong> Explicit is better than implicit. Simple is better than complex. Readability counts. <strong>There should be one obvious way to do it.</strong> If the implementation is hard to explain, it's a bad idea.</div></div>
+</section>
+
+<!-- FINALE -->
+<div class="finale">
+  <div class="finale-bg"></div>
+  <div class="finale-bignum">Py</div>
+  <div class="finale-tag">Quick Start Complete</div>
+  <h2 class="finale-title">You Know Python.<br><em>Now Ship Something.</em></h2>
+  <p class="finale-desc">From virtual environments to async coroutines, you've covered every essential concept. The best way to cement it — build a real project.</p>
+  <div class="finale-cmd">python -m venv .venv && python main.py</div>
+  <div class="finale-pills">
+    <div class="fpill">Install ✓</div><div class="fpill">Types ✓</div><div class="fpill">Strings ✓</div>
+    <div class="fpill">Control Flow ✓</div><div class="fpill">Functions ✓</div><div class="fpill">Decorators ✓</div>
+    <div class="fpill">Data Structs ✓</div><div class="fpill">Comprehensions ✓</div><div class="fpill">OOP ✓</div>
+    <div class="fpill">Modules ✓</div><div class="fpill">Files &amp; Errors ✓</div><div class="fpill">Generators ✓</div>
+    <div class="fpill">Type Hints ✓</div><div class="fpill">Async ✓</div><div class="fpill">Testing ✓</div><div class="fpill">Tooling ✓</div>
+  </div>
+</div>
+
+<footer>Python Complete Quick Start Guide · 2026 Edition · <span>Every Concept Covered</span></footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur'), curO=document.getElementById('curO');
+let mx=0,my=0,ox=0,oy=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.transform=`translate(${mx-2}px,${my-9}px)`;
+});
+(function animO(){ox+=(mx-ox)*.1;oy+=(my-oy)*.1;curO.style.transform=`translate(${ox-16}px,${oy-16}px)`;requestAnimationFrame(animO)})();
+
+// Progress
+const pgbar=document.getElementById('pgbar'), nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  pgbar.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  nav.classList.toggle('show',window.scrollY>window.innerHeight*.4);
+  // active nav links
+  document.querySelectorAll('section.block').forEach(s=>{
+    const r=s.getBoundingClientRect();
+    const a=document.querySelector(`.nav-links a[href="#${s.id}"]`);
+    if(a) a.classList.toggle('on',r.top<=80&&r.bottom>80);
+  });
+});
+
+// Intersection observer
+new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.08})
+  .observe?undefined:null;
+document.querySelectorAll('section.block').forEach(s=>new IntersectionObserver(([e])=>{if(e.isIntersecting)s.classList.add('vis')},{threshold:.06}).observe(s));
+
+// Copy buttons
+function cp(btn){
+  const pre=btn.parentElement.querySelector('.cb-body');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    btn.textContent='copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='copy';btn.classList.remove('ok')},2000);
+  });
+}
+</script>
+</body>
+</html>

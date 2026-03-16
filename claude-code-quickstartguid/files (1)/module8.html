@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 8 — Skills</title>
+<link rel="stylesheet" href="course.css">
+<style>
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+.compare-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.compare-card h4 { font-family: 'Syne', sans-serif; font-size: 14px; margin-bottom: 6px; }
+.compare-card p { font-size: 12px; color: var(--text3); margin: 0; line-height: 1.5; }
+.compare-card .when { font-size: 11px; color: var(--cyan); margin-top: 8px; font-family: 'JetBrains Mono', monospace; }
+
+.anatomy-block {
+  background: #050810;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 20px 0;
+  overflow: hidden;
+  position: relative;
+}
+.annotation {
+  display: flex;
+  margin: 0;
+}
+.ann-code {
+  flex: 1;
+}
+.ann-note {
+  width: 200px;
+  background: var(--bg3);
+  border-left: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text3);
+  padding: 8px 12px;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+}
+
+.skill-dir {
+  background: #050810;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+}
+.skill-dir .dir { color: var(--amber); }
+.skill-dir .file { color: var(--text); }
+.skill-dir .comment { color: var(--text3); font-style: italic; }
+.skill-dir .indent1 { padding-left: 20px; }
+.skill-dir .indent2 { padding-left: 40px; }
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 08</div>
+    <h1 class="page-title">Skills</h1>
+    <p class="page-desc">The most powerful extensibility mechanism in Claude Code — self-contained capability packages that auto-activate based on context, bundle executable scripts, and work across every Claude product.</p>
+    <div class="page-meta">
+      <span>📖 ~30 min</span>
+      <span>🎯 High-impact feature</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: What are Skills -->
+    <div class="section">
+      <h2 class="section-title">What are Skills?</h2>
+      <p>Skills are <strong style="color:var(--text)">folders containing a SKILL.md file</strong> (plus optional scripts and resources) that give Claude a specialized playbook for a class of tasks. Unlike slash commands which you invoke manually, skills can <em style="color:var(--cyan)">activate automatically</em> when Claude recognizes the current task matches the skill's description.</p>
+
+      <p>Think of skills as onboarding guides you write for Claude: "When you're doing X, here's the expert playbook to follow — and here are scripts you can run."</p>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">Skills Merged with Commands</div>
+          <p>In recent versions, slash commands and skills were unified. A file at <code>.claude/commands/deploy.md</code> and a skill at <code>.claude/skills/deploy/SKILL.md</code> both create <code>/deploy</code> and behave identically. Skills add the extras: bundled scripts, supporting files, and automatic invocation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Skills vs Everything Else -->
+    <div class="section">
+      <h2 class="section-title">Skills vs Commands vs MCP vs Agents</h2>
+      <p>Understanding where each mechanism fits helps you pick the right tool:</p>
+
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h4>📝 Slash Commands</h4>
+          <p>Single Markdown file. Simple prompt templates. Invoked by typing /name.</p>
+          <div class="when">→ User invokes manually</div>
+        </div>
+        <div class="compare-card" style="border-color:var(--cyan)44">
+          <h4>🎯 Skills</h4>
+          <p>Folder with SKILL.md + optional scripts/files. Rich playbooks with executable helpers.</p>
+          <div class="when">→ Auto or manual invocation</div>
+        </div>
+        <div class="compare-card">
+          <h4>🔌 MCP Servers</h4>
+          <p>External service connections (GitHub, Jira, etc.). Provide new tools with live data access.</p>
+          <div class="when">→ Always available when connected</div>
+        </div>
+        <div class="compare-card">
+          <h4>🤖 Agents</h4>
+          <p>Parallel Claude instances for concurrent work. Spawned explicitly to delegate tasks.</p>
+          <div class="when">→ Parallel execution</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Decision Rule</div>
+          <p>If the same instructions are repeated across sessions → make it a skill. If it needs live external data → use MCP. If it needs to run in parallel → use an agent. If it's a one-off task → just prompt.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Anatomy of a Skill -->
+    <div class="section">
+      <h2 class="section-title">Anatomy of a Skill</h2>
+      <p>Every skill is a directory with a <code>SKILL.md</code> file at its root. The file has two parts: YAML frontmatter and Markdown instructions.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — SKILL.md anatomy</div></div>
+        <pre><span class="token-comment">--- ← frontmatter start</span>
+<span class="token-key">name:</span> <span class="token-val">code-review</span>
+<span class="token-comment">  # becomes the /slash-command name</span>
+
+<span class="token-key">description:</span> <span class="token-val">Thorough code review covering security, performance,</span>
+             <span class="token-val">and maintainability. Use when reviewing PRs, diffs,</span>
+             <span class="token-val">or any files for quality. Activates automatically</span>
+             <span class="token-val">when user asks to "review" code.</span>
+<span class="token-comment">  # Claude uses this to decide auto-activation.
+  # Be specific — this is your relevance signal.</span>
+
+<span class="token-key">allowed-tools:</span> <span class="token-val">Read, Grep, Glob, Bash(git diff:*)</span>
+<span class="token-comment">  # Whitelist tools this skill can use</span>
+
+<span class="token-key">argument-hint:</span> <span class="token-val">[file, directory, or PR diff]</span>
+<span class="token-key">model:</span> <span class="token-val">claude-opus-4-6</span>
+<span class="token-comment">  # Optional: override model for this skill</span>
+<span class="token-comment">--- ← frontmatter end</span>
+
+<span class="token-comment"># Review Instructions — Markdown content begins here</span>
+
+When reviewing code, always check:
+1. **Security**: injection risks, auth holes, exposed secrets
+2. **Performance**: N+1 queries, unnecessary re-renders
+3. **Maintainability**: naming, DRY violations, complexity
+4. **Tests**: are new code paths covered?
+
+Provide file:line references for each finding.
+Group findings by severity: CRITICAL, HIGH, MEDIUM, LOW.</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Directory Structure -->
+    <div class="section">
+      <h2 class="section-title">Skills Directory Locations</h2>
+      <p>Like CLAUDE.md, skills can be placed at different scopes. Claude discovers all of them automatically.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Location</th><th>Scope</th><th>Git</th><th>Use For</th></tr></thead>
+          <tbody>
+            <tr><td><code>~/.claude/skills/</code></td><td>All your projects</td><td>❌ Personal</td><td>Your personal workflow skills</td></tr>
+            <tr><td><code>.claude/skills/</code></td><td>This project</td><td>✅ Commit</td><td>Team skills for this codebase</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subsection-title">Skill Folder Structure</h3>
+      <div class="skill-dir">
+        <div><span class="dir">.claude/skills/</span></div>
+        <div class="indent1"><span class="dir">code-review/</span>  <span class="comment">← skill name = /code-review command</span></div>
+        <div class="indent2"><span class="file">SKILL.md</span>  <span class="comment">← required: frontmatter + instructions</span></div>
+        <div class="indent2"><span class="dir">scripts/</span>  <span class="comment">← optional: executable scripts</span></div>
+        <div style="padding-left:60px"><span class="file">analyze.py</span>  <span class="comment">← Claude can run this via Bash</span></div>
+        <div class="indent2"><span class="dir">resources/</span>  <span class="comment">← optional: reference files, templates</span></div>
+        <div style="padding-left:60px"><span class="file">checklist.md</span>  <span class="comment">← Claude reads as needed</span></div>
+        <div class="indent1"><span class="dir">database-query/</span></div>
+        <div class="indent2"><span class="file">SKILL.md</span></div>
+        <div class="indent2"><span class="file">schema.sql</span>  <span class="comment">← context file loaded on demand</span></div>
+        <div class="indent1"><span class="dir">deploy/</span></div>
+        <div class="indent2"><span class="file">SKILL.md</span></div>
+        <div class="indent2"><span class="dir">scripts/</span></div>
+        <div style="padding-left:60px"><span class="file">pre-deploy-check.sh</span></div>
+        <div style="padding-left:60px"><span class="file">rollback.sh</span></div>
+      </div>
+    </div>
+
+    <!-- SECTION: Auto vs Manual -->
+    <div class="section">
+      <h2 class="section-title">Auto-Invocation vs Manual Invocation</h2>
+      <p>Skills have two invocation modes, controlled by the frontmatter and how Claude interprets your task.</p>
+
+      <h3 class="subsection-title">Automatic Invocation</h3>
+      <p>When Claude processes your message, it scans all skill frontmatter (~100 tokens per skill) and loads any that match. This happens transparently — you don't need to type a command.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">How auto-invocation works</div></div>
+        <pre><span class="token-comment">You have a skill with this description:</span>
+<span class="token-output">description: Systematic debugging workflow. Use when encountering
+             bugs, test failures, or unexpected behavior, before
+             proposing any fixes.</span>
+
+<span class="token-comment">You say:</span>
+<span class="token-prompt">You:</span> <span class="token-command">The login tests are failing after my last commit, help me debug</span>
+
+<span class="token-output">Claude: [automatically loads debug skill and follows its playbook]
+  ● Reading test output...
+  ● Checking git diff since last pass...
+  ● Identifying root cause...  </span></pre>
+      </div>
+
+      <h3 class="subsection-title">Manual Invocation</h3>
+      <p>You can always invoke a skill explicitly with its slash command, regardless of context:</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">session</div></div>
+        <pre>/code-review               <span class="token-comment">← invoke the code-review skill directly</span>
+/deploy staging            <span class="token-comment">← invoke with argument</span>
+/help                      <span class="token-comment">← see all available skills in autocomplete</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Scripts in Skills -->
+    <div class="section">
+      <h2 class="section-title">Bundling Scripts — The Real Power</h2>
+      <p>Skills can include executable scripts in any language. Claude reads the SKILL.md instructions, then uses Bash to run the bundled scripts as part of completing the task. This is the "progressive disclosure" architecture: scripts only load their output into context, not their source code.</p>
+
+      <h3 class="subsection-title">Example: Codebase Visualizer Skill</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/skills/codebase-viz/SKILL.md</div></div>
+        <pre><span class="token-comment">---
+name: codebase-viz
+description: Generate an interactive collapsible HTML tree visualization
+             of the codebase. Use when asked to visualize project structure,
+             generate a directory map, or explain codebase organization.
+allowed-tools: Bash, Read
+---</span>
+
+Generate an interactive codebase visualization:
+
+1. Run the bundled script to scan the project:
+   `python3 {SKILL_PATH}/scripts/scan.py --output /tmp/tree.json`
+
+2. Run the visualization generator:
+   `python3 {SKILL_PATH}/scripts/render.py /tmp/tree.json > /tmp/viz.html`
+
+3. Open the result:
+   `open /tmp/viz.html`
+
+The output is an interactive HTML page with collapsible directories,
+color-coded file types, and file size indicators.</pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">{SKILL_PATH} Variable</div>
+          <p>Use <code>{SKILL_PATH}</code> in your SKILL.md to reference the skill's directory. This ensures scripts are found regardless of where the skill is installed.</p>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Example: Database Query Skill with Schema Context</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/skills/db-query/SKILL.md</div></div>
+        <pre><span class="token-comment">---
+name: db-query
+description: Write and execute safe PostgreSQL queries. Use when the user
+             asks to query data, analyze records, or investigate database
+             state. Never modifies data without explicit confirmation.
+allowed-tools: Read, Bash(psql *), Bash(cat *)
+---</span>
+
+Database query assistance for this project.
+
+First, read the schema for context:
+`cat {SKILL_PATH}/schema.sql`
+
+Rules for safe querying:
+1. Always use LIMIT on exploratory queries
+2. Never run DELETE/UPDATE/DROP without explicit user confirmation
+3. For large datasets, use EXPLAIN ANALYZE first
+4. Prefer CTEs over nested subqueries for readability
+
+Connection: `psql $DATABASE_URL`</pre>
+      </div>
+
+      <p>The <code>schema.sql</code> file in the skill folder is loaded only when the skill activates — not on every session startup — keeping context lean.</p>
+    </div>
+
+    <!-- SECTION: Complete Skill Examples -->
+    <div class="section">
+      <h2 class="section-title">Production-Ready Skill Examples</h2>
+
+      <h3 class="subsection-title">1. Test-Driven Development Skill</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/skills/tdd/SKILL.md</div></div>
+        <pre><span class="token-comment">---
+name: tdd
+description: Test-driven development workflow. Automatically use when
+             implementing any new feature or bugfix. Forces tests-first
+             approach before any implementation code.
+allowed-tools: Read, Write, Edit, Bash(npm *), Bash(npx *)
+---</span>
+
+# TDD Workflow
+
+**CRITICAL**: Never write implementation code before tests.
+
+## Red Phase
+1. Understand the requirement fully — ask if unclear
+2. Write a failing test that captures the requirement
+3. Run the test — confirm it FAILS with the right error
+4. `npm test -- --testPathPattern=[test-file]`
+
+## Green Phase
+1. Write the MINIMUM code to make the test pass
+2. No extra features, no premature optimization
+3. Run the test — confirm it PASSES
+4. Run the full test suite — confirm nothing is broken
+
+## Refactor Phase
+1. Improve the code structure without changing behavior
+2. Remove duplication, improve naming, simplify logic
+3. Run tests after every change — all must stay green
+
+If at any point the user pushes to skip tests, remind them
+of the TDD contract and ask why they want to skip.</pre>
+      </div>
+
+      <h3 class="subsection-title">2. Git Worktree Workflow Skill</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/skills/worktree/SKILL.md</div></div>
+        <pre><span class="token-comment">---
+name: worktree
+description: Create and manage isolated git worktrees for parallel feature
+             development. Use when asked to work on multiple features
+             simultaneously or start a new isolated task.
+allowed-tools: Bash(git *)
+argument-hint: &lt;feature-name&gt;
+---</span>
+
+# Git Worktree Management
+
+## Creating a new worktree
+1. Ensure we're on main: `git checkout main && git pull`
+2. Generate a branch name: `feat/{ARGUMENTS}` (kebab-case, max 40 chars)
+3. Create worktree: `git worktree add ../wt-{ARGUMENTS} -b feat/{ARGUMENTS}`
+4. Confirm: `git worktree list`
+5. Print: "Worktree created at ../wt-{ARGUMENTS}"
+   "Run: cd ../wt-{ARGUMENTS} && claude"
+
+## Listing worktrees
+`git worktree list`
+
+## Merging & cleaning up
+1. Merge/PR the feature branch
+2. Remove worktree: `git worktree remove ../wt-{ARGUMENTS}`
+3. Delete branch: `git branch -d feat/{ARGUMENTS}`</pre>
+      </div>
+
+      <h3 class="subsection-title">3. API Conventions Reference Skill</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/skills/api-conventions/SKILL.md</div></div>
+        <pre><span class="token-comment">---
+name: api-conventions
+description: API design standards for this codebase. Auto-load when
+             writing any API routes, controllers, or HTTP handlers.
+             Reference content — enhances all API work automatically.
+---</span>
+
+# API Conventions for this Project
+
+## Response Format (always use)
+```json
+{
+  "data": { ... },
+  "meta": { "timestamp": "ISO8601", "version": "1.0" },
+  "error": null
+}
+```
+
+## Error Responses
+```json
+{
+  "data": null,
+  "error": { "code": "VALIDATION_ERROR", "message": "...", "field": "email" }
+}
+```
+
+## Route Naming
+- Collections: `GET /users` — not `/getUsers`
+- Items: `GET /users/:id`
+- Actions: `POST /users/:id/deactivate`
+- Nested: `GET /users/:id/orders` (max 2 levels deep)
+
+## Status Codes
+- 200: Success with data
+- 201: Created (include Location header)
+- 204: Success, no body (DELETE)
+- 400: Validation error
+- 401: Not authenticated
+- 403: Not authorized
+- 404: Not found
+- 422: Business logic error
+- 500: Server error (never expose internals)</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Bundled Skills -->
+    <div class="section">
+      <h2 class="section-title">Bundled & Community Skills</h2>
+      <p>Beyond skills you create, Claude Code ships with bundled skills and there's a growing ecosystem of community skills.</p>
+
+      <h3 class="subsection-title">Anthropic Bundled Skills</h3>
+      <p>These ship with Claude Code and are available in every session. They're prompt-based (not fixed logic) and cover common development needs:</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Excel / XLSX</div>
+          <div class="card-desc">Create complex Excel spreadsheets with formulas, charts, and formatting.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📝</div>
+          <div class="card-title">DOCX</div>
+          <div class="card-desc">Generate polished Word documents with proper headings, tables, and styles.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <div class="card-title">PPTX</div>
+          <div class="card-desc">Build PowerPoint presentations from templates with layouts and charts.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📄</div>
+          <div class="card-title">PDF</div>
+          <div class="card-desc">Create, merge, split, and manipulate PDF files.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <div class="card-title">Frontend Design</div>
+          <div class="card-desc">Create distinctive, production-grade UI components and pages.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔧</div>
+          <div class="card-title">Skill Creator</div>
+          <div class="card-desc">Meta-skill that helps you build, test, and optimize your own skills.</div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Community Skills to Know</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>What It Does</th></tr></thead>
+          <tbody>
+            <tr><td><code>tdd</code></td><td>Enforces test-first development on every feature/bugfix</td></tr>
+            <tr><td><code>systematic-debugging</code></td><td>Structured root-cause analysis before any fix attempt</td></tr>
+            <tr><td><code>owasp-security</code></td><td>OWASP Top 10 security checks with language-specific patterns</td></tr>
+            <tr><td><code>frontend-design</code></td><td>Produces distinctive, non-generic UI (avoids "AI-slop" aesthetic)</td></tr>
+            <tr><td><code>using-git-worktrees</code></td><td>Smart worktree creation with safety checks</td></tr>
+            <tr><td><code>browser-use</code></td><td>Live browser automation for e2e testing and web interaction</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subsection-title">Installing Community Skills</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Installing skills from GitHub</div></div>
+        <pre><span class="token-comment"># Via plugin marketplace (if available)</span>
+<span class="token-command">/plugin marketplace add obra/superpowers</span>
+
+<span class="token-comment"># Or manually: clone and copy the skill folder</span>
+<span class="token-command">git clone https://github.com/some-user/tdd-skill /tmp/tdd-skill</span>
+<span class="token-command">cp -r /tmp/tdd-skill/tdd ~/.claude/skills/</span>
+
+<span class="token-comment"># Verify Claude finds it</span>
+<span class="token-command">claude</span>
+<span class="token-prompt">You:</span> /help
+<span class="token-output">  ...tdd - Test-driven development workflow...</span></pre>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trust Community Skills</div>
+          <p>Skills can execute arbitrary code via bundled scripts. Only install skills from sources you trust. Review the SKILL.md and any scripts before installing, especially community-created ones.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Using the Skill Creator -->
+    <div class="section">
+      <h2 class="section-title">Building Skills with the Skill Creator</h2>
+      <p>Anthropic ships a built-in <strong style="color:var(--text)">Skill Creator</strong> skill — a meta-skill that helps you design, write, and test your own skills. It's the recommended way to create high-quality skills.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">session — Using Skill Creator</div></div>
+        <pre><span class="token-comment"># Claude auto-activates Skill Creator when you say you want to create a skill</span>
+<span class="token-prompt">You:</span> I want to create a skill for our deployment workflow. It should
+     run pre-deploy checks, push to staging, run smoke tests, and
+     notify Slack on completion.
+
+<span class="token-output">Claude: [Skill Creator activates automatically]
+  I'll help you create a deploy skill. A few questions:
+  
+  1. What commands does your pre-deploy check run?
+  2. How do you push to staging? (docker push? kubectl? Heroku?)
+  3. What smoke tests do you have? (URL checks? API calls?)
+  4. What's your Slack webhook URL env var name?</span>
+
+<span class="token-prompt">You:</span> [answers questions]
+
+<span class="token-output">Claude: Creating .claude/skills/deploy/
+  ● Writing SKILL.md
+  ● Writing scripts/pre-check.sh
+  ● Writing scripts/smoke-test.sh
+  
+  Skill created! Test it with: /deploy staging</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Skills vs Slash Commands Decision Guide -->
+    <div class="section">
+      <h2 class="section-title">Skills vs Commands — When to Use Each</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Use Skills When...</th><th>Use Commands When...</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>You want <strong>auto-activation</strong> — Claude should just know to use it</td>
+              <td>You always want to explicitly invoke it</td>
+            </tr>
+            <tr>
+              <td>The skill needs <strong>bundled scripts</strong> or reference files</td>
+              <td>A single Markdown prompt file is sufficient</td>
+            </tr>
+            <tr>
+              <td>You're encoding <strong>expert domain knowledge</strong> (security, testing, API design)</td>
+              <td>You need a simple workflow shortcut (commit, PR description)</td>
+            </tr>
+            <tr>
+              <td>The skill should work <strong>across projects</strong> (personal skills folder)</td>
+              <td>The command is project-specific</td>
+            </tr>
+            <tr>
+              <td>You want <strong>team-wide ambient guidance</strong> (API conventions loaded automatically)</td>
+              <td>You want a quick callable action</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">In Practice: Use Both</div>
+          <p>The best setups combine both: skills for ambient expertise that auto-loads (TDD approach, API conventions, security awareness) and commands for explicit workflow shortcuts (commit, deploy, review). They're complementary, not competing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Performance & Token Usage -->
+    <div class="section">
+      <h2 class="section-title">Performance & Token Usage</h2>
+      <p>Skills are designed to be efficient. Claude Code uses a <strong style="color:var(--text)">progressive disclosure</strong> model:</p>
+
+      <ul class="feature-list">
+        <li>At session start, only skill <strong>frontmatter</strong> is scanned (~100 tokens per skill) to determine relevance</li>
+        <li>When a skill activates, only its <code>SKILL.md</code> content loads into context (~1–5k tokens typically)</li>
+        <li>Bundled resource files (schema.sql, checklist.md) only load <strong>if the skill's instructions reference them</strong></li>
+        <li>Script source code <strong>never</strong> enters the context — only the script's output does</li>
+        <li>Result: you can have dozens of skills installed with minimal overhead</li>
+      </ul>
+
+      <div class="highlight-box">
+        <h4>Token Budget Estimate</h4>
+        <p style="font-size:14px;color:var(--text2);margin-top:8px">10 skills installed × ~100 tokens each = ~1,000 tokens for discovery. When 1-2 skills activate per task, add ~3–8k tokens. Total overhead for a well-stocked skills setup: typically under 2% of the context window.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="module7.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 07</div><div class="label">Hooks, Subagents & Advanced</div></div>
+    </a>
+    <a href="module9.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Module 09</div><div class="label">GitHub Integration</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module8.html');</script>
+</body>
+</html>

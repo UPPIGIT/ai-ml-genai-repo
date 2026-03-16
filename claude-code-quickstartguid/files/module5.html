@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 5 — Slash Commands & Custom Workflows</title>
+<link rel="stylesheet" href="course.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 05</div>
+    <h1 class="page-title">Slash Commands & Custom Workflows</h1>
+    <p class="page-desc">Build reusable slash commands to automate your entire development lifecycle — from feature branches to PRs, security reviews to dependency audits.</p>
+    <div class="page-meta">
+      <span>📖 ~25 min</span>
+      <span>⚡ Automation focus</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: What are Slash Commands -->
+    <div class="section">
+      <h2 class="section-title">What are Custom Slash Commands?</h2>
+      <p>Custom slash commands are Markdown files that define reusable prompts. When you type <code>/command-name</code> in a session, Claude executes the full instructions in that file. This turns repetitive, complex prompts into single-word shortcuts.</p>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">One File = One Command</div>
+          <p>Create a file <code>.claude/commands/review.md</code> → use it with <code>/review</code>. The filename (without extension) becomes the slash command name.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Location</th><th>Scope</th><th>Git</th></tr></thead>
+          <tbody>
+            <tr><td><code>.claude/commands/*.md</code></td><td>Current project only</td><td>✅ Commit — shared with team</td></tr>
+            <tr><td><code>~/.claude/commands/*.md</code></td><td>All your projects</td><td>❌ Personal only</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION: Creating Commands -->
+    <div class="section">
+      <h2 class="section-title">Creating Your First Commands</h2>
+
+      <h3 class="subsection-title">Basic Command Structure</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/review.md</div></div>
+        <pre><span class="token-comment">---
+description: Perform a thorough code review of the current git diff
+allowed-tools: Read, Grep, Glob, Bash(git diff:*)
+argument-hint: [focus area]
+---</span>
+
+# Code Review
+
+Review the current git diff for:
+
+1. **Correctness** — Logic errors, edge cases, null checks
+2. **Security** — Injection risks, exposed secrets, auth bypasses
+3. **Performance** — N+1 queries, unnecessary re-renders, large bundles
+4. **Code Quality** — DRY violations, naming, complexity
+5. **Tests** — Are new code paths covered?
+
+If $ARGUMENTS is provided, focus especially on: $ARGUMENTS
+
+Provide specific line-level feedback and suggest improvements.</pre>
+      </div>
+
+      <p>Usage in session:</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal</div></div>
+        <pre><span class="token-prompt">You:</span> /review
+<span class="token-comment"># Or with a focus argument:</span>
+<span class="token-prompt">You:</span> /review security vulnerabilities in the payment flow</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Frontmatter Options -->
+    <div class="section">
+      <h2 class="section-title">Command Frontmatter Reference</h2>
+      <p>The YAML frontmatter block at the top of a command file controls its behavior.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — Full frontmatter options</div></div>
+        <pre><span class="token-comment">---
+description: Short description (shown in /help autocomplete)
+allowed-tools: Read, Write, Bash(git *), Grep, Glob
+argument-hint: [optional: what arguments this command takes]
+model: claude-haiku-4-5-20251001   # Override model for this command
+---</span></pre>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Purpose</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>description</code></td><td>Shown in /help autocomplete</td><td><code>"Security-focused code review"</code></td></tr>
+            <tr><td><code>allowed-tools</code></td><td>Whitelist tools this command can use</td><td><code>Read, Grep, Bash(git diff:*)</code></td></tr>
+            <tr><td><code>argument-hint</code></td><td>Autocomplete hint for arguments</td><td><code>[file-or-directory]</code></td></tr>
+            <tr><td><code>model</code></td><td>Override model for this command</td><td><code>claude-haiku-4-5-20251001</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Use Haiku for Cheap Repetitive Commands</div>
+          <p>For high-frequency commands like generating commit messages or formatting code, set <code>model: claude-haiku-4-5-20251001</code> to reduce costs dramatically while still getting good results for simple tasks.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: $ARGUMENTS Variable -->
+    <div class="section">
+      <h2 class="section-title">Dynamic Arguments with $ARGUMENTS</h2>
+      <p>The <code>$ARGUMENTS</code> variable captures everything typed after the command name. This makes commands flexible and reusable.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/fix-issue.md</div></div>
+        <pre><span class="token-comment">---
+description: Fix a GitHub issue by number
+allowed-tools: Read, Write, Edit, Bash(git *), Grep, Glob
+argument-hint: &lt;issue-number&gt;
+---</span>
+
+Fix GitHub issue #$ARGUMENTS.
+
+Steps:
+1. Read the issue description from .github/ISSUES/$ARGUMENTS.md
+   (or I'll describe it if you tell me)
+2. Find the relevant code using Grep and Glob
+3. Implement the fix following project conventions in CLAUDE.md
+4. Write a test that would catch this issue in future
+5. Create a descriptive commit message referencing #$ARGUMENTS</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Usage</div></div>
+        <pre><span class="token-prompt">You:</span> /fix-issue 142
+<span class="token-comment"># $ARGUMENTS becomes "142"</span>
+
+<span class="token-prompt">You:</span> /fix-issue 142 focus on the mobile layout
+<span class="token-comment"># $ARGUMENTS becomes "142 focus on the mobile layout"</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Shell Commands in Commands -->
+    <div class="section">
+      <h2 class="section-title">Shell Commands Inside Command Files</h2>
+      <p>You can embed shell commands in your command files using backtick syntax. Claude will run these to gather context before executing the rest of the prompt.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/pr-description.md</div></div>
+        <pre><span class="token-comment">---
+description: Generate a PR description from the current diff
+allowed-tools: Bash(git *), Read
+model: claude-haiku-4-5-20251001
+---</span>
+
+Write a GitHub pull request description for these changes:
+
+&lt;git_diff&gt;
+!`git diff main`
+&lt;/git_diff&gt;
+
+&lt;changed_files&gt;
+!`git diff --name-only main`
+&lt;/changed_files&gt;
+
+The PR description should include:
+- **Summary**: 1-2 sentences of what changed and why
+- **Changes**: Bulleted list of specific changes
+- **Testing**: How to verify this works
+- **Screenshots**: Placeholder section if UI was changed
+
+Follow Conventional Commits format for the PR title.</pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">!`command` Syntax</div>
+          <p>The <code>!`shell command`</code> syntax inside a command file runs the shell command and injects its output into the prompt. This is how you pass dynamic runtime data (like git diffs) into your commands.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Complete Library of Commands -->
+    <div class="section">
+      <h2 class="section-title">Essential Command Library</h2>
+      <p>Here are production-ready commands for common developer workflows. Save these to <code>.claude/commands/</code> and adapt as needed.</p>
+
+      <h3 class="subsection-title">1. Conventional Commit</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/commit.md</div></div>
+        <pre><span class="token-comment">---
+description: Stage all changes and create a conventional commit
+allowed-tools: Bash(git add:*), Bash(git commit:*), Bash(git diff:*)
+model: claude-haiku-4-5-20251001
+argument-hint: [optional custom message]
+---</span>
+
+&lt;diff&gt;
+!`git diff --cached && git diff`
+&lt;/diff&gt;
+
+Stage all changes and create a git commit with a Conventional Commits message.
+
+Format: `type(scope): description`
+Types: feat, fix, docs, style, refactor, test, chore, perf
+
+If $ARGUMENTS is provided, use it as the commit message directly.
+Otherwise, infer the best message from the diff.
+
+Keep the description under 72 characters.</pre>
+      </div>
+
+      <h3 class="subsection-title">2. Security Audit</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/security.md</div></div>
+        <pre><span class="token-comment">---
+description: Run a security audit on the specified path
+allowed-tools: Read, Grep, Glob
+argument-hint: [file-or-directory]
+---</span>
+
+Perform a security audit on: $ARGUMENTS (or the entire src/ if not specified)
+
+Check for:
+1. **Injection** — SQL, NoSQL, command, XSS injection risks
+2. **Authentication** — Broken auth, missing checks, weak tokens
+3. **Authorization** — Missing access controls, privilege escalation
+4. **Secrets** — Hardcoded credentials, API keys, tokens
+5. **Dependencies** — Known vulnerable packages (check package.json)
+6. **Input validation** — Unvalidated user input, type coercion risks
+7. **CORS & Headers** — Misconfigured security headers
+
+Report findings by severity: CRITICAL, HIGH, MEDIUM, LOW
+Include file path and line number for each finding.</pre>
+      </div>
+
+      <h3 class="subsection-title">3. Feature Branch Workflow</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/branch.md</div></div>
+        <pre><span class="token-comment">---
+description: Create a feature branch from main with standard setup
+allowed-tools: Bash(git *)
+argument-hint: &lt;feature-description&gt;
+model: claude-haiku-4-5-20251001
+---</span>
+
+Create a new feature branch for: $ARGUMENTS
+
+Steps:
+1. `git checkout main && git pull origin main`
+2. Create a branch name from the description:
+   - prefix with `feat/`
+   - use lowercase kebab-case
+   - max 40 chars
+3. `git checkout -b [branch-name]`
+4. Confirm the branch was created and output the branch name</pre>
+      </div>
+
+      <h3 class="subsection-title">4. Dependency Audit</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/deps.md</div></div>
+        <pre><span class="token-comment">---
+description: Audit npm dependencies for security issues and outdated packages
+allowed-tools: Read, Bash(npm audit:*), Bash(npm outdated:*)
+---</span>
+
+Run a dependency audit:
+
+1. Run `npm audit` and parse the output
+2. Run `npm outdated` and parse the output  
+3. Read package.json to understand which packages are used for what
+
+Provide a prioritized report:
+- **Critical/High security issues**: Must fix immediately
+- **Outdated with breaking changes**: Review before updating
+- **Outdated patch/minor**: Safe to update
+- **Unused dependencies**: Candidates for removal
+
+For each critical issue, suggest the specific fix command.</pre>
+      </div>
+
+      <h3 class="subsection-title">5. Test Coverage Report</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/coverage.md</div></div>
+        <pre><span class="token-comment">---
+description: Run tests with coverage and identify under-tested files
+allowed-tools: Bash(npm *), Read, Glob
+argument-hint: [threshold: default 80]
+---</span>
+
+Run the test suite with coverage:
+
+1. Run `npm run test:coverage` (or `npm test -- --coverage`)
+2. Parse the coverage results
+3. Identify all files below $ARGUMENTS% coverage (default: 80%)
+4. For the 3 most under-tested files, read them and suggest
+   specific test cases that would improve coverage
+
+Focus on testing business logic and edge cases, not just line coverage.</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Sharing Commands -->
+    <div class="section">
+      <h2 class="section-title">Sharing Commands With Your Team</h2>
+      <p>Project-level commands in <code>.claude/commands/</code> are committed to git and available to everyone on the team immediately. This is one of the highest-leverage things you can do for team productivity.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Commit your commands</div></div>
+        <pre><span class="token-command">git add .claude/commands/
+git commit -m "chore: add Claude Code commands for review, commit, security"
+
+# Now all teammates can use /review, /commit, /security</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Start with These Commands</div>
+          <p>The highest-ROI commands for any team: <code>/commit</code> (consistent commit messages), <code>/review</code> (pre-PR self-review), <code>/pr</code> (PR description generation). These alone save significant daily effort.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="module4.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 04</div><div class="label">CLAUDE.md & Project Memory</div></div>
+    </a>
+    <a href="module6.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Module 06</div><div class="label">MCP Integration</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module5.html');</script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — Cheat Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:    #06080f;
+  --bg2:   #090c17;
+  --cell:  #0b0e1c;
+  --cell2: #0e1222;
+  --line:  #141a2e;
+  --line2: #1c2540;
+  --cyan:  #00e5ff;
+  --cyan2: #00b8cc;
+  --amber: #ffb347;
+  --amber2:#e89020;
+  --green: #39ff8e;
+  --red:   #ff4d6d;
+  --violet:#c77dff;
+  --text:  #ccd6f6;
+  --muted: #4a5680;
+  --muted2:#2e3652;
+  --code:  #040609;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  overflow-x:hidden;
+  /* blueprint grid */
+  background-image:
+    linear-gradient(rgba(0,229,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,.025) 1px, transparent 1px);
+  background-size:48px 48px;
+  cursor:none;
+}
+
+/* ── custom cursor ── */
+.cursor{
+  width:20px;height:20px;
+  border:1.5px solid var(--cyan);
+  position:fixed;pointer-events:none;z-index:9999;
+  transition:transform .12s ease,border-color .2s;
+  transform:translate(-50%,-50%);
+}
+.cursor::before,.cursor::after{
+  content:'';position:absolute;background:var(--cyan);
+}
+.cursor::before{width:6px;height:1px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.cursor::after{width:1px;height:6px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.cursor.hover{border-color:var(--amber);transform:translate(-50%,-50%) scale(1.8)}
+.cursor.hover::before,.cursor.hover::after{background:var(--amber)}
+
+/* ── corner bracket mixin ── */
+.bracket{
+  position:relative;
+}
+.bracket::before,.bracket::after{
+  content:'';position:absolute;
+  width:10px;height:10px;
+  border-color:var(--cyan);border-style:solid;
+  opacity:.5;
+}
+.bracket::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
+.bracket::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+
+/* ══════════ HEADER ══════════ */
+header{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  padding:28px 36px 22px;
+  border-bottom:1px solid var(--line2);
+  position:relative;
+  overflow:hidden;
+  gap:24px;
+}
+header::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,229,255,.04) 0%,transparent 50%,rgba(255,179,71,.03) 100%);
+  pointer-events:none;
+}
+.hd-left{
+  display:flex;flex-direction:column;gap:4px;
+}
+.hd-edition{
+  font-size:8px;letter-spacing:5px;color:var(--cyan);text-transform:uppercase;
+  animation:fadeIn .5s .1s both;
+}
+.hd-sub{
+  font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;
+  animation:fadeIn .5s .2s both;
+}
+.hd-center{
+  text-align:center;
+  animation:fadeIn .5s .15s both;
+}
+.hd-title{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:900;
+  font-size:clamp(42px,7vw,80px);line-height:.88;
+  letter-spacing:-2px;
+}
+.hd-title .c{color:var(--cyan);text-shadow:0 0 30px rgba(0,229,255,.5)}
+.hd-title .sep{color:var(--muted);font-weight:400;font-size:.5em}
+.hd-title .cs{color:var(--amber);text-shadow:0 0 30px rgba(255,179,71,.4)}
+.hd-right{
+  text-align:right;
+  display:flex;flex-direction:column;gap:4px;
+  animation:fadeIn .5s .2s both;
+}
+.hd-stat{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.hd-stat-n{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:900;
+  font-size:28px;color:var(--amber);line-height:1;
+}
+.hd-stat-l{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.hd-divider{width:1px;height:20px;background:var(--line2);margin:0 4px}
+
+/* ══════════ GRID BODY ══════════ */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:auto;
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+}
+
+/* ── cell base ── */
+.cell{
+  background:var(--cell);
+  padding:18px 20px;
+  position:relative;
+  overflow:hidden;
+  opacity:0;
+  animation:cellIn .4s ease both;
+}
+.cell:hover{background:var(--cell2);z-index:10}
+
+/* span helpers */
+.span2{grid-column:span 2}
+.span3{grid-column:span 3}
+.span4{grid-column:span 4}
+.rowspan2{grid-row:span 2}
+
+/* cell header */
+.cell-tag{
+  font-size:7.5px;letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.cell-tag::before{content:'';width:18px;height:1px;flex-shrink:0}
+.ct-cyan .cell-tag,.ct-cyan .cell-tag::before{color:var(--cyan);background:var(--cyan)}
+.ct-amber .cell-tag,.ct-amber .cell-tag::before{color:var(--amber);background:var(--amber)}
+.ct-green .cell-tag,.ct-green .cell-tag::before{color:var(--green);background:var(--green)}
+.ct-violet .cell-tag,.ct-violet .cell-tag::before{color:var(--violet);background:var(--violet)}
+.ct-red .cell-tag,.ct-red .cell-tag::before{color:var(--red);background:var(--red)}
+
+.cell-title{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:700;
+  font-size:clamp(14px,2vw,20px);letter-spacing:-.3px;line-height:1;
+  margin-bottom:14px;
+}
+
+/* glow line accent */
+.cell::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  opacity:0;transition:opacity .3s;
+}
+.ct-cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.ct-amber::before{background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.ct-green::before{background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.ct-violet::before{background:linear-gradient(90deg,transparent,var(--violet),transparent)}
+.ct-red::before{background:linear-gradient(90deg,transparent,var(--red),transparent)}
+.cell:hover::before{opacity:1}
+
+/* ── command row ── */
+.cmd-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:6px 0;border-bottom:1px solid var(--line);
+  transition:background .15s;margin:0 -20px;padding-left:20px;padding-right:20px;
+}
+.cmd-row:last-child{border-bottom:none}
+.cmd-row:hover{background:rgba(0,229,255,.04)}
+.cmd{
+  font-size:12px;color:var(--cyan);font-weight:700;
+  white-space:nowrap;flex-shrink:0;min-width:0;
+}
+.cmd-amber{color:var(--amber)}
+.cmd-green{color:var(--green)}
+.cmd-violet{color:var(--violet)}
+.cmd-red{color:var(--red)}
+.cmd-desc{font-size:10.5px;color:var(--muted);line-height:1.5;font-weight:300}
+.cmd-desc strong{color:var(--text);font-weight:400}
+
+/* ── kbd chip ── */
+.kbd{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  background:var(--code);border:1px solid var(--line2);
+  padding:3px 8px;border-radius:3px;color:var(--amber);
+  white-space:nowrap;font-weight:700;
+  box-shadow:0 2px 0 var(--muted2);
+}
+
+/* ── mode cards ── */
+.mode-cards{display:flex;flex-direction:column;gap:6px}
+.mode-card{
+  padding:10px 14px;border:1px solid var(--line2);border-radius:2px;
+  display:flex;align-items:center;gap:12px;
+  transition:all .2s;cursor:pointer;
+}
+.mode-card:hover{border-color:var(--cyan);background:rgba(0,229,255,.05)}
+.mode-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;flex-shrink:0;font-weight:700;border:1px solid;
+}
+.md-normal .mode-dot{border-color:var(--muted);color:var(--muted)}
+.md-auto .mode-dot{border-color:var(--green);color:var(--green);box-shadow:0 0 8px rgba(57,255,142,.3)}
+.md-plan .mode-dot{border-color:var(--amber);color:var(--amber);box-shadow:0 0 8px rgba(255,179,71,.3)}
+.mode-info{}
+.mode-name{font-size:11px;font-weight:700;margin-bottom:2px}
+.md-normal .mode-name{color:var(--text)}
+.md-auto .mode-name{color:var(--green)}
+.md-plan .mode-name{color:var(--amber)}
+.mode-key{font-size:9px;color:var(--muted)}
+
+/* ── file tree ── */
+.ftree{font-size:11px;line-height:2;padding:4px 0}
+.ftd{color:var(--amber)}.ftf{color:var(--text)}.fts{color:var(--cyan)}.ftc{color:var(--muted);font-style:italic}
+
+/* ── hierarchy rows ── */
+.hier{display:flex;flex-direction:column;gap:0}
+.hier-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 10px;margin:2px 0;border-radius:2px;
+  background:var(--code);border:1px solid var(--line);
+  transition:all .2s;cursor:default;
+}
+.hier-row:hover{border-color:var(--cyan);background:rgba(0,229,255,.04)}
+.hier-path{font-size:10.5px;color:var(--cyan)}
+.hier-scope{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;
+  background:var(--line2);padding:2px 7px;border-radius:2px}
+
+/* ── perm grid ── */
+.perm-split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.perm-box{background:var(--code);border:1px solid var(--line);border-radius:2px;padding:10px}
+.perm-hd{font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.perm-allow .perm-hd{color:var(--green)}.perm-deny .perm-hd{color:var(--red)}
+.perm-item{font-size:10px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.perm-item:last-child{border-bottom:none}
+.perm-allow .perm-item{color:var(--green)}.perm-deny .perm-item{color:var(--red)}
+
+/* ── hook flow ── */
+.hook-flow{display:flex;flex-direction:column;gap:6px}
+.hook-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border:1px solid var(--line);border-radius:2px;
+  background:var(--code);transition:all .2s;
+}
+.hook-row:hover{background:rgba(0,229,255,.04)}
+.hook-type{
+  font-size:8.5px;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 8px;border-radius:2px;flex-shrink:0;font-weight:700;
+}
+.ht-pre{background:rgba(255,77,109,.12);color:var(--red);border:1px solid rgba(255,77,109,.25)}
+.ht-post{background:rgba(57,255,142,.1);color:var(--green);border:1px solid rgba(57,255,142,.2)}
+.ht-notif{background:rgba(199,125,255,.1);color:var(--violet);border:1px solid rgba(199,125,255,.2)}
+.hook-name{font-size:11px;color:var(--text);flex:1;font-weight:400}
+.hook-eg{font-size:9.5px;color:var(--muted);text-align:right}
+
+/* ── prompt patterns ── */
+.pp-box{
+  background:var(--code);border:1px solid var(--line);border-radius:2px;
+  padding:10px 12px;margin:4px 0;transition:border-color .2s;
+}
+.pp-box:hover{border-color:var(--cyan)}
+.pp-label{font-size:7.5px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
+.pp-good .pp-label{color:var(--green)}.pp-bad .pp-label{color:var(--red)}
+.pp-text{font-size:10.5px;color:var(--text);line-height:1.6;font-weight:300}
+.pp-text em{color:var(--cyan);font-style:normal}
+.pp-text s{color:var(--muted);text-decoration:line-through}
+
+/* ── workflow ── */
+.wf{display:flex;flex-direction:column;gap:0}
+.wf-step{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:8px 0;border-bottom:1px solid var(--line);
+  transition:background .15s;margin:0 -20px;padding-left:20px;padding-right:20px;
+}
+.wf-step:last-child{border-bottom:none}
+.wf-step:hover{background:rgba(0,229,255,.03)}
+.wf-n{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:28px;
+  color:var(--line2);min-width:28px;line-height:1;margin-top:-2px;
+  transition:color .2s;
+}
+.wf-step:hover .wf-n{color:var(--cyan)}
+.wf-info{}
+.wf-t{font-size:11px;color:var(--text);margin-bottom:2px;font-weight:400}
+.wf-d{font-size:10px;color:var(--muted);line-height:1.5;font-style:italic}
+
+/* ── big rule ── */
+.rule-list{display:flex;flex-direction:column;gap:5px}
+.rule-item{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:10.5px;color:var(--muted);
+  padding:5px 8px;border-radius:2px;
+  transition:all .2s;cursor:default;
+}
+.rule-item:hover{background:rgba(0,229,255,.04);color:var(--text)}
+.rule-item::before{
+  content:'→';color:var(--cyan);flex-shrink:0;
+  font-size:10px;margin-top:0px;
+}
+.rule-item strong{color:var(--text)}
+
+/* ── code snippet inline ── */
+.snip{
+  font-size:10.5px;line-height:1.85;
+  padding:10px 14px;background:var(--code);
+  border:1px solid var(--line);border-radius:2px;margin:6px 0;
+}
+.k{color:#c792ea}.s{color:#c3e88d}.cm{color:var(--muted);font-style:italic}
+.fn{color:#82aaff}.n{color:#f78c6c}.p{color:var(--amber)}
+.op{color:var(--cyan)}.bi{color:#89ddff}.ok{color:var(--green)}
+.er{color:var(--red)}
+
+/* ── title banner ── */
+.banner{
+  background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(255,179,71,.06));
+  border:1px solid var(--line2);border-radius:2px;
+  padding:14px 18px;text-align:center;
+  font-family:'Big Shoulders Display',sans-serif;font-weight:900;
+  font-size:clamp(18px,2.5vw,28px);letter-spacing:-0.5px;
+  text-shadow:0 0 20px rgba(0,229,255,.3);
+  color:var(--cyan);margin-bottom:12px;
+}
+
+/* ── @ref syntax ── */
+.at-example{
+  display:flex;flex-direction:column;gap:5px;
+}
+.at-row{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 10px;background:var(--code);border:1px solid var(--line);
+  border-radius:2px;transition:border-color .2s;
+}
+.at-row:hover{border-color:var(--amber)}
+.at-sym{font-size:12px;color:var(--amber);font-weight:700;flex-shrink:0}
+.at-desc{font-size:10px;color:var(--muted)}
+
+/* ── settings preview ── */
+.settings-snip{
+  font-size:10px;line-height:1.9;
+  padding:12px;background:var(--code);border:1px solid var(--line);
+  border-radius:2px;overflow-x:auto;white-space:pre;
+}
+
+/* ── skill anatomy ── */
+.skill-anatomy{display:flex;flex-direction:column;gap:5px}
+.sa-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 11px;border:1px solid var(--line);border-radius:2px;
+  background:var(--code);transition:all .2s;
+}
+.sa-row:hover{border-color:var(--violet)}
+.sa-field{font-size:10px;color:var(--violet);font-weight:700;min-width:80px;flex-shrink:0}
+.sa-val{font-size:10px;color:var(--muted);flex:1;line-height:1.4}
+.sa-req{font-size:8px;color:var(--amber);letter-spacing:1px;text-transform:uppercase;background:rgba(255,179,71,.1);padding:2px 6px;border-radius:2px;flex-shrink:0}
+
+/* ── big number stat ── */
+.stat-row{display:flex;gap:0;border:1px solid var(--line2);border-radius:2px;overflow:hidden}
+.stat-box{
+  flex:1;padding:12px 10px;text-align:center;border-right:1px solid var(--line2);
+  transition:background .2s;
+}
+.stat-box:last-child{border-right:none}
+.stat-box:hover{background:rgba(0,229,255,.05)}
+.stat-n{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:32px;
+  line-height:1;margin-bottom:3px;
+}
+.stat-l{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+
+/* ── golden rules ── */
+.gr-list{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.gr{
+  display:flex;align-items:flex-start;gap:7px;
+  padding:7px 9px;background:var(--code);border:1px solid var(--line);
+  border-radius:2px;font-size:10.5px;color:var(--muted);
+  transition:all .2s;
+}
+.gr:hover{border-color:var(--amber);color:var(--text);background:rgba(255,179,71,.04)}
+.gr-num{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:20px;
+  color:var(--line2);line-height:1;flex-shrink:0;min-width:18px;
+  transition:color .2s;
+}
+.gr:hover .gr-num{color:var(--amber)}
+.gr-text strong{color:var(--text)}
+
+/* ── footer ── */
+.footer-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 36px;border-top:1px solid var(--line2);
+  background:rgba(0,229,255,.02);
+}
+.footer-bar .fl{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+.footer-bar .fc{font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:18px;color:var(--cyan);letter-spacing:1px}
+.footer-bar .fr{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+
+/* ── animations ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cellIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+
+/* stagger cells */
+.cell:nth-child(1){animation-delay:.05s}.cell:nth-child(2){animation-delay:.08s}
+.cell:nth-child(3){animation-delay:.11s}.cell:nth-child(4){animation-delay:.14s}
+.cell:nth-child(5){animation-delay:.17s}.cell:nth-child(6){animation-delay:.20s}
+.cell:nth-child(7){animation-delay:.23s}.cell:nth-child(8){animation-delay:.26s}
+.cell:nth-child(9){animation-delay:.29s}.cell:nth-child(10){animation-delay:.32s}
+.cell:nth-child(11){animation-delay:.35s}.cell:nth-child(12){animation-delay:.38s}
+.cell:nth-child(13){animation-delay:.41s}.cell:nth-child(14){animation-delay:.44s}
+.cell:nth-child(15){animation-delay:.47s}.cell:nth-child(16){animation-delay:.50s}
+.cell:nth-child(17){animation-delay:.53s}.cell:nth-child(18){animation-delay:.56s}
+.cell:nth-child(19){animation-delay:.59s}.cell:nth-child(20){animation-delay:.62s}
+.cell:nth-child(21){animation-delay:.65s}.cell:nth-child(22){animation-delay:.68s}
+
+/* responsive */
+@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.span4{grid-column:span 3}.span3{grid-column:span 3}.span2{grid-column:span 2}}
+@media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr)}.span4,.span3,.span2{grid-column:span 2}.gr-list{grid-template-columns:1fr}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.span4,.span3,.span2{grid-column:span 1}.perm-split{grid-template-columns:1fr}.stat-row{flex-wrap:wrap}.header{grid-template-columns:1fr}.hd-right{display:none}}
+
+/* ── copy btn ── */
+.cpbtn{
+  position:absolute;top:14px;right:14px;
+  background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.15);
+  color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:8px;
+  letter-spacing:1px;padding:3px 9px;border-radius:2px;cursor:pointer;
+  text-transform:uppercase;transition:all .2s;
+}
+.cpbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.cpbtn.y{color:var(--green);border-color:rgba(57,255,142,.3)}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="hd-left">
+    <div class="hd-edition">2026 Edition · Complete Reference</div>
+    <div class="hd-sub">Agentic AI Development · Anthropic</div>
+  </div>
+  <div class="hd-center">
+    <div class="hd-title">
+      <span class="c">CLAUDE</span> <span class="sep">×</span> <span class="cs">CODE</span>
+    </div>
+    <div style="font-size:9px;letter-spacing:6px;color:var(--muted);text-transform:uppercase;margin-top:6px">CHEAT SHEET</div>
+  </div>
+  <div class="hd-right">
+    <div class="hd-stat"><div class="hd-stat-n">3</div><div class="hd-divider"></div><div class="hd-stat-l">Modes</div></div>
+    <div class="hd-stat"><div class="hd-stat-n">4</div><div class="hd-divider"></div><div class="hd-stat-l">Hook Types</div></div>
+    <div class="hd-stat"><div class="hd-stat-n">∞</div><div class="hd-divider"></div><div class="hd-stat-l">Velocity</div></div>
+  </div>
+</header>
+
+<!-- ═══════════════════ GRID ═══════════════════ -->
+<div class="grid">
+
+  <!-- ── SLASH COMMANDS ── -->
+  <div class="cell ct-cyan bracket">
+    <div class="cell-tag">Slash Commands</div>
+    <div class="cell-title">/ Commands</div>
+    <div class="cmd-row"><span class="cmd">/init</span><span class="cmd-desc">Scan codebase & generate <strong>CLAUDE.md</strong>. Run this first in every new project.</span></div>
+    <div class="cmd-row"><span class="cmd">/compact</span><span class="cmd-desc">Compress current session context. Run every ~30 min on long sessions.</span></div>
+    <div class="cmd-row"><span class="cmd">/clear</span><span class="cmd-desc">Reset conversation. Fresh context, CLAUDE.md reloads automatically.</span></div>
+    <div class="cmd-row"><span class="cmd">/help</span><span class="cmd-desc">Show available commands and current configuration overview.</span></div>
+    <div class="cmd-row"><span class="cmd">/status</span><span class="cmd-desc">Show active session info, loaded files, and token usage.</span></div>
+  </div>
+
+  <!-- ── KEYBOARD SHORTCUTS ── -->
+  <div class="cell ct-amber bracket">
+    <div class="cell-tag">Keyboard</div>
+    <div class="cell-title">Shortcuts</div>
+    <div class="cmd-row"><span class="kbd">Shift + Tab</span><span class="cmd-desc" style="margin-left:8px">Cycle modes: <strong>Normal → Auto Accept → Plan</strong></span></div>
+    <div class="cmd-row"><span class="kbd">Tab</span><span class="cmd-desc" style="margin-left:8px">Toggle <strong>extended thinking</strong> for hard problems</span></div>
+    <div class="cmd-row"><span class="kbd">Esc Esc</span><span class="cmd-desc" style="margin-left:8px">Open <strong>rewind menu</strong> — roll back to any checkpoint</span></div>
+    <div class="cmd-row"><span class="kbd">Ctrl + C</span><span class="cmd-desc" style="margin-left:8px">Interrupt running task <strong>without losing context</strong></span></div>
+    <div class="cmd-row"><span class="kbd">↑ Arrow</span><span class="cmd-desc" style="margin-left:8px">Navigate prompt history — reuse & edit previous prompts</span></div>
+    <div class="cmd-row"><span class="kbd">Ctrl + L</span><span class="cmd-desc" style="margin-left:8px">Clear screen view (conversation history preserved)</span></div>
+  </div>
+
+  <!-- ── 3 MODES ── -->
+  <div class="cell ct-green span2 bracket">
+    <div class="cell-tag">Interaction</div>
+    <div class="cell-title">The 3 Modes</div>
+    <div class="mode-cards">
+      <div class="mode-card md-normal" onclick="this.style.borderColor='var(--cyan)'">
+        <div class="mode-dot">N</div>
+        <div class="mode-info">
+          <div class="mode-name">Normal Mode</div>
+          <div class="mode-key"><span class="kbd">Default</span> &nbsp; Claude asks for approval before each significant action. Safe for exploration.</div>
+        </div>
+      </div>
+      <div class="mode-card md-auto" onclick="this.style.borderColor='var(--green)'">
+        <div class="mode-dot">A</div>
+        <div class="mode-info">
+          <div class="mode-name">Auto Accept Mode</div>
+          <div class="mode-key"><span class="kbd">Shift+Tab ×1</span> &nbsp; Claude executes without pausing. Use <em>after</em> reviewing a plan. Maximum speed.</div>
+        </div>
+      </div>
+      <div class="mode-card md-plan" onclick="this.style.borderColor='var(--amber)'">
+        <div class="mode-dot">P</div>
+        <div class="mode-info">
+          <div class="mode-name">Plan Mode</div>
+          <div class="mode-key"><span class="kbd">Shift+Tab ×2</span> &nbsp; Claude explains its full approach before touching any files. Review and approve first.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CLAUDE.MD ANATOMY ── -->
+  <div class="cell ct-amber span2 bracket">
+    <div class="cell-tag">Memory File</div>
+    <div class="cell-title">CLAUDE.md Structure</div>
+    <div class="snip"><span class="p"># Project:</span> My App
+Loaded at the start of <span class="ok">every session</span> automatically.
+
+<span class="p">## Commands</span>    <span class="cm">← exact strings Claude will run</span>
+<span class="p">## Architecture</span> <span class="cm">← file map, what lives where</span>
+<span class="p">## Conventions</span>  <span class="cm">← naming, patterns, standards</span>
+<span class="p">## Gotchas</span>      <span class="cm">← things Claude can't infer</span>
+<span class="p">## Workflow</span>     <span class="cm">← git, PR, deploy steps</span></div>
+    <div class="rule-list" style="margin-top:8px">
+      <div class="rule-item">Keep it <strong>under 200 lines</strong> — quality beats quantity</div>
+      <div class="rule-item">Be <strong>hyper-specific</strong>: "use Zod for validation" not "best practices"</div>
+      <div class="rule-item"><strong>Commit to Git</strong> — every teammate gets the same context</div>
+      <div class="rule-item">Add a <strong>Gotchas</strong> section for things Claude will get wrong without it</div>
+    </div>
+  </div>
+
+  <!-- ── FILE HIERARCHY ── -->
+  <div class="cell ct-cyan span2 bracket">
+    <div class="cell-tag">Context Layers</div>
+    <div class="cell-title">CLAUDE.md Hierarchy</div>
+    <div class="hier">
+      <div class="hier-row"><div class="hier-path">~/.claude/CLAUDE.md</div><div class="hier-scope">Global · All Projects</div></div>
+      <div class="hier-row" style="margin-left:14px"><div class="hier-path">~/.claude.md</div><div class="hier-scope">Monorepo Root</div></div>
+      <div class="hier-row" style="margin-left:28px"><div class="hier-path">/CLAUDE.md</div><div class="hier-scope">Project · Git Commit This</div></div>
+      <div class="hier-row" style="margin-left:42px"><div class="hier-path">/frontend/CLAUDE.md</div><div class="hier-scope">Subfolder · Scoped</div></div>
+      <div class="hier-row" style="margin-left:56px"><div class="hier-path">/api/CLAUDE.md</div><div class="hier-scope">Subfolder · Scoped</div></div>
+    </div>
+    <div class="rule-item" style="margin-top:10px;font-size:10px">Child files <strong>append</strong> to parent — never override or contradict</div>
+  </div>
+
+  <!-- ── PROJECT STRUCTURE ── -->
+  <div class="cell ct-violet bracket">
+    <div class="cell-tag">File Layout</div>
+    <div class="cell-title">Project Structure</div>
+    <div class="ftree">
+<span class="ftd">project/</span>
+├── <span class="fts">CLAUDE.md</span>        <span class="ftc">← commit this</span>
+├── <span class="ftd">.claude/</span>
+│   ├── settings.json  <span class="ftc">← shared</span>
+│   ├── settings.local.json <span class="ftc">← gitignore</span>
+│   └── <span class="ftd">skills/</span>
+│       ├── testing/SKILL.md
+│       └── deploy/SKILL.md
+├── <span class="ftd">agents/</span>
+│   └── reviewer.md
+└── .gitignore</div>
+  </div>
+
+  <!-- ── SKILLS SYSTEM ── -->
+  <div class="cell ct-violet span2 bracket">
+    <div class="cell-tag">Knowledge Packs</div>
+    <div class="cell-title">Skills — Auto-Invoked</div>
+    <div class="skill-anatomy">
+      <div class="sa-row"><div class="sa-field">name:</div><div class="sa-val">Short identifier for the skill</div><div class="sa-req">Required</div></div>
+      <div class="sa-row"><div class="sa-field">description:</div><div class="sa-val">Natural language triggers — "Use when writing tests" or "Invoke for code reviews". Claude reads this to auto-activate.</div><div class="sa-req">Critical</div></div>
+      <div class="sa-row"><div class="sa-field">allowed tools:</div><div class="sa-val">Read, Grep, Glob, Bash(limited)</div><div class="sa-req">Optional</div></div>
+    </div>
+    <div class="snip" style="margin-top:8px"><span class="cm">---</span>
+<span class="p">name:</span> pytest patterns
+<span class="p">description:</span> Testing patterns. <span class="ok">Auto-activate when
+             writing or reviewing tests.</span>
+<span class="cm">---</span>
+<span class="cm"># Your testing guide here...</span></div>
+    <div class="rule-item" style="margin-top:6px"><strong>Project skills:</strong> <code style="color:var(--cyan);background:var(--code);padding:1px 5px;font-size:10px">.claude/skills/&lt;name&gt;/SKILL.md</code> — shared via Git</div>
+    <div class="rule-item"><strong>Personal skills:</strong> <code style="color:var(--cyan);background:var(--code);padding:1px 5px;font-size:10px">~/.claude/skills/&lt;name&gt;/SKILL.md</code> — private to you</div>
+  </div>
+
+  <!-- ── @FILENAME SYNTAX ── -->
+  <div class="cell ct-amber bracket">
+    <div class="cell-tag">Context Injection</div>
+    <div class="cell-title">@ Reference Syntax</div>
+    <div class="at-example">
+      <div class="at-row"><span class="at-sym">@src/app.py</span><span class="at-desc">Include exact file content in prompt</span></div>
+      <div class="at-row"><span class="at-sym">@tests/conftest.py</span><span class="at-desc">Pull in fixture definitions</span></div>
+      <div class="at-row"><span class="at-sym">@docs/api-spec.md</span><span class="at-desc">Add spec to context for alignment</span></div>
+      <div class="at-row"><span class="at-sym">@CLAUDE.md</span><span class="at-desc">Explicitly re-read memory file</span></div>
+    </div>
+    <div class="snip" style="margin-top:8px;font-size:10px">Review <span class="p">@app/models/user.py</span> and add
+email validation following the pattern in
+<span class="p">@app/models/product.py</span></div>
+  </div>
+
+  <!-- ── HOOKS ── -->
+  <div class="cell ct-red span2 bracket">
+    <div class="cell-tag">Automation</div>
+    <div class="cell-title">Hooks — Deterministic Callbacks</div>
+    <div class="hook-flow">
+      <div class="hook-row"><span class="hook-type ht-pre">PreToolUse</span><span class="hook-name">Runs before Claude calls any tool</span><span class="hook-eg">security gate</span></div>
+      <div class="hook-row"><span class="hook-type ht-post">PostToolUse</span><span class="hook-name">Runs after tool completes</span><span class="hook-eg">auto lint+test</span></div>
+      <div class="hook-row"><span class="hook-type ht-notif">Notification</span><span class="hook-name">Fires on session events</span><span class="hook-eg">alerts, logging</span></div>
+      <div class="hook-row"><span class="hook-type ht-pre">Stop</span><span class="hook-name">Runs when Claude finishes a task</span><span class="hook-eg">cleanup, notify</span></div>
+    </div>
+    <div class="rule-list" style="margin-top:8px">
+      <div class="rule-item">Exit <strong>0</strong> = allow · Exit <strong>2</strong> = block (Claude stops with error)</div>
+      <div class="rule-item">Hook output is sent back to Claude as context — use it!</div>
+    </div>
+  </div>
+
+  <!-- ── SETTINGS.JSON ── -->
+  <div class="cell ct-red span2 bracket">
+    <div class="cell-tag">Configuration</div>
+    <div class="cell-title">settings.json</div>
+    <div class="settings-snip"><span class="p">{</span>
+  <span class="s">"permissions"</span>: <span class="p">{</span>
+    <span class="s">"allow"</span>: [<span class="s">"Read:*"</span>, <span class="s">"Bash:git:*"</span>, <span class="s">"Write:src/**"</span>],
+    <span class="s">"deny"</span>:  [<span class="s">"Read:.env*"</span>, <span class="s">"Bash:sudo:*"</span>]
+  <span class="p">}</span>,
+  <span class="s">"hooks"</span>: <span class="p">{</span>
+    <span class="s">"PostToolUse"</span>: [<span class="p">{</span>
+      <span class="s">"matcher"</span>: <span class="s">"Write:*.py"</span>,
+      <span class="s">"hooks"</span>: [<span class="p">{</span>
+        <span class="s">"type"</span>: <span class="s">"command"</span>,
+        <span class="s">"command"</span>: <span class="s">"ruff check --fix $FILE && mypy $FILE"</span>
+      <span class="p">}]</span>
+    <span class="p">}]</span>
+  <span class="p">}</span>
+<span class="p">}</span></div>
+    <button class="cpbtn" onclick="cpThis(this)">copy</button>
+  </div>
+
+  <!-- ── PERMISSIONS ── -->
+  <div class="cell ct-red bracket">
+    <div class="cell-tag">Access Control</div>
+    <div class="cell-title">Permissions</div>
+    <div class="perm-split">
+      <div class="perm-box perm-allow">
+        <div class="perm-hd">✓ Allow</div>
+        <div class="perm-item">Read:*</div>
+        <div class="perm-item">Write:src/**</div>
+        <div class="perm-item">Bash:git:*</div>
+        <div class="perm-item">Bash:npm run *</div>
+        <div class="perm-item">Bash:pytest*</div>
+      </div>
+      <div class="perm-box perm-deny">
+        <div class="perm-hd">✗ Deny</div>
+        <div class="perm-item">Read:.env*</div>
+        <div class="perm-item">Bash:sudo:*</div>
+        <div class="perm-item">Bash:rm -rf *</div>
+        <div class="perm-item">Write:/etc/*</div>
+        <div class="perm-item">Read:secrets*</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4-LAYER ARCHITECTURE ── -->
+  <div class="cell ct-cyan span2 bracket">
+    <div class="cell-tag">Architecture</div>
+    <div class="cell-title">The 4-Layer System</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.2);border-radius:2px">
+        <span style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:28px;color:var(--amber);min-width:30px">L1</span>
+        <div><div style="font-size:11px;color:var(--amber);margin-bottom:2px;font-weight:700">CLAUDE.md — Persistent Context & Rules</div><div style="font-size:10px;color:var(--muted)">Always loaded. Your project's brain.</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(199,125,255,.07);border:1px solid rgba(199,125,255,.2);border-radius:2px">
+        <span style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:28px;color:var(--violet);min-width:30px">L2</span>
+        <div><div style="font-size:11px;color:var(--violet);margin-bottom:2px;font-weight:700">Skills — Auto-Invoked Knowledge Packs</div><div style="font-size:10px;color:var(--muted)">Domain expertise that activates by natural language.</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(57,255,142,.06);border:1px solid rgba(57,255,142,.18);border-radius:2px">
+        <span style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:28px;color:var(--green);min-width:30px">L3</span>
+        <div><div style="font-size:11px;color:var(--green);margin-bottom:2px;font-weight:700">Hooks — Deterministic Safety Gates</div><div style="font-size:10px;color:var(--muted)">Enforce rules, auto-run checks, block dangers.</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.18);border-radius:2px">
+        <span style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:28px;color:var(--cyan);min-width:30px">L4</span>
+        <div><div style="font-size:11px;color:var(--cyan);margin-bottom:2px;font-weight:700">Agents — Subagents with Own Context</div><div style="font-size:10px;color:var(--muted)">Specialized AI for complex, long-running tasks.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROMPT PATTERNS ── -->
+  <div class="cell ct-cyan span2 bracket">
+    <div class="cell-tag">Prompt Engineering</div>
+    <div class="cell-title">Prompt Patterns</div>
+    <div class="pp-box pp-bad">
+      <div class="pp-label">❌ Vague — avoid these</div>
+      <div class="pp-text"><s>Fix my code</s> &nbsp;·&nbsp; <s>Add authentication</s> &nbsp;·&nbsp; <s>Refactor this</s> &nbsp;·&nbsp; <s>Use best practices</s></div>
+    </div>
+    <div class="pp-box pp-good">
+      <div class="pp-label">✓ Specific — use these patterns</div>
+      <div class="pp-text">
+        <em>@src/routes.py</em> — include file for context<br>
+        <em>Run pytest -x and fix all failures</em> — executable intent<br>
+        <em>Don't modify the payments module</em> — explicit constraints<br>
+        <em>Follow the pattern in @models/product.py</em> — reference examples<br>
+        <em>Return: SEVERITY / LINE / FIX format</em> — output specification<br>
+        <em>All existing tests must still pass</em> — success criteria
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAILY WORKFLOW ── -->
+  <div class="cell ct-green span2 bracket">
+    <div class="cell-tag">Daily Use</div>
+    <div class="cell-title">The Daily Workflow</div>
+    <div class="wf">
+      <div class="wf-step"><div class="wf-n">1</div><div class="wf-info"><div class="wf-t">cd project && claude</div><div class="wf-d">Always start from project root. CLAUDE.md auto-loads.</div></div></div>
+      <div class="wf-step"><div class="wf-n">2</div><div class="wf-info"><div class="wf-t">Shift + Tab × 2 → Plan Mode</div><div class="wf-d">Activate Plan Mode before any complex task.</div></div></div>
+      <div class="wf-step"><div class="wf-n">3</div><div class="wf-info"><div class="wf-t">Describe task with @file references</div><div class="wf-d">Specific prompt + exact file context = best output.</div></div></div>
+      <div class="wf-step"><div class="wf-n">4</div><div class="wf-info"><div class="wf-t">Review plan → Shift + Tab → Auto Accept</div><div class="wf-d">Read the plan carefully. Approve or correct before executing.</div></div></div>
+      <div class="wf-step"><div class="wf-n">5</div><div class="wf-info"><div class="wf-t">Hooks auto-run quality checks</div><div class="wf-d">ruff / mypy / pytest fire automatically. Claude self-corrects.</div></div></div>
+      <div class="wf-step"><div class="wf-n">6</div><div class="wf-info"><div class="wf-t">git commit → /compact → next task</div><div class="wf-d">Commit after each milestone. Run /compact on long sessions.</div></div></div>
+      <div class="wf-step"><div class="wf-n">7</div><div class="wf-info"><div class="wf-t">Esc Esc if anything goes wrong</div><div class="wf-d">Rewind to any checkpoint. Don't let mistakes compound.</div></div></div>
+    </div>
+  </div>
+
+  <!-- ── STATS BANNER ── -->
+  <div class="cell ct-cyan span4" style="padding:16px 20px">
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-n" style="color:var(--cyan)">/init</div><div class="stat-l">First command</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--amber)">Plan</div><div class="stat-l">Mode for complex tasks</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--green)">Auto</div><div class="stat-l">Mode after plan review</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--violet)">Esc×2</div><div class="stat-l">Rewind anytime</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--cyan)">@file</div><div class="stat-l">Include context</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--amber)">&lt;200</div><div class="stat-l">CLAUDE.md lines</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--green)">L1-L4</div><div class="stat-l">Architecture layers</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--red)">0</div><div class="stat-l">.env reads allowed</div></div>
+    </div>
+  </div>
+
+  <!-- ── GOLDEN RULES ── -->
+  <div class="cell ct-amber span4 bracket">
+    <div class="cell-tag">Non-Negotiable Rules</div>
+    <div class="cell-title">The Golden Rules</div>
+    <div class="gr-list">
+      <div class="gr"><div class="gr-num">01</div><div class="gr-text"><strong>Always launch from project root.</strong> Never from a subfolder — Claude needs the full file tree.</div></div>
+      <div class="gr"><div class="gr-num">02</div><div class="gr-text"><strong>Run /init first, then edit.</strong> Bootstrap CLAUDE.md automatically, then add what Claude missed.</div></div>
+      <div class="gr"><div class="gr-num">03</div><div class="gr-text"><strong>CLAUDE.md under 200 lines.</strong> Long context = diluted attention. Prune stale info aggressively.</div></div>
+      <div class="gr"><div class="gr-num">04</div><div class="gr-text"><strong>Plan Mode before complex tasks.</strong> Read the plan. Correct misunderstandings before any code is written.</div></div>
+      <div class="gr"><div class="gr-num">05</div><div class="gr-text"><strong>One feature per session.</strong> Start fresh. Cross-task context contamination kills quality.</div></div>
+      <div class="gr"><div class="gr-num">06</div><div class="gr-text"><strong>Commit after every working milestone.</strong> Small commits = safe rollback points. Don't batch everything.</div></div>
+      <div class="gr"><div class="gr-num">07</div><div class="gr-text"><strong>Deny Read:.env* in permissions.</strong> Claude must never read secrets. No exceptions.</div></div>
+      <div class="gr"><div class="gr-num">08</div><div class="gr-text"><strong>Esc Esc at the first sign of trouble.</strong> Rewind early. Don't let Claude continue down a wrong path.</div></div>
+      <div class="gr"><div class="gr-num">09</div><div class="gr-text"><strong>PostToolUse hooks for quality gates.</strong> Auto-run lint + type check + tests after every file write.</div></div>
+      <div class="gr"><div class="gr-num">10</div><div class="gr-text"><strong>Use @filename not descriptions.</strong> "Fix @src/auth.py" beats "fix the authentication file".</div></div>
+      <div class="gr"><div class="gr-num">11</div><div class="gr-text"><strong>State constraints explicitly.</strong> "Don't modify the payments module" is as important as what you want.</div></div>
+      <div class="gr"><div class="gr-num">12</div><div class="gr-text"><strong>Commit CLAUDE.md to Git.</strong> Every teammate gets the same session context automatically.</div></div>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="footer-bar">
+  <div class="fl">Claude Code · Anthropic · 2026</div>
+  <div class="fc">CLAUDE CODE CHEAT SHEET</div>
+  <div class="fr">claude.ai · docs.claude.ai</div>
+</div>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+document.querySelectorAll('.cell,.cmd-row,.mode-card,.hier-row,.hook-row,.gr,.wf-step').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('hover'));
+});
+
+// Copy
+function cpThis(btn){
+  const pre=btn.previousElementSibling;
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    btn.textContent='COPIED';btn.classList.add('y');
+    setTimeout(()=>{btn.textContent='copy';btn.classList.remove('y')},2000);
+  });
+}
+</script>
+</body>
+</html>

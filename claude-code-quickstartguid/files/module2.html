@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2 — Installation & Setup</title>
+<link rel="stylesheet" href="course.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 02</div>
+    <h1 class="page-title">Installation & Setup</h1>
+    <p class="page-desc">Install Claude Code on any platform, authenticate your account, verify the setup, and configure your environment for productive use.</p>
+    <div class="page-meta">
+      <span>📖 ~20 min</span>
+      <span>🔧 Hands-on setup</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: System Requirements -->
+    <div class="section">
+      <h2 class="section-title">System Requirements</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Requirement</th></tr></thead>
+          <tbody>
+            <tr><td><strong>macOS</strong></td><td>macOS 10.15 (Catalina) or later</td></tr>
+            <tr><td><strong>Linux</strong></td><td>Ubuntu 20.04+, Debian, Fedora, or similar</td></tr>
+            <tr><td><strong>Windows</strong></td><td>Windows 10+ with Git for Windows <em>or</em> WSL 2</td></tr>
+            <tr><td><strong>Network</strong></td><td>Internet connection required</td></tr>
+            <tr><td><strong>Shell</strong></td><td>Bash, Zsh, Fish, PowerShell, or CMD</td></tr>
+            <tr><td><strong>Account</strong></td><td>Claude Pro, Max subscription, or Anthropic API key</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">Native Installer (Recommended)</div>
+          <p>The native installer is the recommended method. It requires no Node.js, installs faster, and auto-updates in the background. The older npm-based install is deprecated.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: macOS / Linux -->
+    <div class="section">
+      <h2 class="section-title">Install on macOS / Linux</h2>
+      <p>The native installer uses a single curl command. This is the fastest and simplest method.</p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>Run the native installer</strong>
+            <div class="code-block">
+              <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+              <pre><span class="token-command">curl -fsSL https://claude.ai/install.sh | bash</span></pre>
+            </div>
+            <p>This downloads and installs the <code>claude</code> binary and adds it to your PATH.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Verify the installation</strong>
+            <div class="code-block">
+              <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+              <pre><span class="token-command">claude --version</span>
+<span class="token-output"># Expected output: something like
+# claude 2.x.x (native)</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Navigate to your project and launch</strong>
+            <div class="code-block">
+              <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+              <pre><span class="token-command">cd ~/my-project</span>
+<span class="token-command">claude</span>
+<span class="token-output"># First run opens a browser for authentication</span></pre>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <h3 class="subsection-title">Homebrew (Alternative for macOS)</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="token-command">brew install claude-code</span>
+
+<span class="token-comment"># Homebrew does NOT auto-update. Run this periodically:</span>
+<span class="token-command">brew upgrade claude-code</span>
+<span class="token-command">brew cleanup claude-code</span>  <span class="token-comment"># Reclaim disk space from old versions</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Alpine Linux / musl-based Distros</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="token-comment"># Install required dependencies first</span>
+<span class="token-command">apk add libgcc libstdc++ ripgrep</span>
+
+<span class="token-comment"># Then set the flag and install</span>
+<span class="token-command">USE_BUILTIN_RIPGREP=0 curl -fsSL https://claude.ai/install.sh | bash</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Windows -->
+    <div class="section">
+      <h2 class="section-title">Install on Windows</h2>
+      <p>Windows users have two options. Option 1 (Native) is now recommended and doesn't require WSL.</p>
+
+      <h3 class="subsection-title">Option 1: Native Windows (Recommended)</h3>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>Install Git for Windows</strong>
+            <p>Download from <a href="https://git-scm.com/download/win" style="color:var(--cyan)">git-scm.com</a>. Git Bash is used internally by Claude Code.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Install via PowerShell or CMD</strong>
+            <div class="code-block">
+              <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">PowerShell</div></div>
+              <pre><span class="token-comment"># No need to run as Administrator</span>
+<span class="token-command">winget install Anthropic.ClaudeCode</span>
+
+<span class="token-comment"># Or via PowerShell script (if winget unavailable):</span>
+<span class="token-command">iwr -useb https://claude.ai/install.ps1 | iex</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Verify</strong>
+            <div class="code-block">
+              <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">PowerShell</div></div>
+              <pre><span class="token-command">claude --version</span></pre>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <h3 class="subsection-title">Option 2: WSL (Windows Subsystem for Linux)</h3>
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">WSL 2 Recommended</div>
+          <p>WSL 2 supports sandboxing for enhanced security. WSL 1 is supported but does not support sandboxing. Use WSL 2 for production workflows.</p>
+        </div>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>Install WSL (PowerShell as Administrator)</strong>
+            <div class="code-block">
+              <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">PowerShell (Admin)</div></div>
+              <pre><span class="token-command">wsl --install -d Ubuntu</span>
+<span class="token-comment"># Restart when prompted</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Inside your Ubuntu/WSL terminal, install Claude Code</strong>
+            <div class="code-block">
+              <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">WSL bash</div></div>
+              <pre><span class="token-command">curl -fsSL https://claude.ai/install.sh | bash</span>
+<span class="token-command">claude --version</span></pre>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">WSL Users: Run From Linux Terminal</div>
+          <p>Always launch Claude Code from your Linux/WSL terminal, not from Windows Command Prompt. Your project files should be inside the WSL filesystem (<code>~/projects/</code>) for best performance.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Authentication -->
+    <div class="section">
+      <h2 class="section-title">Authentication</h2>
+      <p>Claude Code supports multiple authentication methods. Choose the one matching your account type.</p>
+
+      <h3 class="subsection-title">Method 1: Claude.ai Subscription (OAuth)</h3>
+      <p>If you have Claude Pro or Max, this is the simplest method.</p>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>Run <code>claude</code> in your terminal</strong>
+            <p>On first launch, it opens your browser and asks you to log in with your Claude.ai account.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Authorize in the browser</strong>
+            <p>Click "Authorize" when prompted. You'll be redirected back and your terminal session will begin.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3 class="subsection-title">Method 2: API Key</h3>
+      <p>For API key access (pay-as-you-go or CI/CD pipelines):</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Shell profile (~/.bashrc or ~/.zshrc)</div></div>
+        <pre><span class="token-comment"># Add your API key to your shell profile for persistence</span>
+<span class="token-command">export ANTHROPIC_API_KEY="sk-ant-..."</span>
+
+<span class="token-comment"># Reload the profile</span>
+<span class="token-command">source ~/.zshrc</span>
+
+<span class="token-comment"># Or set it inline for a single session</span>
+<span class="token-command">ANTHROPIC_API_KEY="sk-ant-..." claude</span></pre>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Never commit API keys to git</div>
+          <p>Always use environment variables or a secrets manager. Add <code>.env</code> to your <code>.gitignore</code>. Consider using tools like <code>direnv</code> to manage per-project environment variables safely.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Verify + First Run -->
+    <div class="section">
+      <h2 class="section-title">Your First Session</h2>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="token-comment"># Navigate to a project directory</span>
+<span class="token-command">cd ~/my-project</span>
+
+<span class="token-comment"># Launch Claude Code</span>
+<span class="token-command">claude</span>
+
+<span class="token-output">✻ Welcome to Claude Code! (version 2.x.x)
+  cwd: /home/user/my-project
+  
+  Type your task or question. Use /help to see available commands.
+  Press Ctrl+C to exit.</span>
+
+<span class="token-prompt">You:</span> <span class="token-command">What files are in this project and what does it do?</span>
+
+<span class="token-output">Claude: ● Scanning project structure...
+  ● Reading package.json
+  ● Reading README.md
+  
+  This appears to be a React + TypeScript application...
+  [continues with summary]</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Health Check</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="token-comment"># Diagnose configuration issues automatically</span>
+<span class="token-command">claude doctor</span>
+
+<span class="token-output">✓ Authentication: OK
+✓ Network connectivity: OK
+✓ Shell integration: OK
+✓ Version: 2.x.x (latest)</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Updates -->
+    <div class="section">
+      <h2 class="section-title">Keeping Claude Code Updated</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Install Method</th><th>How to Update</th></tr></thead>
+          <tbody>
+            <tr><td>Native installer (recommended)</td><td>Auto-updates in the background. Updates apply on next launch.</td></tr>
+            <tr><td>Homebrew (macOS)</td><td><code>brew upgrade claude-code</code> (manual)</td></tr>
+            <tr><td>WinGet (Windows)</td><td><code>winget upgrade Anthropic.ClaudeCode</code> (manual)</td></tr>
+            <tr><td>npm (legacy)</td><td>Migrate to native installer; npm install is deprecated</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subsection-title">Migrating from npm</h3>
+      <p>If you previously installed via npm, here's how to migrate to the native installer:</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="token-comment"># 1. Install the native binary</span>
+<span class="token-command">curl -fsSL https://claude.ai/install.sh | bash</span>
+
+<span class="token-comment"># 2. Remove the old npm version</span>
+<span class="token-command">npm uninstall -g @anthropic-ai/claude-code</span>
+
+<span class="token-comment"># 3. Verify (your ~/.claude config is preserved)</span>
+<span class="token-command">claude --version</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: IDE Integration -->
+    <div class="section">
+      <h2 class="section-title">IDE Integration</h2>
+      <p>Claude Code works great alongside your IDE. You can keep Claude Code in a terminal pane while coding in VS Code, JetBrains, or any other editor.</p>
+
+      <h3 class="subsection-title">VS Code Terminal Integration</h3>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>Open VS Code's integrated terminal</strong>
+            <p>Press <code>Ctrl+`</code> (or <code>Cmd+`</code> on Mac) to open the terminal panel.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Launch Claude Code</strong>
+            <p>Type <code>claude</code> in the terminal. Claude Code can now see and edit all files in your VS Code workspace. Changes it makes appear immediately in your editor.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3 class="subsection-title">GitHub / GitLab Integration</h3>
+      <p>Claude Code can be tagged in GitHub issues and PRs using <code>@claude</code>. This is configured separately via the Anthropic console — see the official docs for the latest setup instructions.</p>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">Desktop App</div>
+          <p>Prefer a graphical interface? Anthropic offers a Desktop app (macOS and Windows) that provides Claude Code without needing to use the terminal directly. It includes the same full feature set.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="module1.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 01</div><div class="label">What is Claude Code?</div></div>
+    </a>
+    <a href="module3.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Module 03</div><div class="label">Core Commands & Sessions</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module2.html');</script>
+</body>
+</html>

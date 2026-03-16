@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code × Python — Complete Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@300;400;700;900&family=Inconsolata:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:     #0e0e0e;
+  --bg2:    #141414;
+  --panel:  #1a1a1a;
+  --panel2: #202020;
+  --border: #2a2a2a;
+  --border2:#333;
+  --gold:   #d4a017;
+  --gold2:  #f0c040;
+  --snake:  #4584b4;   /* python blue */
+  --snake2: #ffde57;   /* python yellow */
+  --green:  #3fb950;
+  --red:    #f85149;
+  --teal:   #39c5cf;
+  --purple: #bc8cff;
+  --text:   #e8e4da;
+  --muted:  #605850;
+  --muted2: #807060;
+  --code:   #0a0a0a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inconsolata',monospace;
+  overflow-x:hidden;cursor:none;
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(212,160,23,.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(69,132,180,.04) 0%, transparent 50%);
+}
+
+/* ── custom cursor ── */
+.c1{width:14px;height:14px;border:2px solid var(--gold);border-radius:50%;
+    position:fixed;pointer-events:none;z-index:9999;
+    transition:transform .15s ease,background .15s}
+.c1.big{transform:scale(2.5);background:rgba(212,160,23,.1)}
+.c2{width:4px;height:4px;background:var(--gold);border-radius:50%;
+    position:fixed;pointer-events:none;z-index:9999;
+    transition:transform .05s}
+
+/* ── progress bar ── */
+#bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--snake2));z-index:500;width:0%;box-shadow:0 0 8px var(--gold)}
+
+/* ── nav ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 40px;
+  background:rgba(14,14,14,.94);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  transform:translateY(-100%);transition:transform .4s;
+}
+nav.on{transform:translateY(0)}
+.nav-brand{
+  font-family:'Anybody',sans-serif;font-weight:900;font-size:16px;
+  letter-spacing:2px;display:flex;align-items:center;gap:10px;
+}
+.nav-brand .x{color:var(--gold)}
+.nav-brand .py{color:var(--snake2)}
+.nav-dots{display:flex;gap:6px;align-items:center}
+.ndot{
+  width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--muted);text-decoration:none;
+  transition:all .2s;
+}
+.ndot:hover{border-color:var(--gold);color:var(--gold)}
+.ndot.active{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+
+/* ══════════ HERO ══════════ */
+.hero{
+  min-height:100vh;display:grid;
+  grid-template-columns:1fr 480px;
+  gap:0;position:relative;overflow:hidden;
+}
+.hero-left{
+  padding:120px 60px 80px;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+}
+/* diagonal stripe bg */
+.hero-left::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    -45deg,transparent,transparent 40px,
+    rgba(212,160,23,.015) 40px,rgba(212,160,23,.015) 41px
+  );
+  pointer-events:none;
+}
+.hero-right{
+  background:var(--bg2);
+  display:flex;flex-direction:column;
+  padding:120px 40px 60px;
+  gap:10px;overflow:hidden;
+}
+
+.htag{
+  font-size:9px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+  animation:up .6s .05s both;
+}
+.htag::before{content:'';width:30px;height:1px;background:var(--gold)}
+
+.htitle{
+  font-family:'Anybody',sans-serif;font-weight:900;
+  font-size:clamp(52px,8vw,100px);line-height:.88;
+  letter-spacing:-3px;margin-bottom:28px;
+  animation:up .6s .15s both;
+}
+.htitle .cc{color:var(--gold)}
+.htitle .times{color:var(--muted2);font-weight:300}
+.htitle .py{color:var(--snake2)}
+.htitle .sub{
+  display:block;font-size:.28em;letter-spacing:8px;
+  color:var(--muted2);font-weight:300;margin-top:8px;
+}
+
+.hdesc{
+  font-size:13px;line-height:1.9;color:var(--muted2);
+  border-left:2px solid var(--border2);padding-left:18px;
+  max-width:480px;margin-bottom:32px;
+  animation:up .6s .25s both;
+}
+
+.hstats{
+  display:flex;gap:32px;margin-bottom:32px;
+  animation:up .6s .35s both;
+}
+.hstat .n{
+  font-family:'Anybody',sans-serif;font-weight:900;font-size:36px;
+  color:var(--gold);line-height:1;
+}
+.hstat .l{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+
+/* right column items */
+.hero-item{
+  background:var(--panel);border:1px solid var(--border);border-radius:3px;
+  padding:14px 18px;display:flex;align-items:center;gap:14px;
+  text-decoration:none;transition:all .2s;
+  animation:left .6s both;
+}
+.hero-item:hover{border-color:var(--gold);transform:translateX(-4px)}
+.hi-num{
+  font-family:'Anybody',sans-serif;font-weight:900;font-size:22px;
+  color:var(--border2);min-width:28px;line-height:1;
+  transition:color .2s;
+}
+.hero-item:hover .hi-num{color:var(--gold)}
+.hi-text{}
+.hi-t{font-size:11px;color:var(--text);margin-bottom:2px}
+.hi-d{font-size:10px;color:var(--muted);line-height:1.5}
+
+.hero-terminal{
+  background:var(--code);border:1px solid var(--border);border-radius:4px;
+  overflow:hidden;margin-top:auto;box-shadow:0 20px 60px rgba(0,0,0,.6);
+  animation:up .6s .45s both;
+}
+.ht-bar{
+  background:var(--panel);padding:8px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.ht-dot{width:9px;height:9px;border-radius:50%}
+.ht-dot:nth-child(1){background:#ff5f57}
+.ht-dot:nth-child(2){background:#febc2e}
+.ht-dot:nth-child(3){background:#28c840}
+.ht-name{font-size:9px;letter-spacing:2px;color:var(--muted);margin-left:auto;text-transform:uppercase}
+.ht-body{padding:16px 18px;font-size:11.5px;line-height:2}
+.tp{color:#6eb4f7}.tc{color:#c3e88d}.tm{color:var(--muted);font-style:italic}
+.tg{color:var(--green)}.ta{color:var(--gold2)}.blink{display:inline-block;width:7px;height:13px;background:var(--gold2);animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes left{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+
+/* ══════════ SECTIONS ══════════ */
+.wrap{max-width:1060px;margin:0 auto;padding:0 40px}
+
+section.s{
+  padding:80px 0 0;
+  opacity:0;transform:translateY(24px);
+  transition:opacity .55s ease,transform .55s ease;
+}
+section.s.vis{opacity:1;transform:translateY(0)}
+
+.s-hd{
+  display:grid;grid-template-columns:72px 1fr;
+  gap:0;margin-bottom:40px;padding-bottom:28px;
+  border-bottom:1px solid var(--border);
+}
+.s-num{
+  font-family:'Anybody',sans-serif;font-weight:900;
+  font-size:56px;color:var(--border2);line-height:1;
+  padding-top:4px;transition:color .3s;
+}
+.s:hover .s-num{color:var(--gold)}
+.s-meta{}
+.s-tag{font-size:8px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.s-title{
+  font-family:'Anybody',sans-serif;font-weight:900;
+  font-size:clamp(24px,3.5vw,40px);letter-spacing:-1px;line-height:1
+}
+.s-title em{color:var(--gold2);font-style:normal}
+.s-sub{font-size:11px;color:var(--muted2);margin-top:8px;line-height:1.7}
+
+/* ── code blocks ── */
+.cb{
+  background:var(--code);border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;margin:14px 0;position:relative;
+  box-shadow:0 4px 24px rgba(0,0,0,.4);
+}
+.cb-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;background:var(--panel);border-bottom:1px solid var(--border);
+}
+.cb-dots{display:flex;gap:5px}
+.cbd{width:9px;height:9px;border-radius:50%}
+.cbd:nth-child(1){background:#ff5f57}.cbd:nth-child(2){background:#febc2e}.cbd:nth-child(3){background:#28c840}
+.cb-fn{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.cb-pre{padding:20px 22px;font-size:12.5px;line-height:2;overflow-x:auto;white-space:pre}
+.cpb{
+  position:absolute;top:38px;right:12px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border2);
+  color:var(--muted);font-family:'Inconsolata',monospace;font-size:9px;
+  letter-spacing:1px;padding:4px 10px;border-radius:2px;cursor:pointer;
+  transition:all .2s;text-transform:uppercase;
+}
+.cpb:hover{border-color:var(--gold);color:var(--gold)}
+.cpb.y{color:var(--green);border-color:rgba(63,185,80,.4)}
+
+/* tokens */
+.k{color:#c792ea}.s{color:#c3e88d}.cm{color:#3a4f60;font-style:italic}
+.fn{color:#82aaff}.n{color:#f78c6c}.p{color:var(--gold2)}
+.op{color:var(--teal)}.bi{color:#89ddff}.cl{color:#ffcb6b}
+.deco{color:var(--red)}.ok{color:var(--green)}.er{color:var(--red)}
+.gold{color:var(--gold2)}.py{color:var(--snake2)}
+
+/* ── grid ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* ── cards ── */
+.card{
+  background:var(--panel);border:1px solid var(--border);border-radius:4px;
+  padding:22px;transition:all .25s;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--gold);transform:scaleY(0);transition:transform .3s ease;
+  transform-origin:bottom;
+}
+.card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.card:hover::before{transform:scaleY(1)}
+.card-label{font-size:8px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.card-title{font-family:'Anybody',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.3px;margin-bottom:10px}
+.card-body{font-size:11.5px;line-height:1.85;color:var(--muted2)}
+.card-body strong{color:var(--text)}
+
+/* ── callouts ── */
+.note{border-left:2px solid;padding:14px 18px;border-radius:0 3px 3px 0;margin:14px 0;font-size:11.5px;line-height:1.75}
+.ng{border-color:var(--green);background:rgba(63,185,80,.05)}
+.na{border-color:var(--gold);background:rgba(212,160,23,.05)}
+.nb{border-color:var(--snake);background:rgba(69,132,180,.06)}
+.nr{border-color:var(--red);background:rgba(248,81,73,.05)}
+.np{border-color:var(--purple);background:rgba(188,140,255,.05)}
+.note .lbl{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px}
+.ng .lbl{color:var(--green)}.na .lbl{color:var(--gold)}.nb .lbl{color:var(--snake2)}
+.nr .lbl{color:var(--red)}.np .lbl{color:var(--purple)}
+.note .txt{color:var(--muted2)}.note .txt strong{color:var(--text)}
+
+/* ── pill tags ── */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.pill{
+  font-size:10px;letter-spacing:1px;padding:5px 13px;border-radius:2px;
+  border:1px solid;transition:all .2s;cursor:default;
+}
+.pg{border-color:rgba(63,185,80,.4);color:var(--green);background:rgba(63,185,80,.06)}
+.pa{border-color:rgba(212,160,23,.4);color:var(--gold2);background:rgba(212,160,23,.06)}
+.pb{border-color:rgba(69,132,180,.4);color:var(--snake);background:rgba(69,132,180,.06)}
+.pp{border-color:rgba(188,140,255,.4);color:var(--purple);background:rgba(188,140,255,.06)}
+.pt{border-color:rgba(57,197,207,.4);color:var(--teal);background:rgba(57,197,207,.06)}
+.pill:hover{transform:translateY(-2px)}
+
+/* ── inline code ── */
+code{
+  font-family:'Inconsolata',monospace;font-size:11px;
+  background:var(--panel2);border:1px solid var(--border2);
+  padding:2px 6px;border-radius:2px;color:var(--gold2);
+}
+
+/* ── flow diagram ── */
+.flow{display:flex;flex-direction:column;gap:0}
+.flow-item{display:flex;gap:16px;position:relative;padding-bottom:20px}
+.flow-item::before{content:'';position:absolute;left:13px;top:30px;bottom:0;width:1px;background:var(--border)}
+.flow-item:last-child::before{display:none}
+.flow-dot{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--panel);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--muted);flex-shrink:0;z-index:1;
+  transition:all .25s;
+}
+.flow-item:hover .flow-dot{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.flow-body{padding-top:4px}
+.ft{font-size:12px;color:var(--text);margin-bottom:2px;font-weight:500}
+.fd{font-size:11px;color:var(--muted2);line-height:1.6;font-style:italic}
+
+/* ── comparison table ── */
+.cmp{width:100%;border-collapse:collapse;font-size:11.5px;margin:14px 0}
+.cmp th{padding:10px 14px;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;border-bottom:2px solid var(--border);text-align:left}
+.cmp td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--muted2)}
+.cmp tr:hover td{background:var(--panel)}
+.cmp .cmd{color:var(--snake2);font-weight:500}
+.cmp .res{color:var(--green)}
+.cmp .bad{color:var(--red)}
+.cmp .good{color:var(--green)}
+
+/* ── big quote ── */
+.bq{
+  font-family:'Anybody',sans-serif;font-weight:700;
+  font-size:clamp(16px,2.2vw,24px);line-height:1.4;
+  border-left:3px solid var(--gold);padding:20px 28px;
+  margin:24px 0;background:rgba(212,160,23,.04);border-radius:0 4px 4px 0;
+}
+.bq em{color:var(--gold2);font-style:normal}
+
+/* ── hook flow ── */
+.hkrow{display:flex;align-items:stretch;gap:0;margin:16px 0;overflow:hidden;border-radius:4px;border:1px solid var(--border)}
+.hknode{
+  flex:1;padding:14px 16px;text-align:center;border-right:1px solid var(--border);
+  transition:background .2s;cursor:default;
+}
+.hknode:last-child{border-right:none}
+.hknode:hover{background:var(--panel2)}
+.hk-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
+.hk-name{font-size:13px;font-family:'Anybody',sans-serif;font-weight:700;margin-bottom:4px}
+.hk-desc{font-size:10px;color:var(--muted);line-height:1.5}
+.hk-a .hk-label{color:var(--gold)}.hk-b .hk-label{color:var(--green)}
+.hk-c .hk-label{color:var(--teal)}.hk-d .hk-label{color:var(--purple)}
+
+/* ── checklist ── */
+.checklist{list-style:none;display:flex;flex-direction:column;gap:6px;margin:14px 0}
+.checklist li{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 14px;background:var(--panel);border:1px solid var(--border);
+  border-radius:3px;font-size:11.5px;color:var(--muted2);
+  cursor:pointer;transition:all .2s;line-height:1.5;
+}
+.checklist li:hover{border-color:var(--green)}
+.chk{
+  width:15px;height:15px;border-radius:2px;border:1px solid var(--border2);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:9px;margin-top:1px;transition:all .2s;
+}
+.checklist li.done .chk{background:var(--green);border-color:var(--green);color:var(--bg)}
+.checklist li.done{opacity:.5;text-decoration:line-through}
+
+/* ── prompt box ── */
+.prompt-box{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;margin:14px 0;
+}
+.pb-top{
+  padding:8px 16px;background:var(--panel2);border-bottom:1px solid var(--border);
+  font-size:8px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.pb-tag{padding:3px 8px;border-radius:2px;font-size:8px;letter-spacing:1px}
+.pb-bad{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.2)}
+.pb-good{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.2)}
+.pb-body{padding:14px 18px;font-size:12px;line-height:1.8;color:var(--muted2)}
+.pb-body strong{color:var(--text)}
+
+/* ── section divider ── */
+.sdiv{
+  max-width:1060px;margin:80px auto 0;padding:0 40px;
+  display:flex;align-items:center;gap:16px;
+}
+.sdiv-line{flex:1;height:1px;background:var(--border)}
+.sdiv-lbl{font-size:8px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+
+/* ── finale ── */
+.finale{
+  max-width:1060px;margin:80px auto 0;padding:0 40px 100px;
+}
+.finale-inner{
+  background:linear-gradient(135deg,rgba(212,160,23,.1) 0%,rgba(69,132,180,.08) 50%,rgba(255,222,87,.07) 100%);
+  border:1px solid var(--border2);border-radius:6px;
+  padding:80px;text-align:center;position:relative;overflow:hidden;
+}
+.finale-inner::before{
+  content:'{ }';position:absolute;font-family:'Anybody',sans-serif;font-weight:900;
+  font-size:360px;color:rgba(212,160,23,.04);top:50%;left:50%;
+  transform:translate(-50%,-50%);letter-spacing:-20px;pointer-events:none;
+}
+.fin-tag{font-size:8px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+.fin-title{font-family:'Anybody',sans-serif;font-weight:900;font-size:clamp(36px,5.5vw,64px);line-height:1;margin-bottom:18px}
+.fin-title em{color:var(--snake2);font-style:normal}
+.fin-desc{font-size:12px;color:var(--muted2);max-width:460px;margin:0 auto 36px;line-height:1.9}
+.fin-cmd{
+  display:inline-block;font-size:16px;padding:14px 32px;
+  background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.25);
+  border-radius:3px;color:var(--gold2);letter-spacing:2px;margin-bottom:32px;
+}
+.fin-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}
+.fp{font-size:9px;letter-spacing:1px;padding:6px 13px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:100px;color:var(--muted);transition:all .2s}
+.fp:hover{color:var(--gold);border-color:rgba(212,160,23,.3)}
+
+footer{text-align:center;padding:36px;border-top:1px solid var(--border);font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+footer span{color:var(--gold)}
+
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{border-top:1px solid var(--border);padding:40px}
+  .hero-left{padding:80px 28px 50px}
+  .g2,.g3{grid-template-columns:1fr}
+  .hkrow{flex-direction:column}
+  .hknode{border-right:none;border-bottom:1px solid var(--border)}
+  .hknode:last-child{border-bottom:none}
+  .wrap{padding:0 24px}
+  .finale{padding:0 24px 80px}
+  .finale-inner{padding:48px 28px}
+}
+</style>
+</head>
+<body>
+
+<div class="c1" id="c1"></div>
+<div class="c2" id="c2"></div>
+<div id="bar"></div>
+
+<nav id="nav">
+  <div class="nav-brand">CLAUDE<span class="x"> × </span><span class="py">PYTHON</span></div>
+  <div class="nav-dots" id="ndots"></div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="htag">The Definitive Integration Guide · 2026</div>
+    <h1 class="htitle">
+      <span class="cc">CLAUDE</span><br>
+      <span class="times">CODE</span><br>
+      <span class="py">× PYTHON</span>
+      <span class="sub">From Setup to Production Workflow</span>
+    </h1>
+    <p class="hdesc">
+      Everything you need to supercharge your Python projects with Claude Code — from the perfect CLAUDE.md to automation hooks, skills, and advanced prompting patterns for FastAPI, Django, data science, and more.
+    </p>
+    <div class="hstats">
+      <div class="hstat"><div class="n">12</div><div class="l">Sections</div></div>
+      <div class="hstat"><div class="n">40+</div><div class="l">Examples</div></div>
+      <div class="hstat"><div class="n">∞</div><div class="l">Velocity</div></div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-terminal">
+      <div class="ht-bar"><div class="ht-dot"></div><div class="ht-dot"></div><div class="ht-dot"></div><div class="ht-name">terminal</div></div>
+      <div class="ht-body">
+        <div><span class="tp">~/my-api</span> <span style="color:var(--muted)">$</span> <span class="tc">claude</span></div>
+        <div style="color:var(--muted);font-size:10px">✓ Loaded CLAUDE.md · Python 3.12 · FastAPI project</div>
+        <div style="margin-top:8px"><span class="tp">></span> <span class="ta">Add input validation to POST /users using pydantic</span></div>
+        <div style="color:var(--muted);font-size:10px;margin-top:4px">↳ Reading @app/models/user.py...</div>
+        <div style="color:var(--muted);font-size:10px">↳ Running: mypy app/ --strict</div>
+        <div><span class="tg">✓ Created UserCreate schema with email validation</span></div>
+        <div><span class="tg">✓ Updated route handler · 3 tests added</span></div>
+        <div><span class="tg">✓ All checks pass: ruff ✓  mypy ✓  pytest ✓</span></div>
+        <div style="margin-top:6px"><span class="tp">></span> <span class="blink"></span></div>
+      </div>
+    </div>
+
+    <a href="#s1" class="hero-item" style="animation-delay:.1s"><div class="hi-num">01</div><div class="hi-text"><div class="hi-t">Project Setup</div><div class="hi-d">venv, structure, first launch</div></div></a>
+    <a href="#s2" class="hero-item" style="animation-delay:.15s"><div class="hi-num">02</div><div class="hi-text"><div class="hi-t">Python CLAUDE.md</div><div class="hi-d">The perfect memory file template</div></div></a>
+    <a href="#s3" class="hero-item" style="animation-delay:.2s"><div class="hi-num">03</div><div class="hi-text"><div class="hi-t">Python Skills</div><div class="hi-d">pytest, ruff, docstrings, OOP</div></div></a>
+    <a href="#s4" class="hero-item" style="animation-delay:.25s"><div class="hi-num">04</div><div class="hi-text"><div class="hi-t">Hooks for Python</div><div class="hi-d">Auto-lint, type-check, test on save</div></div></a>
+    <a href="#s5" class="hero-item" style="animation-delay:.3s"><div class="hi-num">05</div><div class="hi-text"><div class="hi-t">Prompting Patterns</div><div class="hi-d">Get 10× better results from Claude</div></div></a>
+    <a href="#s6" class="hero-item" style="animation-delay:.35s"><div class="hi-num">06</div><div class="hi-text"><div class="hi-t">Framework Setups</div><div class="hi-d">FastAPI · Django · Data Science</div></div></a>
+    <a href="#s7" class="hero-item" style="animation-delay:.4s"><div class="hi-num">07</div><div class="hi-text"><div class="hi-t">Debugging &amp; Refactor</div><div class="hi-d">Let Claude find &amp; fix bugs</div></div></a>
+    <a href="#s8" class="hero-item" style="animation-delay:.45s"><div class="hi-num">08</div><div class="hi-text"><div class="hi-t">Testing Automation</div><div class="hi-d">Auto-generate pytest suites</div></div></a>
+    <a href="#s9" class="hero-item" style="animation-delay:.5s"><div class="hi-num">09</div><div class="hi-text"><div class="hi-t">Daily Git Workflow</div><div class="hi-d">Commits, PRs, changelogs</div></div></a>
+    <a href="#s10" class="hero-item" style="animation-delay:.55s"><div class="hi-num">10</div><div class="hi-text"><div class="hi-t">Multi-file Tasks</div><div class="hi-d">Agents, subagents, complex refactors</div></div></a>
+    <a href="#s11" class="hero-item" style="animation-delay:.6s"><div class="hi-num">11</div><div class="hi-text"><div class="hi-t">Best Practices</div><div class="hi-d">The rules that prevent disasters</div></div></a>
+    <a href="#s12" class="hero-item" style="animation-delay:.65s"><div class="hi-num">12</div><div class="hi-text"><div class="hi-t">Quick Reference</div><div class="hi-d">Cheatsheet for daily use</div></div></a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ S1: SETUP ══════════════════════════════ -->
+<div class="sdiv" id="d1"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 01</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s1">
+  <div class="s-hd">
+    <div class="s-num">01</div>
+    <div class="s-meta">
+      <div class="s-tag">Foundation</div>
+      <h2 class="s-title">Python Project <em>Setup</em></h2>
+      <div class="s-sub">The right structure before you ever launch Claude Code. Get this right and everything else flows naturally.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">bash — scaffold a new Python project</div></div>
+    <div class="cb-pre"><span class="cm"># 1. Create project folder</span>
+mkdir my-fastapi-app && cd my-fastapi-app
+
+<span class="cm"># 2. Create virtual environment (ALWAYS do this first)</span>
+python3 -m <span class="fn">venv</span> .venv
+source .venv/bin/activate       <span class="cm"># macOS/Linux</span>
+<span class="cm"># .venv\Scripts\activate        # Windows</span>
+
+<span class="cm"># 3. Install your dependencies</span>
+pip install fastapi uvicorn pydantic sqlalchemy
+pip install --dev pytest pytest-cov ruff mypy
+
+<span class="cm"># 4. Freeze deps</span>
+pip freeze > requirements.txt
+
+<span class="cm"># 5. Init git</span>
+git init && echo <span class="s">".venv/\n__pycache__/\n.env\n*.pyc"</span> > .gitignore
+
+<span class="cm"># 6. Launch Claude Code and generate CLAUDE.md</span>
+claude
+<span class="op">/init</span>
+
+<span class="ok">✓ Scanned 14 files  ·  Detected: Python 3.12 + FastAPI
+✓ Generated CLAUDE.md  →  review and customize</span></div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-label">Recommended</div>
+      <div class="card-title">Project Layout</div>
+      <div class="cb" style="margin-top:10px">
+        <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">tree</div></div>
+        <div class="cb-pre" style="font-size:11px;line-height:1.8"><span class="gold">my-app/</span>
+├── <span class="ok">CLAUDE.md</span>        <span class="cm">← memory</span>
+├── <span class="gold">.claude/</span>
+│   ├── settings.json
+│   └── <span class="gold">skills/</span>
+├── <span class="gold">app/</span>
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models.py
+│   └── routes/
+├── <span class="gold">tests/</span>
+│   └── conftest.py
+├── pyproject.toml
+├── requirements.txt
+└── .env.example</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Essential</div>
+      <div class="card-title">pyproject.toml</div>
+      <div class="cb" style="margin-top:10px">
+        <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">toml</div></div>
+        <div class="cb-pre" style="font-size:11px;line-height:1.8"><span class="gold">[tool.ruff]</span>
+line-length = <span class="n">88</span>
+select = [<span class="s">"E","F","I","N"</span>]
+
+<span class="gold">[tool.mypy]</span>
+strict = <span class="bi">true</span>
+python_version = <span class="s">"3.12"</span>
+
+<span class="gold">[tool.pytest.ini_options]</span>
+testpaths = [<span class="s">"tests"</span>]
+addopts = <span class="s">"-v --cov=app"</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Always add</div>
+      <div class="card-title">.gitignore</div>
+      <div class="cb" style="margin-top:10px">
+        <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">gitignore</div></div>
+        <div class="cb-pre" style="font-size:11px;line-height:1.8">.venv/
+__pycache__/
+*.pyc
+.env          <span class="cm"># secrets!</span>
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+dist/
+*.egg-info/
+.DS_Store</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note na"><div class="lbl">⚡ Critical</div><div class="txt">Never commit <code>.env</code> files. Use <code>.env.example</code> with placeholder values, and add <code>Read:.env*</code> to your Claude permissions deny list so Claude never reads your secrets.</div></div>
+</section></div>
+
+<!-- ══════════════════════════════ S2: CLAUDE.MD ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 02</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s2">
+  <div class="s-hd">
+    <div class="s-num">02</div>
+    <div class="s-meta">
+      <div class="s-tag">Memory File</div>
+      <h2 class="s-title">The Perfect Python <em>CLAUDE.md</em></h2>
+      <div class="s-sub">This file is Claude's brain about your project. It's loaded every session. Be specific, be concise, be ruthless about accuracy.</div>
+    </div>
+  </div>
+
+  <div class="bq">CLAUDE.md is the difference between Claude <em>guessing</em> your conventions and <em>knowing</em> them. Invest 20 minutes here, save hours everywhere else.</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">CLAUDE.md — Complete Python Template (copy &amp; customise)</div></div>
+    <div class="cb-pre"><span class="gold"># Project: My FastAPI Application</span>
+REST API for user management. Python 3.12 + FastAPI + SQLAlchemy 2.0 + Postgres.
+
+<span class="gold">## Environment</span>
+- Python 3.12 (use <span class="s">`python3`</span>, never <span class="s">`python`</span>)
+- Virtual env at <span class="s">`.venv/`</span> — always activated before any work
+- Dependencies: fastapi, uvicorn, sqlalchemy, pydantic, alembic, python-dotenv
+
+<span class="gold">## Commands</span>
+<span class="cm">```bash</span>
+uvicorn app.main:app --reload     <span class="cm"># dev server</span>
+pytest                            <span class="cm"># run all tests</span>
+pytest -x -v                      <span class="cm"># stop on first fail, verbose</span>
+ruff check . --fix                <span class="cm"># lint + auto-fix</span>
+ruff format .                     <span class="cm"># format (like black)</span>
+mypy app/ --strict                <span class="cm"># type check</span>
+alembic revision --autogenerate   <span class="cm"># new migration</span>
+alembic upgrade head              <span class="cm"># apply migrations</span>
+<span class="cm">```</span>
+
+<span class="gold">## Architecture</span>
+<span class="s">app/main.py</span>      → FastAPI app, lifespan, middleware
+<span class="s">app/models/</span>      → SQLAlchemy ORM models (one file per domain)
+<span class="s">app/schemas/</span>     → Pydantic request/response schemas
+<span class="s">app/routers/</span>     → Route handlers (one file per resource)
+<span class="s">app/services/</span>    → Business logic (NO db calls in routers!)
+<span class="s">app/deps.py</span>      → FastAPI dependency functions
+<span class="s">app/database.py</span>  → SQLAlchemy engine + session factory
+<span class="s">tests/conftest.py</span> → Shared fixtures (test db, test client)
+
+<span class="gold">## Our Conventions</span>
+- **Type hints everywhere** — all functions must be fully annotated
+- **Pydantic v2** for ALL request/response validation — never raw dicts in routes
+- **Never import Session directly** — use <span class="s">`Annotated[Session, Depends(get_db)]`</span>
+- **Async routes** — all route handlers must be <span class="s">`async def`</span>
+- **Service layer** — business logic goes in <span class="s">`app/services/`</span>, not in routers
+- **Error handling** — raise <span class="s">`HTTPException`</span> from services, not from models
+- **Naming**: snake_case files, PascalCase classes, UPPER_CASE constants
+
+<span class="gold">## Testing Rules</span>
+- Every new function needs a test in <span class="s">`tests/`</span>
+- Use <span class="s">`pytest.mark.parametrize`</span> for multiple input cases
+- Use factory fixtures in <span class="s">`conftest.py`</span> — never hardcode test data inline
+- Mock external API calls — never hit real endpoints in tests
+- Minimum 80% coverage enforced by CI
+
+<span class="gold">## Gotchas</span>
+- Local dev requires <span class="s">`.env`</span> with <span class="s">`DATABASE_URL`</span> set (see <span class="s">`.env.example`</span>)
+- Run <span class="s">`alembic upgrade head`</span> after pulling any branch with new migrations
+- The <span class="s">`payments/`</span> module uses Stripe — don't refactor without checking stripe.py first
+- SQLAlchemy 2.0 style only — no legacy <span class="s">`session.query()`</span> syntax
+
+<span class="gold">## Git Workflow</span>
+- Branch naming: <span class="s">`feat/description`</span>, <span class="s">`fix/description`</span>, <span class="s">`chore/description`</span>
+- Conventional commits: <span class="s">`feat(auth): add JWT refresh`</span>
+- PRs require: passing CI + 1 review + no mypy errors</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="g3">
+    <div class="card"><div class="card-label">Must Have</div><div class="card-title">Commands Section</div><div class="card-body">Claude uses your exact command strings to run tests and checks. Include <strong>every common task</strong>: run, test, lint, migrate, seed.</div></div>
+    <div class="card"><div class="card-label">Must Have</div><div class="card-title">Conventions Section</div><div class="card-body">The rules Claude can't infer. <strong>Async vs sync, naming patterns, where business logic lives</strong>, which library version you're on.</div></div>
+    <div class="card"><div class="card-label">Must Have</div><div class="card-title">Gotchas Section</div><div class="card-body">Things that will cause Claude to make mistakes without context — <strong>setup steps, legacy code warnings, external service quirks</strong>.</div></div>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S3: SKILLS ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 03</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s3">
+  <div class="s-hd">
+    <div class="s-num">03</div>
+    <div class="s-meta">
+      <div class="s-tag">Skills System</div>
+      <h2 class="s-title">Python <em>Skills</em> for Claude</h2>
+      <div class="s-sub">Skills are knowledge packs that Claude auto-activates when you mention relevant tasks. Build these once, benefit forever.</div>
+    </div>
+  </div>
+
+  <div class="pills">
+    <div class="pill pg">pytest patterns</div><div class="pill pa">type annotations</div>
+    <div class="pill pb">docstrings</div><div class="pill pp">code review</div>
+    <div class="pill pt">pydantic schemas</div><div class="pill pg">sqlalchemy</div>
+    <div class="pill pa">async patterns</div><div class="pill pb">refactor</div>
+    <div class="pill pp">migration helper</div><div class="pill pt">api design</div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">.claude/skills/testing/SKILL.md</div></div>
+    <div class="cb-pre"><span class="cm">---</span>
+<span class="gold">name:</span> pytest testing patterns
+<span class="gold">description:</span> Testing patterns for this Python project using pytest.
+             Auto-activate when writing, reviewing, or fixing tests.
+             Use when asked to add tests or improve test coverage.
+<span class="gold">allowed tools:</span> Read, Bash(pytest), Grep, Glob
+<span class="cm">---</span>
+
+<span class="gold"># Testing Patterns</span>
+
+<span class="gold">## Structure: AAA Pattern</span>
+All tests MUST follow Arrange → Act → Assert:
+<span class="cm">```python</span>
+<span class="k">def</span> <span class="fn">test_create_user</span>(db_session, user_factory):
+    <span class="cm"># Arrange</span>
+    payload = UserCreate(email=<span class="s">"test@example.com"</span>, name=<span class="s">"Alice"</span>)
+
+    <span class="cm"># Act</span>
+    user = create_user(db_session, payload)
+
+    <span class="cm"># Assert</span>
+    <span class="k">assert</span> user.id <span class="k">is not None</span>
+    <span class="k">assert</span> user.email == <span class="s">"test@example.com"</span>
+<span class="cm">```</span>
+
+<span class="gold">## Fixtures (always in conftest.py)</span>
+<span class="cm">```python</span>
+<span class="op">@pytest.fixture</span>
+<span class="k">def</span> <span class="fn">db_session</span>():
+    engine = create_engine(<span class="s">"sqlite:///:memory:"</span>)
+    Base.metadata.create_all(engine)
+    <span class="k">with</span> Session(engine) <span class="k">as</span> session:
+        <span class="k">yield</span> session
+<span class="cm">```</span>
+
+<span class="gold">## Parametrize for edge cases</span>
+<span class="cm">```python</span>
+<span class="op">@pytest.mark.parametrize</span>(<span class="s">"email,valid"</span>, [
+    (<span class="s">"good@email.com"</span>, <span class="bi">True</span>),
+    (<span class="s">"bad-email"</span>, <span class="bi">False</span>),
+    (<span class="s">""</span>, <span class="bi">False</span>),
+    (<span class="k">None</span>, <span class="bi">False</span>),
+])
+<span class="k">def</span> <span class="fn">test_email_validation</span>(email, valid):
+    <span class="k">assert</span> is_valid_email(email) == valid
+<span class="cm">```</span>
+
+<span class="gold">## Mocking External Services</span>
+Always mock: HTTP calls, email sending, payment processing, S3.
+<span class="cm">```python</span>
+<span class="k">def</span> <span class="fn">test_send_email</span>(mocker):
+    mock_send = mocker.<span class="fn">patch</span>(<span class="s">"app.email.resend.emails.send"</span>)
+    send_welcome_email(user)
+    mock_send.<span class="fn">assert_called_once</span>()
+<span class="cm">```</span></div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">.claude/skills/pydantic-schemas/SKILL.md</div></div>
+    <div class="cb-pre"><span class="cm">---</span>
+<span class="gold">name:</span> pydantic v2 schemas
+<span class="gold">description:</span> Pydantic v2 schema patterns. Use when creating or reviewing
+             API schemas, request/response models, or validation logic.
+<span class="gold">allowed tools:</span> Read, Grep
+<span class="cm">---</span>
+
+<span class="gold"># Pydantic v2 Schema Patterns</span>
+
+<span class="gold">## Schema Hierarchy</span>
+<span class="cm">```python</span>
+<span class="k">from</span> pydantic <span class="k">import</span> BaseModel, EmailStr, Field, model_validator
+
+<span class="cm"># Base — shared fields</span>
+<span class="k">class</span> <span class="cl">UserBase</span>(BaseModel):
+    email: EmailStr
+    name: <span class="bi">str</span> = Field(min_length=<span class="n">1</span>, max_length=<span class="n">100</span>)
+
+<span class="cm"># Create — request body (no id)</span>
+<span class="k">class</span> <span class="cl">UserCreate</span>(<span class="cl">UserBase</span>):
+    password: <span class="bi">str</span> = Field(min_length=<span class="n">8</span>)
+
+<span class="cm"># Read — response (includes id, timestamps)</span>
+<span class="k">class</span> <span class="cl">UserRead</span>(<span class="cl">UserBase</span>):
+    id: <span class="bi">int</span>
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=<span class="bi">True</span>)
+
+<span class="cm"># Update — all optional for PATCH</span>
+<span class="k">class</span> <span class="cl">UserUpdate</span>(BaseModel):
+    name: <span class="bi">str</span> | <span class="bi">None</span> = <span class="k">None</span>
+    email: EmailStr | <span class="bi">None</span> = <span class="k">None</span>
+<span class="cm">```</span>
+
+<span class="gold">## Custom Validators</span>
+<span class="cm">```python</span>
+<span class="op">@model_validator</span>(mode=<span class="s">"after"</span>)
+<span class="k">def</span> <span class="fn">passwords_match</span>(self) -> <span class="s">"UserCreate"</span>:
+    <span class="k">if</span> self.password != self.confirm_password:
+        <span class="k">raise</span> <span class="cl">ValueError</span>(<span class="s">"Passwords do not match"</span>)
+    <span class="k">return</span> self
+<span class="cm">```</span></div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S4: HOOKS ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 04</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s4">
+  <div class="s-hd">
+    <div class="s-num">04</div>
+    <div class="s-meta">
+      <div class="s-tag">Automation</div>
+      <h2 class="s-title">Python <em>Hooks</em> — Auto Quality Gates</h2>
+      <div class="s-sub">Hooks are shell commands that run deterministically at key moments. For Python, they're your automatic quality enforcer.</div>
+    </div>
+  </div>
+
+  <div class="hkrow">
+    <div class="hknode hk-a"><div class="hk-label">PreToolUse</div><div class="hk-name">Before Action</div><div class="hk-desc">Validate before Claude runs bash or writes files</div></div>
+    <div class="hknode hk-b"><div class="hk-label">PostToolUse</div><div class="hk-name">After Write</div><div class="hk-desc">Auto-run ruff + mypy after any .py file is written</div></div>
+    <div class="hknode hk-c"><div class="hk-label">PostToolUse</div><div class="hk-name">After Tests</div><div class="hk-desc">Capture test output, feed failures back to Claude</div></div>
+    <div class="hknode hk-d"><div class="hk-label">Notification</div><div class="hk-name">On Complete</div><div class="hk-desc">Notify when a long agentic task finishes</div></div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">.claude/settings.json — Python hooks</div></div>
+    <div class="cb-pre">{
+  <span class="p">"permissions"</span>: {
+    <span class="p">"allow"</span>: [<span class="s">"Read:*"</span>, <span class="s">"Write:app/**"</span>, <span class="s">"Write:tests/**"</span>,
+              <span class="s">"Bash:pytest*"</span>, <span class="s">"Bash:ruff*"</span>, <span class="s">"Bash:mypy*"</span>,
+              <span class="s">"Bash:pip install*"</span>, <span class="s">"Bash:git*"</span>],
+    <span class="p">"deny"</span>:  [<span class="s">"Read:.env*"</span>, <span class="s">"Bash:sudo*"</span>, <span class="s">"Bash:rm -rf*"</span>]
+  },
+  <span class="p">"hooks"</span>: {
+    <span class="cm">// ── After writing any Python file: lint + type-check</span>
+    <span class="p">"PostToolUse"</span>: [
+      {
+        <span class="p">"matcher"</span>: <span class="s">"Write:*.py"</span>,
+        <span class="p">"hooks"</span>: [{
+          <span class="p">"type"</span>: <span class="s">"command"</span>,
+          <span class="p">"command"</span>: <span class="s">"ruff check --fix \"$CLAUDE_TOOL_INPUT_FILE\" && mypy \"$CLAUDE_TOOL_INPUT_FILE\""</span>,
+          <span class="p">"timeout"</span>: <span class="n">15</span>
+        }]
+      },
+      <span class="cm">// ── After writing test files: auto-run the tests</span>
+      {
+        <span class="p">"matcher"</span>: <span class="s">"Write:tests/*.py"</span>,
+        <span class="p">"hooks"</span>: [{
+          <span class="p">"type"</span>: <span class="s">"command"</span>,
+          <span class="p">"command"</span>: <span class="s">"pytest tests/ -x -q 2>&1 | tail -20"</span>,
+          <span class="p">"timeout"</span>: <span class="n">60</span>
+        }]
+      }
+    ],
+    <span class="cm">// ── Before any bash command: block dangerous patterns</span>
+    <span class="p">"PreToolUse"</span>: [
+      {
+        <span class="p">"matcher"</span>: <span class="s">"Bash"</span>,
+        <span class="p">"hooks"</span>: [{
+          <span class="p">"type"</span>: <span class="s">"command"</span>,
+          <span class="p">"command"</span>: <span class="s">"scripts/check_safe.sh"</span>
+        }]
+      }
+    ]
+  }
+}</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">scripts/check_safe.sh — PreToolUse safety script</div></div>
+    <div class="cb-pre"><span class="cm">#!/bin/bash</span>
+<span class="cm"># Exit 2 to BLOCK the command. Exit 0 to ALLOW it.</span>
+
+COMMAND="$CLAUDE_TOOL_INPUT_COMMAND"
+
+<span class="cm"># Block destructive patterns</span>
+<span class="k">if</span> echo "$COMMAND" | grep -qE <span class="s">'(rm -rf|DROP TABLE|DELETE FROM [^W]|sudo)'</span>; then
+  echo <span class="s">"❌ BLOCKED: Dangerous command pattern detected"</span> >&2
+  exit <span class="n">2</span>   <span class="cm"># exit 2 = Claude stops and shows error</span>
+<span class="k">fi</span>
+
+<span class="cm"># Block accessing secrets</span>
+<span class="k">if</span> echo "$COMMAND" | grep -qE <span class="s">'cat .env|echo .env|less .env'</span>; then
+  echo <span class="s">"❌ BLOCKED: .env access not permitted"</span> >&2
+  exit <span class="n">2</span>
+<span class="k">fi</span>
+
+exit <span class="n">0</span>   <span class="cm"># allow everything else</span></div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="note ng"><div class="lbl">✓ Result</div><div class="txt">With these hooks, every time Claude writes a Python file, <strong>ruff auto-fixes style issues</strong> and <strong>mypy catches type errors instantly</strong>. When it writes tests, they run immediately. Claude sees the output and self-corrects — no manual steps.</div></div>
+</section></div>
+
+<!-- ══════════════════════════════ S5: PROMPTING ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 05</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s5">
+  <div class="s-hd">
+    <div class="s-num">05</div>
+    <div class="s-meta">
+      <div class="s-tag">Prompting</div>
+      <h2 class="s-title">Python Prompting <em>Patterns</em></h2>
+      <div class="s-sub">How you phrase requests dramatically changes output quality. These patterns are tuned for Python projects.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="prompt-box">
+      <div class="pb-top">New Feature <span class="pb-tag pb-bad">❌ Vague</span></div>
+      <div class="pb-body">Add authentication to my app.</div>
+    </div>
+    <div class="prompt-box">
+      <div class="pb-top">New Feature <span class="pb-tag pb-good">✓ Specific</span></div>
+      <div class="pb-body">Add JWT authentication to the FastAPI app in <strong>@app/routers/auth.py</strong>. Use python-jose for JWT, bcrypt for password hashing. Include:<br>• POST /auth/register (creates user, returns token)<br>• POST /auth/login (verifies password, returns token)<br>• A <strong>get_current_user</strong> dependency in deps.py<br>Follow the Pydantic schema pattern in <strong>@app/schemas/user.py</strong>. Add tests in tests/test_auth.py.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="prompt-box">
+      <div class="pb-top">Bug Fix <span class="pb-tag pb-bad">❌ Vague</span></div>
+      <div class="pb-body">My tests are failing, fix them.</div>
+    </div>
+    <div class="prompt-box">
+      <div class="pb-top">Bug Fix <span class="pb-tag pb-good">✓ Specific</span></div>
+      <div class="pb-body">Run <strong>pytest tests/test_users.py -v</strong> and fix all failures. The tests were passing before I refactored the UserService. Don't change the test assertions — only fix the implementation in <strong>@app/services/user_service.py</strong>.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="prompt-box">
+      <div class="pb-top">Refactor <span class="pb-tag pb-bad">❌ Vague</span></div>
+      <div class="pb-body">Refactor my code.</div>
+    </div>
+    <div class="prompt-box">
+      <div class="pb-top">Refactor <span class="pb-tag pb-good">✓ Specific</span></div>
+      <div class="pb-body">Refactor <strong>@app/routes/users.py</strong>. Move all DB logic into a new <strong>app/services/user_service.py</strong>. Route handlers should only handle HTTP concerns (request parsing, response formatting). Keep the same endpoint signatures. All existing tests must still pass after refactor.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">Power prompt patterns — copy these</div></div>
+    <div class="cb-pre"><span class="cm"># ── @filename — pull in context inline</span>
+Review <span class="gold">@app/models/user.py</span> and add a <span class="s">`full_name`</span> computed property
+that combines first_name and last_name with proper null handling.
+
+<span class="cm"># ── Plan Mode first for complex tasks (Shift+Tab)</span>
+<span class="cm"># Then confirm before Claude writes any code</span>
+
+<span class="cm"># ── Constraint framing (tell Claude what NOT to do)</span>
+Add email validation to UserCreate. Do NOT modify the database
+schema or existing tests. Only update <span class="gold">@app/schemas/user.py</span>.
+
+<span class="cm"># ── Output format specification</span>
+Review <span class="gold">@app/services/payment.py</span> for security issues.
+Return a list in this format:
+  SEVERITY: [Critical/High/Medium/Low]
+  LINE: [line number]
+  ISSUE: [what's wrong]
+  FIX: [exact code fix]
+
+<span class="cm"># ── TDD style (tests first)</span>
+Write failing tests for a <span class="s">`calculate_discount()`</span> function
+(test file: <span class="gold">@tests/test_pricing.py</span>), then implement the
+function to make them pass. Cover: 0%, 10%, 25% tiers.
+
+<span class="cm"># ── Iterative: build on existing work</span>
+The <span class="s">`UserService`</span> class in <span class="gold">@app/services/user_service.py</span>
+needs a <span class="s">`bulk_create()`</span> method. Use the same pattern as the
+existing <span class="s">`create()`</span> method. Add parametrized tests.</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S6: FRAMEWORKS ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 06</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s6">
+  <div class="s-hd">
+    <div class="s-num">06</div>
+    <div class="s-meta">
+      <div class="s-tag">Framework Setups</div>
+      <h2 class="s-title">FastAPI · Django · <em>Data Science</em></h2>
+      <div class="s-sub">Framework-specific CLAUDE.md additions. Drop the relevant block into your project's memory file.</div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-label">FastAPI</div>
+      <div class="card-title">API Projects</div>
+      <div class="card-body">Add to CLAUDE.md: async routes, dependency injection, Pydantic v2, Alembic migrations, test client setup.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Django</div>
+      <div class="card-title">Web Projects</div>
+      <div class="card-body">Add to CLAUDE.md: ORM patterns, management commands, Django test runner, settings split, signals.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Data Science</div>
+      <div class="card-title">ML / Analysis</div>
+      <div class="card-body">Add to CLAUDE.md: notebook vs script conventions, pandas/numpy idioms, model serialization, data paths.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">CLAUDE.md addition — FastAPI specific</div></div>
+    <div class="cb-pre"><span class="gold">## FastAPI Patterns</span>
+<span class="cm">```python</span>
+<span class="cm"># ── Dependency injection (always use Annotated)</span>
+<span class="k">from</span> typing <span class="k">import</span> Annotated
+DbSession = Annotated[Session, Depends(get_db)]
+CurrentUser = Annotated[User, Depends(get_current_user)]
+
+<span class="op">@router.get</span>(<span class="s">"/me"</span>, response_model=UserRead)
+<span class="k">async def</span> <span class="fn">get_me</span>(db: DbSession, user: CurrentUser):
+    <span class="k">return</span> user
+
+<span class="cm"># ── Lifespan (replace @app.on_event)</span>
+<span class="op">@asynccontextmanager</span>
+<span class="k">async def</span> <span class="fn">lifespan</span>(app: FastAPI):
+    <span class="k">await</span> startup()
+    <span class="k">yield</span>
+    <span class="k">await</span> shutdown()
+
+<span class="cm"># ── Test client</span>
+<span class="op">@pytest.fixture</span>
+<span class="k">def</span> <span class="fn">client</span>(db_session):
+    app.dependency_overrides[get_db] = <span class="k">lambda</span>: db_session
+    <span class="k">with</span> TestClient(app) <span class="k">as</span> c:
+        <span class="k">yield</span> c
+<span class="cm">```</span></div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">CLAUDE.md addition — Django specific</div></div>
+    <div class="cb-pre"><span class="gold">## Django Conventions</span>
+Commands:
+  python manage.py runserver       <span class="cm"># dev</span>
+  python manage.py test            <span class="cm"># tests</span>
+  python manage.py makemigrations  <span class="cm"># new migration</span>
+  python manage.py migrate         <span class="cm"># apply</span>
+
+Patterns:
+- Use <span class="s">`select_related()`</span> / <span class="s">`prefetch_related()`</span> to avoid N+1 queries
+- Fat models, thin views — business logic in model methods
+- Custom managers for reusable query sets
+- All views use class-based views (CBV) with mixins
+- <span class="s">`settings/base.py`</span> + <span class="s">`settings/dev.py`</span> + <span class="s">`settings/prod.py`</span>
+- Use <span class="s">`django-environ`</span> for environment variables
+- Tests use <span class="s">`pytest-django`</span> with <span class="s">`@pytest.mark.django_db`</span></div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">CLAUDE.md addition — Data Science / ML</div></div>
+    <div class="cb-pre"><span class="gold">## Data Science Conventions</span>
+Stack: Python 3.12 · pandas 2.x · numpy · scikit-learn · matplotlib
+
+Paths:
+  data/raw/          → original, never modified
+  data/processed/    → cleaned, feature-engineered
+  models/            → serialized model files (.pkl, .joblib)
+  notebooks/         → exploration only, not production
+  src/               → production Python modules
+
+Rules:
+- Use <span class="s">`pathlib.Path`</span>, never string paths
+- DataFrames: always set explicit dtypes on load
+- Use <span class="s">`pd.read_csv(..., dtype={...})`</span> not implicit inference
+- Models saved with <span class="s">`joblib.dump()`</span>, versioned by date
+- Seed all random operations: <span class="s">`np.random.seed(42)`</span>, <span class="s">`random_state=42`</span>
+- Log training metrics with MLflow or simple CSV log
+
+Commands:
+  jupyter notebook                <span class="cm"># explore</span>
+  python src/train.py             <span class="cm"># train model</span>
+  pytest tests/ -m "not slow"     <span class="cm"># fast tests only</span></div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S7: DEBUGGING ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 07</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s7">
+  <div class="s-hd">
+    <div class="s-num">07</div>
+    <div class="s-meta">
+      <div class="s-tag">Debugging</div>
+      <h2 class="s-title">Let Claude <em>Debug &amp; Refactor</em></h2>
+      <div class="s-sub">Claude excels at Python debugging when given the right context. Share error output, stack traces, and relevant files directly.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">Debugging prompts — paste these with your error</div></div>
+    <div class="cb-pre"><span class="cm"># ── Share the full traceback (paste it directly)</span>
+This error occurs when calling <span class="s">`POST /users`</span> with a valid payload.
+Here's the full traceback:
+
+  sqlalchemy.exc.IntegrityError: (psycopg2.errors.UniqueViolation)
+  duplicate key value violates unique constraint "users_email_key"
+  DETAIL: Key (email)=(test@example.com) already exists.
+
+Relevant files: <span class="gold">@app/routers/users.py</span> <span class="gold">@app/services/user_service.py</span>
+Fix the root cause. Add a proper 409 HTTP response instead of a 500.
+
+<span class="cm"># ── mypy error fix</span>
+Run <span class="s">`mypy app/ --strict`</span> and fix ALL type errors.
+Do not use <span class="s">`type: ignore`</span> unless absolutely necessary, and comment why.
+
+<span class="cm"># ── Performance problem</span>
+The <span class="s">`GET /users`</span> endpoint is slow (>2s with 1000 users).
+Profile <span class="gold">@app/services/user_service.py</span> — I suspect N+1 queries.
+Add <span class="s">`select_related`</span> or eager loading as needed, then benchmark with pytest-benchmark.
+
+<span class="cm"># ── Async bug</span>
+This function is raising <span class="s">`RuntimeError: no running event loop`</span>.
+Review <span class="gold">@app/tasks/email_task.py</span> — I think I'm mixing sync/async.
+Fix it and explain what was wrong.</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">Refactor prompts — battle-tested patterns</div></div>
+    <div class="cb-pre"><span class="cm"># ── Extract service layer</span>
+<span class="gold">@app/routers/users.py</span> has grown to 400 lines with embedded business logic.
+Extract all DB and business logic into <span class="s">`app/services/user_service.py`</span>.
+The router should only handle: request parsing, calling service methods, returning responses.
+Existing tests must all pass after the refactor.
+
+<span class="cm"># ── Add type hints to legacy code</span>
+Add complete type annotations to <span class="gold">@app/utils/helpers.py</span>.
+Run <span class="s">`mypy --strict`</span> to verify. Use <span class="s">`TypeVar`</span> and <span class="s">`Generic`</span> where appropriate.
+Don't change the function logic — only add types.
+
+<span class="cm"># ── Replace print with proper logging</span>
+Replace all <span class="s">`print()`</span> statements in <span class="gold">@app/</span> with structured logging.
+Use Python's built-in <span class="s">`logging`</span> module. Set up a logger per module.
+Log levels: DEBUG for dev details, INFO for operations, ERROR for failures.
+
+<span class="cm"># ── Convert sync to async</span>
+Convert all route handlers in <span class="gold">@app/routers/reports.py</span> from sync to async.
+Use <span class="s">`asyncio.gather()`</span> where multiple independent DB calls can run concurrently.
+Keep the same function signatures and response models.</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S8: TESTING ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 08</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s8">
+  <div class="s-hd">
+    <div class="s-num">08</div>
+    <div class="s-meta">
+      <div class="s-tag">Testing</div>
+      <h2 class="s-title">Automated <em>Test Generation</em></h2>
+      <div class="s-sub">Claude can write comprehensive pytest suites faster than you can. Give it the right prompts and constraints.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">Test generation prompts</div></div>
+    <div class="cb-pre"><span class="cm"># ── Complete test suite for a module</span>
+Write a comprehensive pytest test suite for <span class="gold">@app/services/user_service.py</span>.
+Cover:
+  - Happy path for every public method
+  - Edge cases: empty string, None, max length, duplicate values
+  - Error cases: DB errors, validation failures, not found
+  - Use pytest.mark.parametrize for input variations
+  - All fixtures in conftest.py, not inline in tests
+Save to tests/test_user_service.py
+
+<span class="cm"># ── TDD: write tests FIRST, then implementation</span>
+Write FAILING tests for a <span class="s">`PasswordResetService`</span> class that should:
+  - generate_reset_token(email: str) -> str
+  - validate_token(token: str) -> User | None  (None if expired/invalid)
+  - reset_password(token: str, new_password: str) -> bool
+Tokens expire in 1 hour. Add tests for expiry.
+Once tests are written, implement the service to make them pass.
+
+<span class="cm"># ── Improve existing test coverage</span>
+Run <span class="s">`pytest --cov=app --cov-report=term-missing`</span> and identify the
+files below 80% coverage. Add tests for the uncovered lines in
+<span class="gold">@app/services/</span>. Focus on branch coverage, not just line coverage.
+
+<span class="cm"># ── Integration tests</span>
+Write integration tests for the full <span class="s">`POST /users/register`</span> flow
+using the TestClient. Test the complete request → response cycle
+including headers, status codes, and response body structure.</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+
+  <div class="note ng"><div class="lbl">🎯 Best Result Pattern</div><div class="txt">Before asking for tests: <strong>1)</strong> Make sure your CLAUDE.md has the testing conventions section. <strong>2)</strong> Have a good <code>conftest.py</code> with shared fixtures. <strong>3)</strong> Show Claude an existing test file with <code>@tests/conftest.py</code> so it follows your patterns exactly.</div></div>
+</section></div>
+
+<!-- ══════════════════════════════ S9: GIT ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 09</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s9">
+  <div class="s-hd">
+    <div class="s-num">09</div>
+    <div class="s-meta">
+      <div class="s-tag">Git Workflow</div>
+      <h2 class="s-title">Daily <em>Git Workflow</em> with Claude</h2>
+      <div class="s-sub">Claude can handle the entire git workflow — from writing commit messages to generating changelogs and PR descriptions.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">Git prompts for Python projects</div></div>
+    <div class="cb-pre"><span class="cm"># ── Generate a conventional commit message</span>
+Run <span class="s">`git diff --staged`</span> and write a conventional commit message.
+Format: <span class="s">`type(scope): description`</span>
+Types: feat|fix|refactor|test|docs|chore
+Keep subject under 72 chars. Add body if the change is complex.
+
+<span class="cm"># ── Pre-commit check before committing</span>
+Before I commit, run the full check suite:
+1. <span class="s">`ruff check . --fix`</span> — fix any lint issues
+2. <span class="s">`ruff format .`</span> — ensure formatting
+3. <span class="s">`mypy app/ --strict`</span> — type check
+4. <span class="s">`pytest -x -q`</span> — run tests
+If anything fails, fix it. Then show me the final <span class="s">`git diff`</span>.
+
+<span class="cm"># ── PR description</span>
+Look at <span class="s">`git log main..HEAD --oneline`</span> and <span class="s">`git diff main`</span>.
+Write a PR description with:
+  - Summary: what this PR does (2-3 sentences)
+  - Changes: bullet list of files changed and why
+  - Testing: what tests were added/modified
+  - Breaking changes: any API changes? (none / list them)
+
+<span class="cm"># ── Changelog generation</span>
+Generate a CHANGELOG entry for version 1.2.0.
+Look at git log from the last tag: <span class="s">`git log v1.1.0..HEAD --oneline`</span>
+Format as Keep a Changelog (Added / Changed / Fixed / Removed).</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S10: MULTI-FILE ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 10</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s10">
+  <div class="s-hd">
+    <div class="s-num">10</div>
+    <div class="s-meta">
+      <div class="s-tag">Advanced Usage</div>
+      <h2 class="s-title">Complex Multi-file <em>Tasks</em></h2>
+      <div class="s-sub">Big refactors, new features that span many files, database migrations — how to tackle them safely with Claude.</div>
+    </div>
+  </div>
+
+  <div class="bq">For large tasks: always use <em>Plan Mode first</em>. Read the plan. Then switch to Auto Accept. <em>Commit after each working milestone</em> — not at the end.</div>
+
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-dot">1</div>
+      <div class="flow-body">
+        <div class="ft">Switch to Plan Mode (Shift + Tab twice)</div>
+        <div class="fd">Describe the full feature. Claude outlines all files it will touch, the order, and any risks. Read it carefully before approving.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot">2</div>
+      <div class="flow-body">
+        <div class="ft">Approve plan or correct it before any code is written</div>
+        <div class="fd">If the plan touches the wrong files, says so in plain English. "Don't modify the payments module — only the user module." Claude will re-plan.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot">3</div>
+      <div class="flow-body">
+        <div class="ft">Switch to Auto Accept (Shift + Tab) and confirm</div>
+        <div class="fd">Claude executes without interrupting you on each step. Hooks will run ruff + mypy + pytest automatically after each file write.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot">4</div>
+      <div class="flow-body">
+        <div class="ft">Commit after each working phase</div>
+        <div class="fd"><code>git add . && git commit -m "feat(users): add service layer"</code> — small commits mean easy rollback if something goes wrong later.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot">5</div>
+      <div class="flow-body">
+        <div class="ft">Esc Esc to rewind if anything goes sideways</div>
+        <div class="fd">Claude's rewind rolls back to any previous checkpoint without losing your git history. Then try a different approach.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">Multi-file task prompt examples</div></div>
+    <div class="cb-pre"><span class="cm"># ── Complete new feature across multiple files</span>
+<span class="cm"># (Use Plan Mode first!)</span>
+Implement a Role-Based Access Control (RBAC) system:
+  1. New SQLAlchemy model: <span class="s">`Role`</span> (id, name, permissions JSON)
+  2. Add <span class="s">`role_id FK`</span> to the User model
+  3. Alembic migration for both changes
+  4. New <span class="s">`require_role(role_name)`</span> dependency in deps.py
+  5. Apply <span class="s">`require_role("admin")`</span> to all admin routes in <span class="gold">@app/routers/admin.py</span>
+  6. Tests for all new behaviour
+
+Commit each step separately. Run tests after each commit.
+
+<span class="cm"># ── Large-scale type annotation</span>
+Add strict type hints to ALL files in <span class="gold">@app/services/</span>.
+Process them one file at a time. After each file, run:
+  <span class="s">`mypy app/services/&lt;filename&gt;.py --strict`</span>
+Fix all errors before moving to the next file.
+Do NOT use <span class="s">`Any`</span> as a shortcut.
+
+<span class="cm"># ── Database schema change + migration</span>
+Add a <span class="s">`profile_picture_url`</span> field (nullable str, max 500 chars) to User.
+Steps:
+  1. Update SQLAlchemy model in <span class="gold">@app/models/user.py</span>
+  2. Update Pydantic schemas (UserRead, UserUpdate) in <span class="gold">@app/schemas/user.py</span>
+  3. Run <span class="s">`alembic revision --autogenerate -m "add profile picture url"`</span>
+  4. Review the generated migration, then <span class="s">`alembic upgrade head`</span>
+  5. Update affected tests</div>
+    <button class="cpb" onclick="cp(this)">copy</button>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S11: BEST PRACTICES ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 11</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s11">
+  <div class="s-hd">
+    <div class="s-num">11</div>
+    <div class="s-meta">
+      <div class="s-tag">Rules</div>
+      <h2 class="s-title">Best Practices &amp; <em>Common Mistakes</em></h2>
+      <div class="s-sub">The habits that separate power users from beginners. Click each rule as you adopt it.</div>
+    </div>
+  </div>
+
+  <ul class="checklist" id="cl">
+    <li onclick="tick(this)"><div class="chk">✓</div> Always launch Claude from project root — never from src/ or app/ subdirectory</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Run /init first, then add Python-specific sections to CLAUDE.md before first real task</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Include your exact pytest, ruff, and mypy commands in CLAUDE.md — Claude will run them</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Add "Conventions" section: type hints everywhere, async patterns, where business logic lives</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Add "Gotchas": DB setup steps, legacy modules to avoid, external service quirks</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Set up PostToolUse hooks: auto-run ruff + mypy after every .py file write</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Add Read:.env* to permissions deny list — Claude must never read your secrets</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Always use Plan Mode first on tasks that touch more than 3 files</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Commit after each working milestone — one feature = many small commits, not one big one</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Use @filename syntax to include specific files rather than describing them vaguely</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Tell Claude what NOT to change — constraints are as important as goals</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> One session per feature — start fresh, stay focused, use /compact on long sessions</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Build a testing SKILL.md with your project's pytest patterns and fixture conventions</li>
+    <li onclick="tick(this)"><div class="chk">✓</div> Commit CLAUDE.md to Git — share the same context with every team member</li>
+  </ul>
+
+  <div class="g2" style="margin-top:24px">
+    <div class="note nr"><div class="lbl">❌ Common Mistakes</div><div class="txt">
+      • Vague prompts like "improve this code"<br>
+      • Not sharing the error traceback with Claude<br>
+      • Starting a new session mid-feature and losing context<br>
+      • Never running /compact → context fills up → quality drops<br>
+      • Letting Claude access .env files
+    </div></div>
+    <div class="note ng"><div class="lbl">✓ Power Moves</div><div class="txt">
+      • Plan Mode + Auto Accept = fastest safe iteration<br>
+      • @filename pulls exact file content into the prompt<br>
+      • PostToolUse hooks = zero manual lint/test steps<br>
+      • Skills for pytest patterns = consistent test output<br>
+      • Specific constraints = Claude doesn't over-refactor
+    </div></div>
+  </div>
+</section></div>
+
+<!-- ══════════════════════════════ S12: REFERENCE ══════════════════════════════ -->
+<div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-lbl">Section 12</div><div class="sdiv-line"></div></div>
+<div class="wrap"><section class="s" id="s12">
+  <div class="s-hd">
+    <div class="s-num">12</div>
+    <div class="s-meta">
+      <div class="s-tag">Cheatsheet</div>
+      <h2 class="s-title">Quick <em>Reference</em></h2>
+      <div class="s-sub">Every command, shortcut, and prompt pattern you'll use daily with Python projects.</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="note nb"><div class="lbl">Slash Commands</div></div>
+      <table class="cmp">
+        <thead><tr><th>Command</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td class="cmd">/init</td><td>Generate CLAUDE.md from project scan</td></tr>
+          <tr><td class="cmd">/compact</td><td>Compress context — run every 30+ min</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note nb" style="margin-top:20px"><div class="lbl">Keyboard Shortcuts</div></div>
+      <table class="cmp">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td class="cmd">Shift + Tab</td><td>Cycle modes: Normal → Auto Accept → Plan</td></tr>
+          <tr><td class="cmd">Tab</td><td>Toggle extended thinking (hard problems)</td></tr>
+          <tr><td class="cmd">Esc Esc</td><td>Open rewind — roll back to any checkpoint</td></tr>
+          <tr><td class="cmd">Ctrl + C</td><td>Interrupt task without losing context</td></tr>
+          <tr><td class="cmd">@filename</td><td>Include file content in prompt</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <div class="note na"><div class="lbl">Python Daily Commands</div></div>
+      <div class="cb">
+        <div class="cb-top"><div class="cb-dots"><div class="cbd"></div><div class="cbd"></div><div class="cbd"></div></div><div class="cb-fn">bash</div></div>
+        <div class="cb-pre" style="font-size:11.5px"><span class="cm"># Start Claude in your project</span>
+cd my-python-app
+source .venv/bin/activate
+claude
+
+<span class="cm"># Inside Claude — typical session</span>
+<span class="op">/init</span>              <span class="cm"># first time only</span>
+
+<span class="cm"># Quality checks Claude runs for you</span>
+ruff check . --fix
+ruff format .
+mypy app/ --strict
+pytest -x -v
+pytest --cov=app --cov-report=term-missing</div>
+        <button class="cpb" onclick="cp(this)">copy</button>
+      </div>
+
+      <div class="note na"><div class="lbl">Workflow Pattern</div></div>
+      <div class="flow" style="margin-top:10px">
+        <div class="flow-item"><div class="flow-dot" style="font-size:9px">1</div><div class="flow-body"><div class="ft">cd project → source .venv/bin/activate → claude</div></div></div>
+        <div class="flow-item"><div class="flow-dot" style="font-size:9px">2</div><div class="flow-body"><div class="ft">Shift+Tab×2 → Plan Mode → describe task with @files</div></div></div>
+        <div class="flow-item"><div class="flow-dot" style="font-size:9px">3</div><div class="flow-body"><div class="ft">Approve plan → Shift+Tab → Auto Accept → confirm</div></div></div>
+        <div class="flow-item"><div class="flow-dot" style="font-size:9px">4</div><div class="flow-body"><div class="ft">Hooks auto-run ruff + mypy + pytest → Claude self-fixes</div></div></div>
+        <div class="flow-item"><div class="flow-dot" style="font-size:9px">5</div><div class="flow-body"><div class="ft">git commit → /compact → next feature or new session</div></div></div>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<!-- FINALE -->
+<div class="finale">
+  <div class="finale-inner">
+    <div class="fin-tag">Setup Complete</div>
+    <h2 class="fin-title">Claude Code + Python.<br><em>Now Build Something Great.</em></h2>
+    <p class="fin-desc">You have the CLAUDE.md template, the hooks, the skills, and the prompting patterns. The only thing left is to open your terminal and start.</p>
+    <div class="fin-cmd">cd my-python-app && source .venv/bin/activate && claude</div>
+    <div class="fin-pills">
+      <div class="fp">Project Setup ✓</div><div class="fp">CLAUDE.md ✓</div>
+      <div class="fp">Python Skills ✓</div><div class="fp">ruff Hooks ✓</div>
+      <div class="fp">mypy Hooks ✓</div><div class="fp">pytest Auto-run ✓</div>
+      <div class="fp">Prompting Patterns ✓</div><div class="fp">FastAPI Setup ✓</div>
+      <div class="fp">Django Setup ✓</div><div class="fp">Data Science ✓</div>
+      <div class="fp">Debugging ✓</div><div class="fp">Test Gen ✓</div>
+      <div class="fp">Git Workflow ✓</div><div class="fp">Multi-file Tasks ✓</div>
+    </div>
+  </div>
+</div>
+
+<footer>Claude Code × Python · Complete Integration Guide · 2026 · <span>Every concept covered</span></footer>
+
+<script>
+// Cursor
+const c1=document.getElementById('c1'),c2=document.getElementById('c2');
+let mx=0,my=0,ox=0,oy=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  c2.style.transform=`translate(${mx-2}px,${my-2}px)`;
+});
+document.querySelectorAll('a,button,.card,.hero-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>c1.classList.add('big'));
+  el.addEventListener('mouseleave',()=>c1.classList.remove('big'));
+});
+(function animC(){ox+=(mx-ox)*.12;oy+=(my-oy)*.12;c1.style.transform=`translate(${ox-7}px,${oy-7}px)`;requestAnimationFrame(animC)})();
+
+// Progress + nav
+const bar=document.getElementById('bar'),nav=document.getElementById('nav');
+const ndots=document.getElementById('ndots');
+for(let i=1;i<=12;i++){
+  const a=document.createElement('a');a.href=`#s${i}`;a.className='ndot';a.textContent=i;a.id=`nd${i}`;ndots.appendChild(a);
+}
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  bar.style.width=pct+'%';
+  nav.classList.toggle('on',window.scrollY>window.innerHeight*.5);
+  for(let i=1;i<=12;i++){
+    const el=document.getElementById('s'+i);
+    if(!el)continue;
+    const r=el.getBoundingClientRect();
+    const d=document.getElementById('nd'+i);
+    if(d)d.classList.toggle('active',r.top<=100&&r.bottom>100);
+  }
+});
+
+// Intersection observer
+document.querySelectorAll('section.s').forEach(s=>{
+  new IntersectionObserver(([e])=>{if(e.isIntersecting)s.classList.add('vis')},{threshold:.07}).observe(s);
+});
+
+// Copy
+function cp(btn){
+  const pre=btn.parentElement.querySelector('.cb-pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    btn.textContent='COPIED';btn.classList.add('y');
+    setTimeout(()=>{btn.textContent='copy';btn.classList.remove('y')},2000);
+  });
+}
+
+// Checklist
+function tick(li){li.classList.toggle('done')}
+</script>
+</body>
+</html>

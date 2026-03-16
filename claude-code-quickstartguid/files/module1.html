@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1 — What is Claude Code?</title>
+<link rel="stylesheet" href="course.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 01</div>
+    <h1 class="page-title">What is Claude Code?</h1>
+    <p class="page-desc">Understand the agentic architecture, mental model, and capabilities that make Claude Code fundamentally different from traditional coding assistants.</p>
+    <div class="page-meta">
+      <span>📖 Reading time: ~15 min</span>
+      <span>🎯 Foundation module</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: Definition -->
+    <div class="section">
+      <h2 class="section-title">The Core Idea</h2>
+      <p>Claude Code is an <strong style="color:var(--text)">agentic coding tool</strong> that runs in your terminal. Unlike a chatbot or autocomplete engine, Claude Code is designed to actively work on your codebase — reading files, writing code, running commands, managing git, and interacting with external services — all through natural language.</p>
+      <p>The key distinction is <em style="color:var(--cyan)">agency</em>: Claude Code doesn't just suggest; it executes.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">💬</div>
+          <div class="card-title">Traditional AI Chat</div>
+          <div class="card-desc">You copy code snippets back and forth. You run commands yourself. Context is lost between sessions. It's a lookup tool.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <div class="card-title">Claude Code (Agentic)</div>
+          <div class="card-desc">Claude reads your actual files, makes changes, runs tests, creates PRs, and maintains context. It's a teammate.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Architecture -->
+    <div class="section">
+      <h2 class="section-title">How it Works — The Architecture</h2>
+      <p>Claude Code is a loop: you give it a task, it plans steps, executes tools, observes results, and repeats until done. Understanding this loop is key to using it well.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+          <div class="code-lang">The Agent Loop</div>
+        </div>
+        <pre>You: "Add input validation to the registration form"
+
+Claude Code loop:
+  1. Plan  → "I'll need to read the form component,
+              understand existing validation, add rules"
+  2. Tool  → Read(src/components/RegisterForm.tsx)
+  3. Observe → [reads file content]
+  4. Plan  → "I'll add Zod schema validation"
+  5. Tool  → Write(src/components/RegisterForm.tsx, ...)
+  6. Tool  → Bash("npm test -- --testPathPattern=register")
+  7. Observe → ✓ 8 tests passed
+  8. Done  → "I've added validation for email, password
+              strength, and username uniqueness."</pre>
+      </div>
+
+      <h3 class="subsection-title">The Built-in Tool Set</h3>
+      <p>Claude Code's power comes from its ability to use tools. Here are the core tools available in every session:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tool</th><th>What It Does</th><th>Example Use</th></tr></thead>
+          <tbody>
+            <tr><td><code>Read</code></td><td>Read file contents</td><td>Understand existing code</td></tr>
+            <tr><td><code>Write</code></td><td>Create or overwrite files</td><td>Generate new components</td></tr>
+            <tr><td><code>Edit</code></td><td>Replace strings in files</td><td>Targeted refactoring</td></tr>
+            <tr><td><code>Bash</code></td><td>Execute shell commands</td><td>Run tests, git, build tools</td></tr>
+            <tr><td><code>Glob</code></td><td>Find files matching pattern</td><td>Discover all .tsx files</td></tr>
+            <tr><td><code>Grep</code></td><td>Search file contents</td><td>Find usages of a function</td></tr>
+            <tr><td><code>WebFetch</code></td><td>Fetch web content</td><td>Read library docs</td></tr>
+            <tr><td><code>WebSearch</code></td><td>Search the web</td><td>Research errors</td></tr>
+            <tr><td><code>Agent</code></td><td>Spawn a subagent</td><td>Parallel tasks</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION: What it can do -->
+    <div class="section">
+      <h2 class="section-title">What Claude Code Can Do</h2>
+
+      <h3 class="subsection-title">Development Tasks</h3>
+      <ul class="feature-list">
+        <li>Implement features end-to-end across multiple files and directories</li>
+        <li>Write unit, integration, and e2e tests for new or existing code</li>
+        <li>Refactor code with confidence — it reads first, then changes</li>
+        <li>Debug complex issues by reading error logs, tracing through code, and testing fixes</li>
+        <li>Add documentation, JSDoc comments, and inline explanations</li>
+        <li>Migrate between frameworks, languages, or architectural patterns</li>
+      </ul>
+
+      <h3 class="subsection-title">Git & DevOps</h3>
+      <ul class="feature-list">
+        <li>Create descriptive commit messages following Conventional Commits</li>
+        <li>Manage branches, merges, and cherry-picks</li>
+        <li>Review diffs and write PR descriptions</li>
+        <li>Resolve merge conflicts</li>
+        <li>Set up CI/CD pipeline configurations</li>
+      </ul>
+
+      <h3 class="subsection-title">Codebase Understanding</h3>
+      <ul class="feature-list">
+        <li>Explain unfamiliar codebases by reading and summarizing structure</li>
+        <li>Answer "where is X implemented?" by searching across all files</li>
+        <li>Map dependencies and architecture</li>
+        <li>Identify security vulnerabilities and code smells</li>
+      </ul>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Pro Insight: Treat it as a Teammate</div>
+          <p>The best mental model for Claude Code is a skilled developer on your team who has just joined. Give them context (CLAUDE.md), clear tasks, and let them work. Review their output, correct misunderstandings, and iterate.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: What it's NOT -->
+    <div class="section">
+      <h2 class="section-title">Limitations & What to Expect</h2>
+      <p>Understanding limitations helps you work with Claude Code more effectively.</p>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Context Window Limits</div>
+          <p>Claude Code has a context window. Very large codebases can't be fully loaded at once. It searches intelligently, but you may need to guide it to the right files for complex cross-cutting changes.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">It Makes Mistakes</div>
+          <p>Always review Claude's changes before committing. Use <code>git diff</code> frequently. Claude Code is powerful but not infallible — treat it like a PR from a colleague you trust but still review.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Training Data Cutoff</div>
+          <p>Claude may have outdated knowledge of very new libraries. Use WebFetch to load live documentation, or add library docs to your CLAUDE.md.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Use Cases -->
+    <div class="section">
+      <h2 class="section-title">Real-World Use Cases</h2>
+
+      <h3 class="subsection-title">Scenario 1: Onboarding to a New Codebase</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal session</div></div>
+        <pre><span class="token-prompt">You:</span> <span class="token-command">I just joined this project. Can you give me an overview of the architecture,
+     key entry points, and explain the data flow for user authentication?</span>
+
+<span class="token-output">Claude: Reading project structure...
+  ● Reading package.json
+  ● Scanning src/
+  ● Reading src/app.ts, src/routes/auth.ts, src/middleware/auth.ts
+
+  Architecture Overview:
+  This is a Node.js/Express API with a PostgreSQL database...
+  [detailed breakdown follows]</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Scenario 2: Fixing a Bug End-to-End</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal session</div></div>
+        <pre><span class="token-prompt">You:</span> <span class="token-command">Users report that the cart total is wrong when discount codes are applied.
+     Find the bug, fix it, and add a regression test.</span>
+
+<span class="token-output">Claude: ● Searching for discount code logic...
+  ● Reading src/cart/pricing.ts
+  ● Found issue: discount applied before tax calculation instead of after
+  ● Writing fix to src/cart/pricing.ts
+  ● Writing test: tests/cart/discount.test.ts
+  ● Running: npm test -- discount
+  ✓ 3 new tests passed, 15 existing tests still passing
+  
+  Bug: Line 47 in pricing.ts applied the percentage discount to the
+  pre-tax subtotal. Fixed to apply discount after tax is calculated...</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Scenario 3: Full Feature Implementation</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal session</div></div>
+        <pre><span class="token-prompt">You:</span> <span class="token-command">Implement a file upload feature for user avatars. Support JPG/PNG up to 5MB,
+     resize to 256x256, store in S3, and show a loading state in the UI.</span>
+
+<span class="token-output">Claude: This will involve:
+  1. Backend: multer middleware + sharp for resizing + AWS SDK for S3
+  2. API endpoint: POST /users/:id/avatar
+  3. Frontend: upload component with progress state
+  4. Tests for all three layers
+  
+  Starting with the backend...
+  ● Writing src/middleware/upload.ts
+  ● Writing src/routes/users/avatar.ts
+  ● Writing src/components/AvatarUpload.tsx
+  ● Writing tests/avatar.test.ts
+  ...</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Subscriptions -->
+    <div class="section">
+      <h2 class="section-title">Access & Pricing</h2>
+      <p>Claude Code requires a paid Anthropic account. There are two main ways to access it:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Plan</th><th>Best For</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--cyan)">Claude Pro</strong></td>
+              <td>Individual developers, getting started</td>
+              <td>Monthly usage limits apply</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--purple)">Claude Max</strong></td>
+              <td>Heavy daily use</td>
+              <td>Higher limits, priority access, more economical for frequent users</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--amber)">API Key</strong></td>
+              <td>Pay-as-you-go, CI/CD, automation</td>
+              <td>Costs depend on model and usage; good for variable workloads</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">Which Plan Should I Choose?</div>
+          <p>Start with Claude Pro to evaluate your usage patterns. If you find yourself hitting limits daily, Claude Max is typically more cost-effective for power users. API key billing works best for automation and CI/CD pipelines where usage is sporadic.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <div class="page-nav">
+    <a href="index.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Back to</div><div class="label">Course Overview</div></div>
+    </a>
+    <a href="module2.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Next: Module 02</div><div class="label">Installation & Setup</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module1.html');</script>
+</body>
+</html>

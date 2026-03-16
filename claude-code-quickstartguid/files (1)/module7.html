@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 7 — Hooks, Subagents & Advanced Features</title>
+<link rel="stylesheet" href="course.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 07</div>
+    <h1 class="page-title">Hooks, Subagents & Advanced Features</h1>
+    <p class="page-desc">Automate Claude Code's lifecycle with hooks, parallelize complex work using subagents, integrate with CI/CD pipelines, and apply expert-level patterns.</p>
+    <div class="page-meta">
+      <span>📖 ~35 min</span>
+      <span>🚀 Advanced features</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: Hooks Overview -->
+    <div class="section">
+      <h2 class="section-title">Hooks — Automating the Lifecycle</h2>
+      <p>Hooks are scripts, HTTP endpoints, or LLM prompts that fire automatically at specific points in Claude Code's lifecycle. They let you add deterministic, automated behavior without relying on Claude to remember.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Hook Event</th><th>When it Fires</th><th>Common Uses</th></tr></thead>
+          <tbody>
+            <tr><td><code>PreToolUse</code></td><td>Before Claude uses any tool</td><td>Log actions, block dangerous commands, ask for permission</td></tr>
+            <tr><td><code>PostToolUse</code></td><td>After a tool completes successfully</td><td>Format code, run linter, send notifications</td></tr>
+            <tr><td><code>PostToolUseFailure</code></td><td>After a tool fails</td><td>Error alerting, diagnostics</td></tr>
+            <tr><td><code>Stop</code></td><td>When Claude finishes responding</td><td>Desktop notification, save summary, run tests</td></tr>
+            <tr><td><code>SubagentStop</code></td><td>When a subagent finishes</td><td>Aggregate results, cleanup</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION: Hook Configuration -->
+    <div class="section">
+      <h2 class="section-title">Configuring Hooks</h2>
+      <p>Hooks are defined in <code>.claude/settings.json</code>. Each hook specifies which event triggers it, which tools to match (for tool hooks), and what command/endpoint/prompt to call.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — .claude/settings.json</div></div>
+        <pre>{
+  <span class="token-key">"hooks"</span>: {
+    <span class="token-key">"PostToolUse"</span>: [
+      {
+        <span class="token-key">"matcher"</span>: <span class="token-val">"Write|Edit"</span>,
+        <span class="token-key">"hooks"</span>: [
+          {
+            <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+            <span class="token-key">"command"</span>: <span class="token-val">"npx prettier --write \"${TOOL_INPUT_PATH}\""</span>
+          }
+        ]
+      }
+    ],
+    <span class="token-key">"Stop"</span>: [
+      {
+        <span class="token-key">"hooks"</span>: [
+          {
+            <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+            <span class="token-key">"command"</span>: <span class="token-val">"notify-send 'Claude Code' 'Task finished'"</span>
+          }
+        ]
+      }
+    ],
+    <span class="token-key">"PreToolUse"</span>: [
+      {
+        <span class="token-key">"matcher"</span>: <span class="token-val">"Bash"</span>,
+        <span class="token-key">"hooks"</span>: [
+          {
+            <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+            <span class="token-key">"command"</span>: <span class="token-val">"~/.claude/hooks/log-bash.sh"</span>
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Hook Examples -->
+    <div class="section">
+      <h2 class="section-title">Practical Hook Examples</h2>
+
+      <h3 class="subsection-title">1. Auto-Format on Every Write</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — PostToolUse hook</div></div>
+        <pre>{
+  <span class="token-key">"hooks"</span>: {
+    <span class="token-key">"PostToolUse"</span>: [{
+      <span class="token-key">"matcher"</span>: <span class="token-val">"Write|Edit"</span>,
+      <span class="token-key">"hooks"</span>: [{
+        <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+        <span class="token-key">"command"</span>: <span class="token-val">"prettier --write \"${TOOL_INPUT_PATH}\" 2>/dev/null; eslint --fix \"${TOOL_INPUT_PATH}\" 2>/dev/null; true"</span>
+      }]
+    }]
+  }
+}</pre>
+      </div>
+
+      <h3 class="subsection-title">2. Block Dangerous Bash Commands</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — ~/.claude/hooks/guard.sh</div></div>
+        <pre>#!/bin/bash
+# Block destructive commands from being run without explicit confirmation
+
+INPUT=$(cat)  # Hook receives JSON on stdin
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
+
+# Block patterns
+if echo "$COMMAND" | grep -qE '(rm -rf|DROP TABLE|DELETE FROM [a-z]+$|truncate)'; then
+  echo '{"decision": "block", "message": "Blocked potentially destructive command. Please confirm explicitly."}'
+  exit 0
+fi
+
+# Allow all other commands
+echo '{"decision": "allow"}'</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — Register the hook</div></div>
+        <pre>{
+  <span class="token-key">"hooks"</span>: {
+    <span class="token-key">"PreToolUse"</span>: [{
+      <span class="token-key">"matcher"</span>: <span class="token-val">"Bash"</span>,
+      <span class="token-key">"hooks"</span>: [{
+        <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+        <span class="token-key">"command"</span>: <span class="token-val">"~/.claude/hooks/guard.sh"</span>
+      }]
+    }]
+  }
+}</pre>
+      </div>
+
+      <h3 class="subsection-title">3. Desktop Notification on Completion</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Multi-platform notification</div></div>
+        <pre>#!/bin/bash
+# ~/.claude/hooks/notify.sh
+# Platform-aware desktop notification
+
+MESSAGE="${1:-Claude finished}"
+
+case "$(uname -s)" in
+  Darwin)
+    osascript -e "display notification \"$MESSAGE\" with title \"Claude Code\""
+    ;;
+  Linux)
+    notify-send "Claude Code" "$MESSAGE" 2>/dev/null || true
+    ;;
+  CYGWIN*|MINGW*)
+    powershell -Command "New-BurntToastNotification -Text 'Claude Code','$MESSAGE'"
+    ;;
+esac</pre>
+      </div>
+
+      <h3 class="subsection-title">4. Auto-Run Tests After File Changes</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — Run tests after write</div></div>
+        <pre>{
+  <span class="token-key">"hooks"</span>: {
+    <span class="token-key">"PostToolUse"</span>: [{
+      <span class="token-key">"matcher"</span>: <span class="token-val">"Write|Edit"</span>,
+      <span class="token-key">"hooks"</span>: [{
+        <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+        <span class="token-key">"command"</span>: <span class="token-val">"npm test --passWithNoTests --bail 2>&1 | tail -5"</span>,
+        <span class="token-key">"async"</span>: <span class="token-val">true</span>
+      }]
+    }]
+  }
+}</pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">async: true for Non-Blocking Hooks</div>
+          <p>Set <code>"async": true</code> on hooks that are slow (like test runs) so they don't block Claude Code while they execute. The hook runs in the background.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Subagents -->
+    <div class="section">
+      <h2 class="section-title">Subagents — Parallel Work</h2>
+      <p>Subagents are separate Claude Code instances spawned to work in parallel. The orchestrating Claude delegates tasks to subagents and combines their results. This is how Claude Code handles complex multi-track tasks efficiently.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal — Spawning subagents</div></div>
+        <pre><span class="token-prompt">You:</span> Run a comprehensive audit of our codebase:
+     - Security vulnerabilities
+     - Performance bottlenecks  
+     - Accessibility issues in the UI
+     - Dependency updates needed
+     Do all four in parallel.
+
+<span class="token-output">Claude: I'll spawn 4 specialized subagents for parallel analysis...
+
+  [Subagent 1] Security audit → scanning src/ for vulnerabilities
+  [Subagent 2] Performance analysis → reading src/, checking bundles
+  [Subagent 3] Accessibility audit → scanning components for a11y
+  [Subagent 4] Dependency check → running npm audit + npm outdated
+
+  [All complete in 45s — vs ~160s sequentially]
+
+  Aggregate Report:
+  Security: 2 HIGH issues found in auth/...
+  Performance: 3 bundle-size wins identified...
+  Accessibility: 7 missing aria-labels...
+  Dependencies: 4 updates recommended...</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Custom Subagent Definitions</h3>
+      <p>You can define specialized subagents with their own instructions and tool access in <code>.claude/agents/</code>.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/agents/security-auditor.md</div></div>
+        <pre><span class="token-comment">---
+name: security-auditor
+description: Use when performing security analysis, vulnerability scanning,
+             or code reviews focused on security. Triggers automatically
+             for security-related tasks.
+allowed-tools: Read, Grep, Glob
+model: claude-opus-4-6
+---</span>
+
+You are a security expert specializing in web application security.
+
+When analyzing code:
+1. Look for OWASP Top 10 vulnerabilities
+2. Check for hardcoded secrets using regex patterns
+3. Verify authentication and authorization on all routes
+4. Look for SQL/NoSQL injection vectors
+5. Check for XSS vulnerabilities in output rendering
+
+Report findings by severity: CRITICAL, HIGH, MEDIUM, LOW
+Include: file path, line number, vulnerability type, remediation.</pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">Skills vs Agents</div>
+          <p><strong>Skills</strong> (<code>.claude/skills/</code>) are loaded automatically when their description matches the current task. <strong>Agents</strong> (<code>.claude/agents/</code>) are explicitly spawned by the orchestrating Claude when it decides to delegate work. Skills influence behavior; agents do parallel work.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Worktrees -->
+    <div class="section">
+      <h2 class="section-title">Git Worktrees for Isolated Sessions</h2>
+      <p>The <code>--worktree</code> flag creates an isolated git worktree so Claude Code's changes don't interfere with your current branch. Perfect for experimenting or running multiple tasks in parallel.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Worktree sessions</div></div>
+        <pre><span class="token-comment"># Start an isolated session for a risky refactor</span>
+<span class="token-command">claude --worktree refactor-auth</span>
+<span class="token-output">Created worktree: /tmp/claude-worktree-refactor-auth
+Working in isolation from your main branch.</span>
+
+<span class="token-comment"># Run two feature implementations in parallel</span>
+<span class="token-comment"># Terminal 1:</span>
+<span class="token-command">claude --worktree feature-dark-mode</span>
+<span class="token-comment"># Terminal 2 (simultaneously):</span>
+<span class="token-command">claude --worktree feature-notifications</span>
+
+<span class="token-comment"># Worktree is auto-cleaned if no changes are made
+# Otherwise, it remains for you to review and merge</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: CI/CD Integration -->
+    <div class="section">
+      <h2 class="section-title">CI/CD Integration</h2>
+      <p>Claude Code's headless mode makes it a powerful addition to GitHub Actions, GitLab CI, and other pipelines.</p>
+
+      <h3 class="subsection-title">GitHub Actions: Auto-Review PRs</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">yaml — .github/workflows/claude-review.yml</div></div>
+        <pre>name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Claude Code
+        run: curl -fsSL https://claude.ai/install.sh | bash
+
+      - name: Run security review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "Review this PR diff for security vulnerabilities.
+            Output findings as GitHub-flavored Markdown." \
+            --allowedTools Read,Grep,Glob,Bash(git diff:*) \
+            --output-format text \
+            --max-turns 10 > review.md
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('review.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🤖 Claude Code Security Review\n\n${review}`
+            });</pre>
+      </div>
+
+      <h3 class="subsection-title">Auto-Generate Changelogs</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — In a release script</div></div>
+        <pre>#!/bin/bash
+# Generate changelog from git history since last tag
+
+LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~50")
+GIT_LOG=$(git log $LAST_TAG..HEAD --oneline)
+
+claude -p "Generate a user-facing CHANGELOG.md entry from these commits:
+
+$GIT_LOG
+
+Group by: Features, Bug Fixes, Performance, Dependencies.
+Write in plain English that non-developers can understand.
+Output only the Markdown, nothing else." \
+  --output-format text \
+  --model claude-haiku-4-5-20251001 > CHANGELOG_NEW.md
+
+cat CHANGELOG_NEW.md CHANGELOG.md > CHANGELOG_MERGED.md
+mv CHANGELOG_MERGED.md CHANGELOG.md</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Advanced Settings -->
+    <div class="section">
+      <h2 class="section-title">Advanced Settings Reference</h2>
+      <p>The full <code>.claude/settings.json</code> supports extensive configuration. Here's the complete structure:</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — Complete .claude/settings.json structure</div></div>
+        <pre>{
+  <span class="token-key">"model"</span>: <span class="token-val">"claude-sonnet-4-6"</span>,
+
+  <span class="token-key">"permissions"</span>: {
+    <span class="token-key">"allow"</span>: [<span class="token-val">"Bash(git *)"</span>, <span class="token-val">"Bash(npm *)"</span>, <span class="token-val">"Read"</span>],
+    <span class="token-key">"deny"</span>: [<span class="token-val">"Bash(rm -rf *)"</span>]
+  },
+
+  <span class="token-key">"env"</span>: {
+    <span class="token-key">"NODE_ENV"</span>: <span class="token-val">"development"</span>,
+    <span class="token-key">"DEBUG"</span>: <span class="token-val">"app:*"</span>
+  },
+
+  <span class="token-key">"hooks"</span>: {
+    <span class="token-key">"PostToolUse"</span>: [
+      {
+        <span class="token-key">"matcher"</span>: <span class="token-val">"Write|Edit"</span>,
+        <span class="token-key">"hooks"</span>: [{
+          <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+          <span class="token-key">"command"</span>: <span class="token-val">"prettier --write ${TOOL_INPUT_PATH}"</span>
+        }]
+      }
+    ],
+    <span class="token-key">"Stop"</span>: [
+      {
+        <span class="token-key">"hooks"</span>: [{
+          <span class="token-key">"type"</span>: <span class="token-val">"command"</span>,
+          <span class="token-key">"command"</span>: <span class="token-val">"~/.claude/hooks/notify.sh"</span>,
+          <span class="token-key">"async"</span>: <span class="token-val">true</span>
+        }]
+      }
+    ]
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Power User Tips -->
+    <div class="section">
+      <h2 class="section-title">Power User Tips & Patterns</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">⚡</div>
+        <div class="callout-body">
+          <div class="callout-title">The "Rubber Duck" Pattern</div>
+          <p>Start with <code>--no-tools</code> for design discussions. "Walk me through how you'd design a caching layer for this API." Get the architecture right before any code is written.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">⚡</div>
+        <div class="callout-body">
+          <div class="callout-title">Session per Feature Branch</div>
+          <p>Use <code>claude --worktree feature-name</code> for each feature. This maps your Claude Code sessions directly to git branches, making it easy to context-switch between features without confusion.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">⚡</div>
+        <div class="callout-body">
+          <div class="callout-title">The "Read → Plan → Code → Test" Loop</div>
+          <p>For any non-trivial task: 1) Ask Claude to read the relevant files first, 2) Ask for a plan, 3) Approve or adjust the plan, 4) Execute, 5) Run tests. This loop produces higher quality results than one-shot prompts.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">⚡</div>
+        <div class="callout-body">
+          <div class="callout-title">Use /compact Proactively</div>
+          <p>Don't wait for context to fill up. After completing a major task within a session, run <code>/compact keep the architecture decisions and changed files list</code>. Smaller context = faster responses and lower cost.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">⚡</div>
+        <div class="callout-body">
+          <div class="callout-title">Batch Automation with Shell Scripts</div>
+          <p>Combine Claude Code with shell scripting for powerful batch operations: iterate over a list of files, call <code>claude -p</code> for each, collect outputs. Example: generate API documentation for every route file in one script.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="module6.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 06</div><div class="label">MCP Integration</div></div>
+    </a>
+    <a href="module8.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Module 08</div><div class="label">Skills</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module7.html');</script>
+</body>
+</html>

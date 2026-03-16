@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 6 — MCP Integration</title>
+<link rel="stylesheet" href="course.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 06</div>
+    <h1 class="page-title">MCP Integration</h1>
+    <p class="page-desc">Connect Claude Code to GitHub, Jira, databases, Slack, and hundreds of external services using the Model Context Protocol (MCP).</p>
+    <div class="page-meta">
+      <span>📖 ~30 min</span>
+      <span>🔌 External integrations</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: What is MCP -->
+    <div class="section">
+      <h2 class="section-title">What is MCP?</h2>
+      <p>The <strong style="color:var(--text)">Model Context Protocol (MCP)</strong> is an open standard that allows Claude Code to communicate with external tools and services. Think of it as a universal adapter — like USB-C for AI applications.</p>
+
+      <p>When you connect an MCP server, Claude gains new tools with names like <code>mcp__github__create_pr</code> or <code>mcp__jira__get_issue</code>. These work just like built-in tools — Claude can decide to use them as part of completing your tasks.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">The MCP Flow</div></div>
+        <pre>You: "Read ticket PROJ-123, implement it, then update its status to In Review"
+
+Claude Code ─── mcp__jira__get_issue("PROJ-123") ──→ Jira
+         ←── { title, description, acceptance criteria } ──
+
+Claude Code ─── Read, Write, Edit (local files) ──→ Your Codebase
+
+Claude Code ─── mcp__github__create_pull_request(...) ──→ GitHub
+         ←── { pr_url: "github.com/org/repo/pull/47" } ──
+
+Claude Code ─── mcp__jira__update_issue("PROJ-123", "In Review") ──→ Jira
+
+Done! Feature implemented and ticket updated automatically.</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Adding MCP Servers -->
+    <div class="section">
+      <h2 class="section-title">Adding MCP Servers</h2>
+
+      <h3 class="subsection-title">The claude mcp add Command</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Adding MCP servers</div></div>
+        <pre><span class="token-comment"># Syntax</span>
+<span class="token-command">claude mcp add &lt;server-name&gt; [options] -- &lt;command&gt; [args]</span>
+
+<span class="token-comment"># Add GitHub MCP server</span>
+<span class="token-command">claude mcp add github \
+  -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_yourtoken \
+  -- npx -y @modelcontextprotocol/server-github</span>
+
+<span class="token-comment"># Add with user scope (personal, not project)</span>
+<span class="token-command">claude mcp add github -s user \
+  -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_yourtoken \
+  -- npx -y @modelcontextprotocol/server-github</span>
+
+<span class="token-comment"># Verify servers are configured</span>
+<span class="token-command">claude mcp list</span>
+<span class="token-output">  github    stdio  npx -y @modelcontextprotocol/server-github
+  filesystem  stdio  npx -y @modelcontextprotocol/server-filesystem /projects</span></pre>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Scope</th><th>Flag</th><th>Stored In</th><th>Shared</th></tr></thead>
+          <tbody>
+            <tr><td>Project (default)</td><td>(none)</td><td><code>.mcp.json</code> in project root</td><td>✅ Commit to git</td></tr>
+            <tr><td>User</td><td><code>-s user</code></td><td><code>~/.claude/settings.json</code></td><td>❌ Personal only</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Never Commit Tokens</div>
+          <p>Use environment variables (<code>-e KEY=${KEY}</code>) instead of hardcoded values. The token value is read from your shell environment at runtime, not stored in the config file.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: .mcp.json Config -->
+    <div class="section">
+      <h2 class="section-title">The .mcp.json Configuration File</h2>
+      <p>MCP server configuration is stored in <code>.mcp.json</code> at your project root. This file can be committed to git so your whole team gets the same integrations (without their personal tokens).</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — .mcp.json (safe to commit)</div></div>
+        <pre>{
+  <span class="token-key">"mcpServers"</span>: {
+    <span class="token-key">"github"</span>: {
+      <span class="token-key">"type"</span>: <span class="token-val">"stdio"</span>,
+      <span class="token-key">"command"</span>: <span class="token-val">"npx"</span>,
+      <span class="token-key">"args"</span>: [<span class="token-val">"-y"</span>, <span class="token-val">"@modelcontextprotocol/server-github"</span>],
+      <span class="token-key">"env"</span>: {
+        <span class="token-key">"GITHUB_PERSONAL_ACCESS_TOKEN"</span>: <span class="token-val">"${GITHUB_TOKEN}"</span>
+      }
+    },
+    <span class="token-key">"jira"</span>: {
+      <span class="token-key">"type"</span>: <span class="token-val">"stdio"</span>,
+      <span class="token-key">"command"</span>: <span class="token-val">"npx"</span>,
+      <span class="token-key">"args"</span>: [<span class="token-val">"-y"</span>, <span class="token-val">"@anthropic/mcp-jira"</span>],
+      <span class="token-key">"env"</span>: {
+        <span class="token-key">"JIRA_HOST"</span>: <span class="token-val">"${JIRA_HOST}"</span>,
+        <span class="token-key">"JIRA_EMAIL"</span>: <span class="token-val">"${JIRA_EMAIL}"</span>,
+        <span class="token-key">"JIRA_API_TOKEN"</span>: <span class="token-val">"${JIRA_API_TOKEN}"</span>
+      }
+    },
+    <span class="token-key">"playwright"</span>: {
+      <span class="token-key">"type"</span>: <span class="token-val">"stdio"</span>,
+      <span class="token-key">"command"</span>: <span class="token-val">"npx"</span>,
+      <span class="token-key">"args"</span>: [<span class="token-val">"@playwright/mcp@latest"</span>]
+    }
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Popular MCP Servers -->
+    <div class="section">
+      <h2 class="section-title">Popular MCP Servers</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🐙</div>
+          <div class="card-title">GitHub</div>
+          <div class="card-desc">Create PRs, read issues, search repos, manage branches, review code.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎭</div>
+          <div class="card-title">Jira / Linear</div>
+          <div class="card-desc">Read tickets, update status, create issues, link PRs to tasks.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗄️</div>
+          <div class="card-title">PostgreSQL / SQLite</div>
+          <div class="card-desc">Query databases, analyze data, generate migrations, inspect schemas.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Playwright</div>
+          <div class="card-desc">Browser automation, e2e testing, web scraping, UI testing.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💬</div>
+          <div class="card-title">Slack</div>
+          <div class="card-desc">Send messages, read channels, create notifications on task completion.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📁</div>
+          <div class="card-title">Filesystem</div>
+          <div class="card-desc">Expanded file access outside the current directory.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔑</div>
+          <div class="card-title">AWS / GCP</div>
+          <div class="card-desc">Interact with cloud resources, deploy, check logs, manage secrets.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">Memory</div>
+          <div class="card-desc">Persistent key-value memory across sessions using knowledge graphs.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Real-world Workflow Example -->
+    <div class="section">
+      <h2 class="section-title">Real-World: Ticket-to-PR Workflow</h2>
+      <p>With GitHub + Jira MCP servers connected, you can automate an entire feature development cycle.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — .claude/commands/ticket.md</div></div>
+        <pre><span class="token-comment">---
+description: Implement a Jira ticket end-to-end
+allowed-tools: Read, Write, Edit, Bash(git *), Glob, Grep,
+               mcp__jira__get_issue, mcp__jira__update_issue,
+               mcp__github__create_pull_request, mcp__github__create_branch
+argument-hint: &lt;TICKET-ID&gt;
+---</span>
+
+Implement Jira ticket $ARGUMENTS end-to-end:
+
+1. **Read the ticket**: Use mcp__jira__get_issue to fetch TICKET-$ARGUMENTS
+2. **Understand requirements**: Read acceptance criteria carefully
+3. **Create branch**: Name it after the ticket (e.g., feat/$ARGUMENTS-description)
+4. **Search codebase**: Find relevant files using Grep and Glob
+5. **Implement**: Write the code following CLAUDE.md conventions
+6. **Write tests**: Add tests that verify acceptance criteria
+7. **Run tests**: `npm test` — fix any failures
+8. **Commit**: Using conventional commit format referencing $ARGUMENTS
+9. **Create PR**: Use mcp__github__create_pull_request with:
+   - Title: "[TICKET-$ARGUMENTS] {description}"
+   - Body: Summary, changes, testing instructions
+10. **Update Jira**: Set ticket status to "In Review" via mcp__jira__update_issue</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal — Using the workflow</div></div>
+        <pre><span class="token-prompt">You:</span> /ticket PROJ-247
+<span class="token-output">
+Claude: Fetching PROJ-247 from Jira...
+  ● Title: "Add dark mode toggle to settings page"
+  ● Acceptance criteria: 3 items
+  
+  Creating branch: feat/PROJ-247-dark-mode-toggle
+  Reading src/pages/Settings.tsx...
+  Reading src/hooks/useTheme.ts...
+  Reading src/styles/theme.css...
+  
+  Implementing dark mode toggle...
+  ● Writing src/pages/Settings.tsx (toggle component)
+  ● Writing src/hooks/useDarkMode.ts (new hook)
+  ● Writing tests/settings.test.tsx
+  
+  Running tests... ✓ 18 passed
+  Creating commit: "feat(settings): add dark mode toggle PROJ-247"
+  
+  Creating PR #51: "[PROJ-247] Add dark mode toggle to settings page"
+  PR URL: github.com/org/repo/pull/51
+  
+  Updating PROJ-247 status to "In Review"...
+  ✓ Done! PR opened and ticket updated.</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Database MCP -->
+    <div class="section">
+      <h2 class="section-title">Database Integration Example</h2>
+      <p>Connect a PostgreSQL MCP server to let Claude query and analyze your database directly.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Add PostgreSQL MCP</div></div>
+        <pre><span class="token-command">claude mcp add postgres \
+  -e DATABASE_URL="${DATABASE_URL}" \
+  -- npx -y @modelcontextprotocol/server-postgres</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal — Database tasks</div></div>
+        <pre><span class="token-prompt">You:</span> Find the 10 most expensive queries in the last 24 hours and
+     suggest index improvements
+
+<span class="token-output">Claude: ● Querying pg_stat_statements...
+  ● Analyzing query plans with EXPLAIN ANALYZE...
+  
+  Top 10 slow queries found:
+  1. SELECT * FROM orders WHERE user_id = ? — 847ms avg
+     Cause: Missing index on orders.user_id
+     Fix: CREATE INDEX idx_orders_user_id ON orders(user_id);
+  ...</span>
+
+<span class="token-prompt">You:</span> Write and apply those migrations
+
+<span class="token-output">Claude: ● Writing migrations/20250316_add_indexes.sql
+  ● Running migration via Bash...
+  ✓ 3 indexes created, estimated 10x query speedup</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: URL-based MCP -->
+    <div class="section">
+      <h2 class="section-title">URL-Based MCP Servers (HTTP/SSE)</h2>
+      <p>Some MCP servers run as HTTP services rather than local processes. Add them with the URL type.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — URL-based MCP in .mcp.json</div></div>
+        <pre>{
+  <span class="token-key">"mcpServers"</span>: {
+    <span class="token-key">"my-api-server"</span>: {
+      <span class="token-key">"type"</span>: <span class="token-val">"url"</span>,
+      <span class="token-key">"url"</span>: <span class="token-val">"https://mcp.my-service.com/sse"</span>,
+      <span class="token-key">"headers"</span>: {
+        <span class="token-key">"Authorization"</span>: <span class="token-val">"Bearer ${API_TOKEN}"</span>
+      }
+    }
+  }
+}</pre>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="module5.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 05</div><div class="label">Slash Commands & Workflows</div></div>
+    </a>
+    <a href="module7.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Module 07</div><div class="label">Hooks, Subagents & Advanced</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module6.html');</script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3 — Core Commands & Sessions</title>
+<link rel="stylesheet" href="course.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 03</div>
+    <h1 class="page-title">Core Commands & Sessions</h1>
+    <p class="page-desc">Master the CLI interface, session management, slash commands, model selection, permission controls, and effective prompting patterns.</p>
+    <div class="page-meta">
+      <span>📖 ~25 min</span>
+      <span>⌨️ CLI mastery</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: CLI Flags -->
+    <div class="section">
+      <h2 class="section-title">CLI Flags & Launch Options</h2>
+      <p>The <code>claude</code> command accepts many flags that control behavior, model selection, and output format.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Syntax</div></div>
+        <pre>claude [flags] [prompt]</pre>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Flag</th><th>Purpose</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>-p "prompt"</code></td><td>Non-interactive: run one task and exit</td><td><code>claude -p "Write tests for auth.ts"</code></td></tr>
+            <tr><td><code>-c</code></td><td>Continue the most recent conversation</td><td><code>claude -c</code></td></tr>
+            <tr><td><code>--resume &lt;id&gt;</code></td><td>Resume a specific conversation by ID</td><td><code>claude --resume abc123</code></td></tr>
+            <tr><td><code>--model &lt;m&gt;</code></td><td>Specify the model to use</td><td><code>claude --model claude-sonnet-4-6</code></td></tr>
+            <tr><td><code>--output-format</code></td><td>Set output format (text, json, stream-json)</td><td><code>claude -p "..." --output-format json</code></td></tr>
+            <tr><td><code>--allowedTools</code></td><td>Restrict which tools Claude can use</td><td><code>claude --allowedTools Read,Grep</code></td></tr>
+            <tr><td><code>--max-turns &lt;n&gt;</code></td><td>Limit agentic loop iterations</td><td><code>claude -p "..." --max-turns 5</code></td></tr>
+            <tr><td><code>--no-tools</code></td><td>Disable all tools (chat only)</td><td><code>claude --no-tools</code></td></tr>
+            <tr><td><code>--worktree</code></td><td>Create isolated git worktree for this session</td><td><code>claude --worktree feature-auth</code></td></tr>
+            <tr><td><code>--version</code></td><td>Print version number</td><td><code>claude --version</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION: Interactive Session -->
+    <div class="section">
+      <h2 class="section-title">Interactive Session Controls</h2>
+      <p>Once inside a Claude Code session, these keyboard shortcuts and conventions control the experience.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Key / Input</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code>Enter</code></td><td>Send your message / confirm a permission</td></tr>
+            <tr><td><code>Shift+Enter</code></td><td>Insert a newline (multi-line messages)</td></tr>
+            <tr><td><code>Escape</code></td><td>Cancel Claude's current action mid-stream</td></tr>
+            <tr><td><code>Ctrl+C</code></td><td>Exit the session</td></tr>
+            <tr><td><code>↑ / ↓</code></td><td>Navigate message history</td></tr>
+            <tr><td><code>/</code> then Tab</td><td>Autocomplete slash commands</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subsection-title">Permission Prompts</h3>
+      <p>When Claude wants to run a command or modify a file, it may ask permission. You can respond with:</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal interaction</div></div>
+        <pre><span class="token-output">Claude wants to run: rm -rf dist/
+  [y] Allow  [n] Deny  [a] Allow always  [d] Deny always</span>
+
+<span class="token-comment"># y / Enter  — allow once
+# a          — allow this exact command always in this project
+# n          — deny once  
+# d          — deny this command always in this project</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Built-in Slash Commands -->
+    <div class="section">
+      <h2 class="section-title">Built-in Slash Commands</h2>
+      <p>Slash commands are typed during a session (starting with <code>/</code>) and provide quick access to session controls and features. Type <code>/help</code> at any time to see the full list.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Command</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code>/help</code></td><td>Show all available commands (including your custom ones)</td></tr>
+            <tr><td><code>/clear</code></td><td>Clear the current conversation context and start fresh</td></tr>
+            <tr><td><code>/compact [hint]</code></td><td>Summarize context to save tokens, retaining key info</td></tr>
+            <tr><td><code>/init</code></td><td>Generate a CLAUDE.md file for the current project</td></tr>
+            <tr><td><code>/model &lt;name&gt;</code></td><td>Switch model mid-session</td></tr>
+            <tr><td><code>/bug</code></td><td>Report a bug to Anthropic from within the session</td></tr>
+            <tr><td><code>/cost</code></td><td>Show token and cost usage for the current session</td></tr>
+            <tr><td><code>/status</code></td><td>Show session info, model, permissions</td></tr>
+            <tr><td><code>/doctor</code></td><td>Run diagnostics on Claude Code configuration</td></tr>
+            <tr><td><code>/exit</code></td><td>Exit the session cleanly</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">/compact vs /clear</div>
+          <p>Use <code>/compact</code> when context usage exceeds ~80% to summarize the conversation and free tokens while retaining important decisions. Use <code>/clear</code> when switching to a completely unrelated task where old context would be confusing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Model Selection -->
+    <div class="section">
+      <h2 class="section-title">Model Selection & Strategy</h2>
+      <p>Claude Code can use different models. Choosing the right model balances capability, speed, and cost.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Model</th><th>Best For</th><th>Speed</th><th>Cost</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>claude-sonnet-4-6</code></td>
+              <td>Most coding tasks — best balance (default recommendation)</td>
+              <td>Fast</td><td>Medium</td>
+            </tr>
+            <tr>
+              <td><code>claude-opus-4-6</code></td>
+              <td>Complex architecture, multi-file refactors, deep analysis</td>
+              <td>Slower</td><td>Higher</td>
+            </tr>
+            <tr>
+              <td><code>claude-haiku-4-5-*</code></td>
+              <td>Simple lookups, quick questions, high-volume automation</td>
+              <td>Fastest</td><td>Lowest</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Selecting a model</div></div>
+        <pre><span class="token-comment"># Start with a specific model</span>
+<span class="token-command">claude --model claude-opus-4-6</span>
+
+<span class="token-comment"># Switch model mid-session</span>
+<span class="token-prompt">You:</span> /model claude-haiku-4-5-20251001
+
+<span class="token-comment"># Use Haiku for a quick non-interactive task (cost-efficient)</span>
+<span class="token-command">claude -p "What does this error mean: ECONNRESET" --model claude-haiku-4-5-20251001</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Model Switching Strategy</div>
+          <p>Start complex sessions with Opus for architectural planning, then switch to Sonnet for implementation, and use Haiku for quick lookups or repetitive generation tasks. This optimizes cost without sacrificing quality where it matters.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Non-interactive mode -->
+    <div class="section">
+      <h2 class="section-title">Non-Interactive (Headless) Mode</h2>
+      <p>The <code>-p</code> flag lets you run Claude Code without an interactive session — ideal for scripts, CI/CD, and automation.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Headless examples</div></div>
+        <pre><span class="token-comment"># Run a task and capture output</span>
+<span class="token-command">claude -p "Find all TODO comments in src/ and list them" > todos.txt</span>
+
+<span class="token-comment"># JSON output for programmatic use</span>
+<span class="token-command">claude -p "Analyze package.json for outdated deps" \
+  --output-format json > analysis.json</span>
+
+<span class="token-comment"># Restrict tools for safety in automated contexts</span>
+<span class="token-command">claude -p "Review this code for security issues" \
+  --allowedTools Read,Grep,Glob \
+  --max-turns 3 > security-report.txt</span>
+
+<span class="token-comment"># Pipe code into Claude</span>
+<span class="token-command">cat src/utils.ts | claude -p "Explain what this code does"</span>
+
+<span class="token-comment"># Use in a shell script</span>
+<span class="token-command">#!/bin/bash
+FILES=$(git diff --name-only HEAD~1)
+claude -p "Review these changed files for bugs: $FILES" --allowedTools Read,Grep</span></pre>
+      </div>
+
+      <h3 class="subsection-title">JSON Output Format</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash + JSON output</div></div>
+        <pre><span class="token-command">claude -p "List all React components in src/" \
+  --output-format json | jq '.result'</span>
+
+<span class="token-comment"># JSON output includes: result, cost, tokens, duration</span>
+<span class="token-output">{
+  "result": "Found 14 React components:\n1. Button.tsx\n...",
+  "cost_usd": 0.0023,
+  "input_tokens": 1842,
+  "output_tokens": 215,
+  "duration_ms": 3400
+}</span></pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Session Management -->
+    <div class="section">
+      <h2 class="section-title">Session Management</h2>
+      <p>Claude Code saves conversation history so you can resume exactly where you left off.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash — Session control</div></div>
+        <pre><span class="token-comment"># Start a new session</span>
+<span class="token-command">claude</span>
+
+<span class="token-comment"># Continue the most recent session</span>
+<span class="token-command">claude -c</span>
+<span class="token-output">Resuming conversation from: "Implement user avatar upload..."</span>
+
+<span class="token-comment"># List recent sessions</span>
+<span class="token-command">claude --list-sessions</span>
+<span class="token-output">abc123  2025-03-15  "Refactor auth module..."
+def456  2025-03-14  "Add avatar upload feature..."
+ghi789  2025-03-14  "Fix cart discount bug..."</span>
+
+<span class="token-comment"># Resume a specific session by ID</span>
+<span class="token-command">claude --resume abc123</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Conversation Context Tips</h3>
+      <ul class="feature-list">
+        <li>Long sessions consume more tokens — use <code>/compact</code> to compress context when it gets large</li>
+        <li>Sessions are stored in <code>~/.claude/conversations/</code></li>
+        <li>Context resets on <code>/clear</code> but the session ID remains for history purposes</li>
+        <li>For unrelated new tasks, starting fresh (<code>/clear</code>) often gives better results</li>
+      </ul>
+    </div>
+
+    <!-- SECTION: Permissions -->
+    <div class="section">
+      <h2 class="section-title">Permissions & Safety</h2>
+      <p>Claude Code has a fine-grained permission system so you control exactly what it can do.</p>
+
+      <h3 class="subsection-title">Permission Levels</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Mode</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Interactive (default)</strong></td><td>Asks permission for potentially destructive actions</td></tr>
+            <tr><td><code>--allowedTools</code></td><td>Only specific tools are available (whitelist)</td></tr>
+            <tr><td><code>--no-tools</code></td><td>No file access or commands — chat-only mode</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subsection-title">Configuring Permanent Permissions</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json — .claude/settings.json</div></div>
+        <pre>{
+  <span class="token-key">"permissions"</span>: {
+    <span class="token-key">"allow"</span>: [
+      <span class="token-val">"Bash(git *)"</span>,       <span class="token-comment">// Allow all git commands</span>
+      <span class="token-val">"Bash(npm test)"</span>,    <span class="token-comment">// Allow running tests</span>
+      <span class="token-val">"Read"</span>,             <span class="token-comment">// Allow all file reads</span>
+      <span class="token-val">"Write(src/**)"</span>     <span class="token-comment">// Allow writes only in src/</span>
+    ],
+    <span class="token-key">"deny"</span>: [
+      <span class="token-val">"Bash(rm -rf *)"</span>,   <span class="token-comment">// Never delete recursively</span>
+      <span class="token-val">"Bash(curl *)"</span>      <span class="token-comment">// No external requests from shell</span>
+    ]
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Effective Prompting -->
+    <div class="section">
+      <h2 class="section-title">Effective Prompting Patterns</h2>
+      <p>How you phrase requests significantly impacts Claude Code's effectiveness. Here are the patterns that consistently produce the best results.</p>
+
+      <h3 class="subsection-title">Be Specific About Scope</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Good vs. vague prompts</div></div>
+        <pre><span class="token-comment">❌ Vague (leads to guessing)</span>
+<span class="token-output">"Fix the bug"</span>
+
+<span class="token-comment">✓ Specific (gives Claude exactly what it needs)</span>
+<span class="token-output">"The user login fails when the email contains a + character.
+ The error is in the logs: 'Invalid email format'. Fix this in
+ src/auth/validation.ts and add a test for this case."</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Specify Constraints Up Front</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Prompting with constraints</div></div>
+        <pre><span class="token-output">"Add a rate limiter to the /api/auth routes.
+ Constraints:
+ - Use the existing 'express-rate-limit' package (already installed)
+ - Config must be in a separate file: src/config/rateLimiting.ts
+ - Max 5 requests per minute for login, 20 for other auth routes
+ - Write a test that verifies rate limiting works
+ - Don't modify existing tests"</span></pre>
+      </div>
+
+      <h3 class="subsection-title">Break Large Tasks Into Steps</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Iterative approach</div></div>
+        <pre><span class="token-comment"># Step 1 — understand first</span>
+<span class="token-prompt">You:</span> Read the payment module and explain how checkout works
+
+<span class="token-comment"># Step 2 — plan</span>
+<span class="token-prompt">You:</span> Given that architecture, outline what changes are needed to add
+     Apple Pay support. Don't code yet, just outline.
+
+<span class="token-comment"># Step 3 — implement</span>
+<span class="token-prompt">You:</span> Implement step 1 of your plan (the backend Stripe integration)
+
+<span class="token-comment"># Step 4 — review</span>
+<span class="token-prompt">You:</span> Run the payment tests and fix any failures</pre>
+      </div>
+
+      <h3 class="subsection-title">Reference Files Explicitly</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">File references in prompts</div></div>
+        <pre><span class="token-output">"Look at src/components/Button.tsx as the design reference.
+ Create a similar Card component in src/components/Card.tsx
+ following the same patterns for props, styling, and exports."</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">The "Read First" Pattern</div>
+          <p>For complex changes, start with: <em>"Read [file] and explain what you find, then we'll plan the changes."</em> This ensures Claude has the right context before making any edits — a common cause of mistakes is acting without full understanding.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="module2.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 02</div><div class="label">Installation & Setup</div></div>
+    </a>
+    <a href="module4.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Module 04</div><div class="label">CLAUDE.md & Project Memory</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module3.html');</script>
+</body>
+</html>

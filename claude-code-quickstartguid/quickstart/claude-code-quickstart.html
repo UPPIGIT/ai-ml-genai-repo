@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — Quick Start Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --surface: #ede9e1;
+    --surface2: #e4dfd5;
+    --border: #d0c9bb;
+    --accent: #1a1a2e;
+    --ink: #1a1a2e;
+    --ink-muted: #7a7469;
+    --red: #c0392b;
+    --orange: #d4590a;
+    --green: #1a6b3c;
+    --blue: #1a3a6b;
+    --teal: #0d6b5e;
+    --code-bg: #1a1a2e;
+    --code-text: #e8e8f0;
+    --step-line: #c0b9a8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Instrument Serif', Georgia, serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.08s;
+  }
+  .cursor-cross {
+    width: 28px; height: 28px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.25s ease;
+  }
+  .cursor-cross::before,
+  .cursor-cross::after {
+    content: '';
+    position: absolute;
+    background: var(--ink);
+    opacity: 0.3;
+  }
+  .cursor-cross::before { width: 1px; height: 100%; left: 50%; top: 0; }
+  .cursor-cross::after { height: 1px; width: 100%; top: 50%; left: 0; }
+
+  /* Progress */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--red);
+    z-index: 200;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(245,242,236,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
+  }
+  nav.visible { transform: translateY(0); }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--red);
+  }
+
+  .nav-steps {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .nav-step-dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .nav-step-dot:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .nav-step-dot.active { background: var(--red); color: white; border-color: var(--red); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 80px 80px 80px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 50%;
+    height: 100%;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 0;
+  }
+
+  .hero-left { position: relative; z-index: 1; padding-right: 60px; }
+  .hero-right {
+    position: relative; z-index: 1;
+    padding-left: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--red);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 9vw, 120px);
+    line-height: 0.88;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+
+  .hero-title .line2 { color: var(--red); }
+  .hero-title .line3 { color: var(--ink-muted); font-size: 0.55em; letter-spacing: 4px; }
+
+  .hero-desc {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--ink-muted);
+    font-style: italic;
+    max-width: 420px;
+    margin-bottom: 36px;
+  }
+
+  .hero-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    background: rgba(26,107,60,0.08);
+    border: 1px solid rgba(26,107,60,0.2);
+    padding: 8px 16px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+
+  .hero-step-preview {
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 22px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--code-text);
+    line-height: 1.8;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-step-preview::before {
+    content: '● QUICK START';
+    position: absolute;
+    top: 12px; right: 16px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .terminal-line { display: flex; align-items: center; gap: 10px; }
+  .t-prompt { color: #6eb4f7; }
+  .t-cmd { color: #c3e88d; }
+  .t-out { color: rgba(255,255,255,0.4); font-size: 11px; }
+  .t-success { color: #39d353; }
+  .t-blink {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: rgba(255,255,255,0.7);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .hero-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hero-step-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-muted);
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .hero-step-item:hover { border-color: var(--ink); color: var(--ink); transform: translateX(4px); }
+  .hero-step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--red);
+    min-width: 24px;
+    line-height: 1;
+  }
+
+  /* Main */
+  main { max-width: 1000px; margin: 0 auto; padding: 100px 40px; }
+
+  /* Step sections */
+  .step-section {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0;
+    margin-bottom: 0;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .step-section.visible { opacity: 1; transform: translateX(0); }
+
+  /* Timeline */
+  .step-timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+  }
+
+  .step-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-section:hover .step-circle {
+    border-color: var(--red);
+    background: var(--red);
+    color: white;
+  }
+
+  .step-line {
+    width: 1px;
+    flex: 1;
+    background: var(--step-line);
+    margin: 8px 0;
+    min-height: 40px;
+  }
+
+  .step-section:last-child .step-line { display: none; }
+
+  /* Step content */
+  .step-content {
+    padding: 0 0 80px 40px;
+  }
+
+  .step-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .step-title .hl { color: var(--red); }
+
+  .step-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink-muted);
+    margin-bottom: 28px;
+    max-width: 620px;
+    font-style: italic;
+  }
+
+  /* Code blocks */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 20px 0;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .code-filename {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+
+  .code-dots { display: flex; gap: 6px; }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-dot:nth-child(1) { background: #ff5f57; }
+  .code-dot:nth-child(2) { background: #febc2e; }
+  .code-dot:nth-child(3) { background: #28c840; }
+
+  .code-content {
+    padding: 22px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--code-text);
+    overflow-x: auto;
+    white-space: pre;
+    tab-size: 2;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 40px;
+    right: 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.4);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); }
+  .copy-btn.copied { color: #39d353; border-color: rgba(57,211,83,0.4); }
+
+  /* Syntax tokens */
+  .kw  { color: #c792ea; }
+  .str { color: #c3e88d; }
+  .cm  { color: #546e7a; font-style: italic; }
+  .fn  { color: #82aaff; }
+  .num { color: #f78c6c; }
+  .prop{ color: #ffcb6b; }
+  .sym { color: #89ddff; }
+  .ok  { color: #39d353; }
+  .warn{ color: #febc2e; }
+  .err { color: #ff5f57; }
+
+  /* Cards inside steps */
+  .card-grid {
+    display: grid;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .card-grid-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 22px;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .info-card:hover { border-color: var(--ink); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+  .info-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+    border-radius: 0 0 4px 4px;
+  }
+  .info-card:hover::before { transform: scaleX(1); }
+
+  .card-icon { font-size: 24px; margin-bottom: 12px; }
+
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .card-body {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-muted);
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+  }
+  .card-body strong { color: var(--ink); font-style: normal; }
+
+  /* Callout boxes */
+  .callout {
+    border-left: 3px solid;
+    padding: 16px 20px;
+    border-radius: 0 4px 4px 0;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: 'DM Mono', monospace;
+  }
+  .callout-red { border-color: var(--red); background: rgba(192,57,43,0.05); }
+  .callout-green { border-color: var(--green); background: rgba(26,107,60,0.05); }
+  .callout-blue { border-color: var(--blue); background: rgba(26,58,107,0.05); }
+  .callout-orange { border-color: var(--orange); background: rgba(212,89,10,0.05); }
+  .callout .label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .callout-red .label { color: var(--red); }
+  .callout-green .label { color: var(--green); }
+  .callout-blue .label { color: var(--blue); }
+  .callout-orange .label { color: var(--orange); }
+  .callout .text { color: var(--ink-muted); font-size: 13px; }
+  .callout .text strong { color: var(--ink); }
+
+  /* File tree */
+  .file-tree {
+    background: var(--code-bg);
+    border-radius: 6px;
+    padding: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 2.1;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  }
+  .ft-dir  { color: #ffcb6b; }
+  .ft-file { color: var(--code-text); }
+  .ft-spec { color: #89ddff; }
+  .ft-note { color: #546e7a; font-style: italic; }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-muted);
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    transition: all 0.2s;
+    cursor: pointer;
+    line-height: 1.5;
+  }
+  .checklist li:hover { border-color: var(--green); background: rgba(26,107,60,0.04); }
+  .checklist li .check {
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .checklist li.done .check { background: var(--green); border-color: var(--green); color: white; }
+  .checklist li.done { opacity: 0.6; text-decoration: line-through; }
+
+  /* Mode switcher */
+  .mode-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .mode-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+  }
+  .mode-card:hover, .mode-card.active { background: var(--ink); border-color: var(--ink); }
+  .mode-card:hover *, .mode-card.active * { color: white !important; }
+
+  .mode-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    background: rgba(192,57,43,0.1);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .mode-card:hover .mode-key, .mode-card.active .mode-key {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+    color: white;
+  }
+
+  .mode-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--ink);
+    margin: 10px 0 6px;
+  }
+
+  .mode-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* Shortcut table */
+  .shortcut-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .shortcut-item:hover { border-color: var(--ink); transform: translateX(3px); }
+
+  .kbd {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 4px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .shortcut-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+
+  /* Workflow timeline */
+  .flow-steps {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .flow-item {
+    display: flex;
+    gap: 20px;
+    position: relative;
+  }
+
+  .flow-item::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 44px;
+    bottom: -12px;
+    width: 1px;
+    background: var(--border);
+  }
+  .flow-item:last-child::before { display: none; }
+
+  .flow-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    transition: all 0.3s;
+    z-index: 1;
+  }
+
+  .flow-item:hover .flow-dot {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+
+  .flow-body {
+    padding: 8px 0 28px;
+  }
+
+  .flow-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .flow-desc {
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Section dividers */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 60px;
+    padding-left: 80px;
+  }
+  .section-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .section-divider-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* Final section */
+  .finale {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 80px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 40px;
+  }
+
+  .finale::before {
+    content: 'GO';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 320px;
+    color: rgba(255,255,255,0.03);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: -10px;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .finale-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .finale-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    line-height: 1;
+    margin-bottom: 24px;
+    color: white;
+    position: relative;
+  }
+
+  .finale-title span { color: #febc2e; }
+
+  .finale-desc {
+    font-size: 17px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.55);
+    max-width: 520px;
+    margin: 0 auto 48px;
+    font-style: italic;
+  }
+
+  .finale-command {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 18px 40px;
+    border-radius: 4px;
+    color: #c3e88d;
+    letter-spacing: 2px;
+    position: relative;
+  }
+
+  .finale-command::before {
+    content: '$';
+    color: rgba(255,255,255,0.3);
+    margin-right: 12px;
+  }
+
+  .finale-steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+
+  .finale-step-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .finale-step-pill:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+
+  /* footer */
+  footer {
+    text-align: center;
+    padding: 40px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+  }
+
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 3px;
+    color: var(--red);
+  }
+
+  /* Anim */
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(24px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .fade-in { opacity:0; animation: fadeInUp 0.7s ease forwards; }
+  .d1 { animation-delay: 0.05s; }
+  .d2 { animation-delay: 0.15s; }
+  .d3 { animation-delay: 0.25s; }
+  .d4 { animation-delay: 0.35s; }
+  .d5 { animation-delay: 0.45s; }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 80px 32px 60px; }
+    .hero::after { display: none; }
+    .hero-right { padding-left: 0; }
+    .card-grid-2, .card-grid-3, .mode-cards, .shortcut-grid { grid-template-columns: 1fr; }
+    main { padding: 80px 24px; }
+    .step-content { padding: 0 0 60px 24px; }
+    .finale { padding: 60px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-cross" id="cursorCross"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<nav id="nav">
+  <div class="nav-logo">QUICK START</div>
+  <div class="nav-steps" id="navSteps"></div>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow fade-in d1">Claude Code Guide</div>
+    <h1 class="hero-title fade-in d2">
+      QUICK<br>
+      <span class="line2">START</span><br>
+      <span class="line3">From Zero to Working</span>
+    </h1>
+    <p class="hero-desc fade-in d3">
+      Everything you need to go from a fresh terminal to an AI-powered development workflow. No fluff, just the essential steps.
+    </p>
+    <div class="hero-time fade-in d4">
+      <span>⏱</span> 5–10 minutes to complete
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-step-preview fade-in d2">
+      <div class="terminal-line"><span class="t-prompt">~</span><span style="color:rgba(255,255,255,0.3)"> $ </span><span class="t-cmd">curl -fsSL https://claude.ai/install.sh | bash</span></div>
+      <div class="terminal-line" style="margin-left:8px;"><span class="t-out">▸ Downloading Claude Code…</span></div>
+      <div class="terminal-line" style="margin-left:8px;"><span class="t-out">▸ Installing dependencies…</span></div>
+      <div class="terminal-line" style="margin-left:8px;"><span class="t-success">✓ Claude Code installed successfully</span></div>
+      <br>
+      <div class="terminal-line"><span class="t-prompt">~/project</span><span style="color:rgba(255,255,255,0.3)"> $ </span><span class="t-cmd">claude</span></div>
+      <div class="terminal-line" style="margin-left:8px;"><span class="t-success">✓ Claude Code ready</span></div>
+      <div class="terminal-line"><span class="t-prompt">></span> <span class="t-blink"></span></div>
+    </div>
+
+    <div class="hero-steps-list fade-in d3">
+      <a href="#step1" class="hero-step-item"><div class="hero-step-num">1</div> Install &amp; verify Claude Code</a>
+      <a href="#step2" class="hero-step-item"><div class="hero-step-num">2</div> Navigate to your project</a>
+      <a href="#step3" class="hero-step-item"><div class="hero-step-num">3</div> Launch &amp; run /init</a>
+      <a href="#step4" class="hero-step-item"><div class="hero-step-num">4</div> Understand CLAUDE.md</a>
+      <a href="#step5" class="hero-step-item"><div class="hero-step-num">5</div> Learn the 3 modes</a>
+      <a href="#step6" class="hero-step-item"><div class="hero-step-num">6</div> Master key shortcuts</a>
+      <a href="#step7" class="hero-step-item"><div class="hero-step-num">7</div> Your first real task</a>
+      <a href="#step8" class="hero-step-item"><div class="hero-step-num">8</div> Best practices &amp; next steps</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MAIN ═══════ -->
+<main>
+
+  <!-- ─── STEP 1 ─── -->
+  <div class="step-section" id="step1">
+    <div class="step-timeline">
+      <div class="step-circle">1</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">Installation</div>
+      <h2 class="step-title">Install <span class="hl">Claude Code</span></h2>
+      <p class="step-desc">One command installs the <code>claude</code> CLI globally. Requires Node.js 18 or higher — check yours first.</p>
+
+      <div class="card-grid card-grid-2">
+        <div class="info-card">
+          <div class="card-icon">🔍</div>
+          <div class="card-label">Check First</div>
+          <div class="card-title">Verify Node.js</div>
+          <div class="card-body">Make sure you have Node.js 18+. If not, install it from <strong>nodejs.org</strong> before proceeding.</div>
+          <div class="code-block" style="margin-top:14px;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <div class="code-filename">bash</div>
+            </div>
+            <div class="code-content"><span class="cm"># Should be 18.x or higher</span>
+node --version
+<span class="ok">v20.11.0</span>  <span class="cm">✓ good</span></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-icon">⬇️</div>
+          <div class="card-label">Install</div>
+          <div class="card-title">Run the Installer</div>
+          <div class="card-body">The install script from Anthropic handles everything — downloads the binary and adds it to your PATH.</div>
+          <div class="code-block" style="margin-top:14px;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <div class="code-filename">bash</div>
+            </div>
+            <div class="code-content">curl -fsSL \
+  https://claude.ai/install.sh \
+  | bash</div>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <div class="code-filename">Verify installation</div>
+        </div>
+        <div class="code-content"><span class="cm"># Verify install succeeded</span>
+claude --version
+<span class="ok">Claude Code v1.x.x</span>  <span class="cm">✓ installed</span>
+
+<span class="cm"># Authenticate with your Anthropic account</span>
+claude auth login</div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+
+      <div class="callout callout-green">
+        <div class="label">✓ Success Signal</div>
+        <div class="text">Running <code>claude --version</code> should return a version number. If you get "command not found", restart your terminal or add the install path to your <strong>$PATH</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Step 2</div><div class="section-divider-line"></div></div>
+
+  <!-- ─── STEP 2 ─── -->
+  <div class="step-section" id="step2">
+    <div class="step-timeline">
+      <div class="step-circle">2</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">Navigation</div>
+      <h2 class="step-title">Navigate to <span class="hl">Your Project</span></h2>
+      <p class="step-desc">Always start Claude Code from your project root. This gives it full context about your codebase structure.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <div class="code-filename">bash</div>
+        </div>
+        <div class="code-content"><span class="cm"># Navigate to your project root</span>
+cd ~/projects/my-app
+
+<span class="cm"># You should see your project files</span>
+ls
+<span class="ok">src/  package.json  README.md  ...</span></div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+
+      <div class="card-grid card-grid-3">
+        <div class="info-card">
+          <div class="card-icon">✅</div>
+          <div class="card-label">Do this</div>
+          <div class="card-title">Root Directory</div>
+          <div class="card-body">Run <code>claude</code> from the project root so it can see your entire file tree and understand the architecture.</div>
+        </div>
+        <div class="info-card">
+          <div class="card-icon">✅</div>
+          <div class="card-label">Works great</div>
+          <div class="card-title">Monorepos</div>
+          <div class="card-body">For monorepos, run from the top-level root. Use subfolder CLAUDE.md files to scope context per package.</div>
+        </div>
+        <div class="info-card">
+          <div class="card-icon">❌</div>
+          <div class="card-label">Avoid</div>
+          <div class="card-title">Subfolder Launch</div>
+          <div class="card-body">Don't launch from deep inside <code>src/components/</code>. Claude will miss important context about your full project.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Step 3</div><div class="section-divider-line"></div></div>
+
+  <!-- ─── STEP 3 ─── -->
+  <div class="step-section" id="step3">
+    <div class="step-timeline">
+      <div class="step-circle">3</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">First Launch</div>
+      <h2 class="step-title">Launch &amp; Run <span class="hl">/init</span></h2>
+      <p class="step-desc">Start Claude Code and run <code>/init</code> to automatically scan your project and generate a CLAUDE.md file with the right context.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <div class="code-filename">Launch Claude Code &amp; initialise</div>
+        </div>
+        <div class="code-content"><span class="cm"># Start Claude Code</span>
+<span class="fn">claude</span>
+
+<span class="cm"># Inside the Claude Code session:</span>
+<span class="sym">/init</span>
+
+<span class="ok">✓ Scanning project structure…</span>
+<span class="ok">✓ Detecting tech stack: Next.js + TypeScript</span>
+<span class="ok">✓ Found 248 source files</span>
+<span class="ok">✓ Generated CLAUDE.md</span>
+<span class="warn">  → Review and customise before first use</span></div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+
+      <div class="flow-steps">
+        <div class="flow-item">
+          <div class="flow-dot">a</div>
+          <div class="flow-body">
+            <div class="flow-title">claude  →  Opens the interactive session</div>
+            <div class="flow-desc">Your terminal becomes a conversation interface with Claude. You'll see a prompt cursor waiting for input.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot">b</div>
+          <div class="flow-body">
+            <div class="flow-title">/init  →  Scans &amp; generates memory file</div>
+            <div class="flow-desc">Claude reads your entire file tree, detects your tech stack, and writes a starter CLAUDE.md with project context.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot">c</div>
+          <div class="flow-body">
+            <div class="flow-title">Review CLAUDE.md  →  Add what Claude missed</div>
+            <div class="flow-desc">Open the generated file in your editor. Add workflow steps, gotchas, naming conventions — the things only you know.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-orange">
+        <div class="label">⚡ Critical Step</div>
+        <div class="text">Don't skip editing CLAUDE.md after <code>/init</code>. Add your <strong>build commands</strong>, <strong>known gotchas</strong>, and <strong>team conventions</strong>. This is what separates a productive session from a frustrating one.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Step 4</div><div class="section-divider-line"></div></div>
+
+  <!-- ─── STEP 4 ─── -->
+  <div class="step-section" id="step4">
+    <div class="step-timeline">
+      <div class="step-circle">4</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">Core Concept</div>
+      <h2 class="step-title">Craft Your <span class="hl">CLAUDE.md</span></h2>
+      <p class="step-desc">CLAUDE.md is loaded at the start of every session. Think of it as Claude's briefing doc — keep it concise, specific, and actionable.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <div class="code-filename">CLAUDE.md — Minimal Starter Template</div>
+        </div>
+        <div class="code-content"><span class="prop"># Project: My App</span>
+Next.js 14 App Router + TypeScript + Postgres
+
+<span class="prop">## Tech Stack</span>
+- Frontend: Next.js 14, Tailwind CSS, Shadcn/ui
+- Backend: Next.js API Routes + tRPC
+- DB: PostgreSQL via Prisma ORM
+- Auth: Clerk
+
+<span class="prop">## Commands</span>
+npm run dev      <span class="cm"># Start development server</span>
+npm run build    <span class="cm"># Production build</span>
+npm run test     <span class="cm"># Jest test suite</span>
+npm run lint     <span class="cm"># ESLint + Prettier check</span>
+npx prisma db push  <span class="cm"># Push schema changes</span>
+
+<span class="prop">## Architecture</span>
+/app          → Next.js App Router pages &amp; layouts
+/app/api      → API route handlers
+/components   → Reusable UI components
+/lib          → Shared utilities, db client, helpers
+/prisma       → Schema &amp; migration files
+
+<span class="prop">## Our Conventions</span>
+- Use Zod for all API input validation
+- Prefer server components; use 'use client' sparingly
+- All DB calls go through /lib/db.ts — never import Prisma directly
+- New components get a matching .test.tsx file
+
+<span class="prop">## Gotchas</span>
+- Local dev requires VPN for DB connection
+- Run `npx prisma db seed` after pulling main
+- The /payments module uses a legacy pattern — don't refactor without a PM review</div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+
+      <div class="card-grid card-grid-3">
+        <div class="info-card">
+          <div class="card-icon">📏</div>
+          <div class="card-label">Rule</div>
+          <div class="card-title">Stay Under 200 Lines</div>
+          <div class="card-body">Context window attention degrades with length. Keep it tight. If it's stale, delete it. Quality beats quantity.</div>
+        </div>
+        <div class="info-card">
+          <div class="card-icon">🎯</div>
+          <div class="card-label">Rule</div>
+          <div class="card-title">Be Hyper-Specific</div>
+          <div class="card-body">Not <em>"follow best practices"</em>. Instead: <strong>"use Zod for validation", "prefer server components"</strong>. Exact rules, not vague guidance.</div>
+        </div>
+        <div class="info-card">
+          <div class="card-icon">🔗</div>
+          <div class="card-label">Tip</div>
+          <div class="card-title">Commit to Git</div>
+          <div class="card-body">Commit CLAUDE.md to your repo. Every teammate's Claude session will start with the same shared project context.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Step 5</div><div class="section-divider-line"></div></div>
+
+  <!-- ─── STEP 5 ─── -->
+  <div class="step-section" id="step5">
+    <div class="step-timeline">
+      <div class="step-circle">5</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">Interaction Modes</div>
+      <h2 class="step-title">Learn the <span class="hl">3 Modes</span></h2>
+      <p class="step-desc">Claude Code has three interaction modes. Knowing when to use each one is the single biggest productivity unlock. Switch with <code>Shift + Tab</code>.</p>
+
+      <div class="mode-cards" id="modecards">
+        <div class="mode-card" onclick="activateMode(this)">
+          <div class="mode-key">Shift + Tab ×1</div>
+          <div class="mode-name">Normal Mode</div>
+          <div class="mode-desc">Claude asks for your approval before each significant action. Safe and deliberate.</div>
+        </div>
+        <div class="mode-card" onclick="activateMode(this)">
+          <div class="mode-key">Shift + Tab ×2</div>
+          <div class="mode-name">Auto Accept</div>
+          <div class="mode-desc">Claude executes without pausing. Use after reviewing a plan. Fast iteration.</div>
+        </div>
+        <div class="mode-card" onclick="activateMode(this)">
+          <div class="mode-key">Shift + Tab ×3</div>
+          <div class="mode-name">Plan Mode</div>
+          <div class="mode-desc">Claude explains what it will do before doing anything. Review and approve first.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-blue">
+        <div class="label">🎯 Best Practice Workflow</div>
+        <div class="text">Start every task in <strong>Plan Mode</strong> → read the plan → switch to <strong>Auto Accept</strong> to execute. This gives you oversight without constant interruption. It's the gold-standard pattern for agentic tasks.</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <div class="code-filename">Ideal task flow example</div>
+        </div>
+        <div class="code-content"><span class="cm"># Step 1: Activate Plan Mode (Shift+Tab twice)</span>
+<span class="warn">[ PLAN MODE ]</span>
+
+<span class="prop">You:</span> Add a password reset flow to the auth module
+
+<span class="prop">Claude:</span> Here's my plan:
+  1. Create /app/auth/reset/page.tsx — email input form
+  2. Add POST /api/auth/reset route — sends email via Resend
+  3. Create /app/auth/reset/confirm/page.tsx — new password form
+  4. Add token validation middleware to /lib/auth.ts
+  5. Update Prisma schema with PasswordResetToken model
+
+  Shall I proceed?
+
+<span class="cm"># Step 2: Switch to Auto Accept (Shift+Tab again), then confirm</span>
+<span class="ok">[ AUTO ACCEPT ]</span>
+<span class="prop">You:</span> Yes, proceed
+
+<span class="ok">✓ Writing files...</span>
+<span class="ok">✓ All 5 files created, tests passing</span></div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Step 6</div><div class="section-divider-line"></div></div>
+
+  <!-- ─── STEP 6 ─── -->
+  <div class="step-section" id="step6">
+    <div class="step-timeline">
+      <div class="step-circle">6</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">Keyboard Mastery</div>
+      <h2 class="step-title">Essential <span class="hl">Shortcuts</span></h2>
+      <p class="step-desc">These eight shortcuts cover 95% of what you'll use daily. Learn them before your first real session.</p>
+
+      <div class="shortcut-grid">
+        <div class="shortcut-item">
+          <div class="kbd">Shift + Tab</div>
+          <div class="shortcut-desc">Cycle through Normal → Auto Accept → Plan modes</div>
+        </div>
+        <div class="shortcut-item">
+          <div class="kbd">Tab</div>
+          <div class="shortcut-desc">Toggle extended thinking (deeper reasoning for complex tasks)</div>
+        </div>
+        <div class="shortcut-item">
+          <div class="kbd">Esc Esc</div>
+          <div class="shortcut-desc">Open rewind menu — roll back to any previous checkpoint</div>
+        </div>
+        <div class="shortcut-item">
+          <div class="kbd">Ctrl + C</div>
+          <div class="shortcut-desc">Interrupt a running task immediately without losing context</div>
+        </div>
+        <div class="shortcut-item">
+          <div class="kbd">↑ Arrow</div>
+          <div class="shortcut-desc">Navigate history — reuse or edit previous prompts quickly</div>
+        </div>
+        <div class="shortcut-item">
+          <div class="kbd">Ctrl + L</div>
+          <div class="shortcut-desc">Clear the current session view (history preserved)</div>
+        </div>
+        <div class="shortcut-item">
+          <div class="kbd">@filename</div>
+          <div class="shortcut-desc">Include a specific file in your current prompt context</div>
+        </div>
+        <div class="shortcut-item">
+          <div class="kbd">/compact</div>
+          <div class="shortcut-desc">Compress session when context gets long — keeps focus sharp</div>
+        </div>
+      </div>
+
+      <div class="callout callout-red">
+        <div class="label">💡 Learn these two first</div>
+        <div class="text"><strong>Esc Esc</strong> (rewind) and <strong>Shift + Tab</strong> (mode switch) are the two shortcuts that will save you the most time. Know them before anything else.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Step 7</div><div class="section-divider-line"></div></div>
+
+  <!-- ─── STEP 7 ─── -->
+  <div class="step-section" id="step7">
+    <div class="step-timeline">
+      <div class="step-circle">7</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">In Practice</div>
+      <h2 class="step-title">Your First <span class="hl">Real Task</span></h2>
+      <p class="step-desc">Walk through a complete task end-to-end. This is the daily loop you'll use for every feature.</p>
+
+      <div class="flow-steps">
+        <div class="flow-item">
+          <div class="flow-dot">1</div>
+          <div class="flow-body">
+            <div class="flow-title">cd my-project && claude</div>
+            <div class="flow-desc">Always launch fresh from the project root. Claude re-loads CLAUDE.md every session.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot">2</div>
+          <div class="flow-body">
+            <div class="flow-title">Switch to Plan Mode (Shift + Tab)</div>
+            <div class="flow-desc">Before writing any code, get a plan. This prevents wasted effort and lets you catch misunderstandings early.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot">3</div>
+          <div class="flow-body">
+            <div class="flow-title">Describe your task clearly</div>
+            <div class="flow-desc">Be specific. Include what the feature does, where it lives in the codebase, and any constraints. The more context, the better the plan.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot">4</div>
+          <div class="flow-body">
+            <div class="flow-title">Review the plan, then switch to Auto Accept</div>
+            <div class="flow-desc">Read Claude's plan carefully. If it looks right, switch modes and confirm. If not, correct it in plain English before proceeding.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot">5</div>
+          <div class="flow-body">
+            <div class="flow-title">Commit the working result</div>
+            <div class="flow-desc">Once Claude completes the task and tests pass, commit immediately. Small, frequent commits give you safe rollback points.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot">6</div>
+          <div class="flow-body">
+            <div class="flow-title">New feature? Start a new session</div>
+            <div class="flow-desc">One session per feature keeps context clean. Don't let unrelated tasks pile up in the same conversation.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <div class="code-filename">Writing a great prompt — example</div>
+        </div>
+        <div class="code-content"><span class="cm"># ❌ Vague — don't do this</span>
+<span class="err">Add a search feature</span>
+
+<span class="cm"># ✓ Specific — do this instead</span>
+<span class="ok">Add a full-text search bar to the /products page.
+It should filter the existing product list in real-time
+as the user types. Use the existing ProductCard component.
+The search should match on product name and description.
+No backend changes needed — filter client-side from the
+data already loaded. Add a test in products.test.tsx.</span>
+
+<span class="cm"># ✓ With file context</span>
+<span class="ok">Review @src/components/ProductCard.tsx and add a search
+bar above the product grid that filters cards by name.</span></div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Step 8</div><div class="section-divider-line"></div></div>
+
+  <!-- ─── STEP 8 ─── -->
+  <div class="step-section" id="step8">
+    <div class="step-timeline">
+      <div class="step-circle">8</div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step-content">
+      <div class="step-tag">Best Practices</div>
+      <h2 class="step-title">Rules for <span class="hl">Success</span></h2>
+      <p class="step-desc">Click each item as you internalise it. These habits separate experts from beginners.</p>
+
+      <ul class="checklist" id="checklist">
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Always start from the project root — never launch from a subfolder</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Run /init once, then refine CLAUDE.md manually before first real task</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Keep CLAUDE.md under 200 lines — prune stale info aggressively</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Always start complex tasks in Plan Mode before switching to Auto Accept</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> One feature per session — start fresh for every new task</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Commit after every working milestone — small, frequent commits</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Use Esc Esc (rewind) the moment something goes wrong — don't let it compound</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Use @filename to include relevant files in complex prompts</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Run /compact when sessions grow long to maintain focus</li>
+        <li onclick="toggleCheck(this)"><div class="check">✓</div> Commit CLAUDE.md to Git — share context with your entire team</li>
+      </ul>
+
+      <div class="card-grid card-grid-2" style="margin-top:32px;">
+        <div class="info-card">
+          <div class="card-icon">🚀</div>
+          <div class="card-label">Next Level</div>
+          <div class="card-title">Add Your First Skill</div>
+          <div class="card-body">Create <code>.claude/skills/testing/SKILL.md</code> with your team's testing patterns. Claude will auto-invoke it when you ask it to write tests.</div>
+        </div>
+        <div class="info-card">
+          <div class="card-icon">🔒</div>
+          <div class="card-label">Safety</div>
+          <div class="card-title">Set Up Permissions</div>
+          <div class="card-body">Add a <code>.claude/settings.json</code> with explicit allow/deny rules. At minimum, deny <code>Read:env:*</code> and <code>Bash:sudo:*</code>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ FINALE ═══════ -->
+  <div class="finale">
+    <div class="finale-eyebrow">Quick Start Complete</div>
+    <h2 class="finale-title">You're Ready.<br><span>Now Build Something.</span></h2>
+    <p class="finale-desc">Every great Claude Code workflow starts with these same eight steps. The rest is practice, iteration, and adding layers.</p>
+    <div class="finale-command">cd my-project && claude</div>
+    <div class="finale-steps">
+      <div class="finale-step-pill">Install ✓</div>
+      <div class="finale-step-pill">Navigate ✓</div>
+      <div class="finale-step-pill">/init ✓</div>
+      <div class="finale-step-pill">CLAUDE.md ✓</div>
+      <div class="finale-step-pill">3 Modes ✓</div>
+      <div class="finale-step-pill">Shortcuts ✓</div>
+      <div class="finale-step-pill">First Task ✓</div>
+      <div class="finale-step-pill">Best Practices ✓</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Claude Code Quick Start Guide · 2026 Edition
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor   = document.getElementById('cursor');
+  const cross    = document.getElementById('cursorCross');
+  let mx=0,my=0,rx=0,ry=0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx-4}px,${my-4}px)`;
+  });
+
+  function animateCross() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    cross.style.transform = `translate(${rx-14}px,${ry-14}px)`;
+    requestAnimationFrame(animateCross);
+  }
+  animateCross();
+
+  // Progress bar
+  const bar = document.getElementById('progressBar');
+  const nav = document.getElementById('nav');
+  const navSteps = document.getElementById('navSteps');
+
+  // Build nav dots
+  for (let i = 1; i <= 8; i++) {
+    const a = document.createElement('a');
+    a.href = `#step${i}`;
+    a.className = 'nav-step-dot';
+    a.textContent = i;
+    a.id = `navdot${i}`;
+    navSteps.appendChild(a);
+  }
+
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+    nav.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
+
+    // Active nav dot
+    for (let i = 1; i <= 8; i++) {
+      const el = document.getElementById('step'+i);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      const dot = document.getElementById('navdot'+i);
+      dot.classList.toggle('active', rect.top <= 120 && rect.bottom > 120);
+    }
+  });
+
+  // Intersection observer
+  const sections = document.querySelectorAll('.step-section');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, idx) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), idx * 80);
+      }
+    });
+  }, { threshold: 0.08 });
+  sections.forEach(s => obs.observe(s));
+
+  // Copy buttons
+  function copyCode(btn) {
+    const pre = btn.parentElement.querySelector('.code-content');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // Mode card toggle
+  function activateMode(card) {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+  }
+
+  // Checklist toggle
+  function toggleCheck(item) {
+    item.classList.toggle('done');
+  }
+</script>
+</body>
+</html>

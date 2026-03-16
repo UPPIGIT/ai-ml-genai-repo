@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4 — CLAUDE.md & Project Memory</title>
+<link rel="stylesheet" href="course.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="page-header">
+    <div class="module-tag">MODULE 04</div>
+    <h1 class="page-title">CLAUDE.md & Project Memory</h1>
+    <p class="page-desc">Give Claude persistent, deep knowledge of your project. Learn the memory hierarchy, write effective CLAUDE.md files, and manage context across sessions.</p>
+    <div class="page-meta">
+      <span>📖 ~20 min</span>
+      <span>🧠 Context engineering</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION: What is CLAUDE.md -->
+    <div class="section">
+      <h2 class="section-title">What is CLAUDE.md?</h2>
+      <p>CLAUDE.md is a plain Markdown file that Claude Code reads automatically at the start of every session. Think of it as <strong style="color:var(--text)">your project's onboarding document for Claude</strong> — it contains everything Claude needs to know to work effectively: coding conventions, architecture decisions, tech stack, testing requirements, and any rules you want followed consistently.</p>
+
+      <p>Without CLAUDE.md, Claude starts every session with zero project context. With a good CLAUDE.md, Claude immediately understands your codebase the way a veteran team member does.</p>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <div class="callout-title">Quick Generate with /init</div>
+          <p>Run <code>/init</code> inside a Claude Code session and it will scan your project and generate an initial CLAUDE.md for you. Use this as a starting point, then refine it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Memory Hierarchy -->
+    <div class="section">
+      <h2 class="section-title">The Memory Hierarchy</h2>
+      <p>Claude Code supports multiple CLAUDE.md files that stack on top of each other. Files closer to the project override global ones.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">File locations — loading order (lowest to highest priority)</div></div>
+        <pre><span class="token-comment">1. Global (your machine, all projects)</span>
+~/.claude/CLAUDE.md
+
+<span class="token-comment">2. Project root (shared with team via git)</span>
+/your-project/CLAUDE.md
+
+<span class="token-comment">3. Project local (personal, gitignored)</span>
+/your-project/CLAUDE.local.md
+
+<span class="token-comment">4. Subdirectory (applies only when working in that dir)</span>
+/your-project/src/components/CLAUDE.md</pre>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>File</th><th>Scope</th><th>Git</th><th>Use For</th></tr></thead>
+          <tbody>
+            <tr><td><code>~/.claude/CLAUDE.md</code></td><td>All projects</td><td>No</td><td>Your personal style preferences, universal tools</td></tr>
+            <tr><td><code>CLAUDE.md</code> (root)</td><td>This project</td><td>✅ Commit</td><td>Team conventions, architecture, shared rules</td></tr>
+            <tr><td><code>CLAUDE.local.md</code></td><td>This project</td><td>❌ Gitignore</td><td>Personal notes, local paths, private context</td></tr>
+            <tr><td><code>src/CLAUDE.md</code></td><td>That subdirectory</td><td>✅ Commit</td><td>Subsystem-specific rules (e.g., "all components must use Storybook")</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION: Writing CLAUDE.md -->
+    <div class="section">
+      <h2 class="section-title">Writing an Effective CLAUDE.md</h2>
+      <p>The best CLAUDE.md files are specific, actionable, and focus on what Claude would otherwise get wrong. Here's a complete real-world example:</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — CLAUDE.md (complete example)</div></div>
+        <pre><span class="token-comment"># Project: Horizon — E-commerce Platform</span>
+
+## Tech Stack
+- Frontend: Next.js 14 (App Router), TypeScript, Tailwind CSS
+- Backend: Node.js with Express, PostgreSQL with Prisma ORM
+- Testing: Vitest + Testing Library, Playwright for e2e
+- CI/CD: GitHub Actions
+
+## Architecture
+- `/src/app/` — Next.js App Router pages and layouts
+- `/src/components/` — Reusable UI components (always use TypeScript)
+- `/src/lib/` — Shared utilities, API client, db helpers
+- `/src/server/` — Express API routes and middleware
+- `/prisma/` — Database schema and migrations
+- `/tests/` — All test files mirror the src/ structure
+
+## Coding Standards
+- TypeScript strict mode is enabled — no `any` types
+- All components must be functional (no class components)
+- Prefer named exports over default exports
+- Use Zod for all runtime validation (already installed)
+- Error boundaries required for all page-level components
+- All async operations must have explicit error handling
+
+## Naming Conventions
+- Components: PascalCase (e.g., UserProfile.tsx)
+- Utilities: camelCase (e.g., formatCurrency.ts)
+- Test files: co-located with source (e.g., Button.test.tsx)
+- API routes: kebab-case (e.g., /api/user-profile)
+- DB table names: snake_case (following Prisma convention)
+
+## Testing Requirements
+- Unit tests required for all utility functions
+- Component tests required for interactive components
+- Run `npm test` before suggesting a task is complete
+- Minimum 80% coverage — run `npm run test:coverage` to check
+
+## Common Commands
+```bash
+npm run dev          # Start development server
+npm test             # Run unit tests
+npm run test:e2e     # Run Playwright e2e tests
+npm run db:migrate   # Run Prisma migrations
+npm run lint         # ESLint check
+npm run typecheck    # TypeScript type check
+```
+
+## Important Context
+- The `useAuth` hook is our custom auth wrapper — never use
+  next-auth directly in components
+- All prices are stored in cents (integer) in the DB
+- Feature flags are in `src/lib/flags.ts` — check before
+  adding conditional logic
+- DO NOT modify the Prisma schema without running a migration</pre>
+      </div>
+
+      <h3 class="subsection-title">What to Include</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">Tech Stack & Versions</div>
+          <div class="card-desc">Framework versions, key packages, any legacy constraints Claude needs to respect.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📁</div>
+          <div class="card-title">Directory Structure</div>
+          <div class="card-desc">Where things live so Claude places new files in the right location automatically.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📏</div>
+          <div class="card-title">Coding Standards</div>
+          <div class="card-desc">Naming conventions, TypeScript settings, forbidden patterns, style rules.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧪</div>
+          <div class="card-title">Testing Requirements</div>
+          <div class="card-desc">What tests are required, which test runner to use, coverage expectations.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⌨️</div>
+          <div class="card-title">Common Commands</div>
+          <div class="card-desc">Dev server, test runner, build, lint, deploy — so Claude uses the right commands.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚠️</div>
+          <div class="card-title">Gotchas & Rules</div>
+          <div class="card-desc">"Never do X", "Always use Y instead of Z", project-specific pitfalls.</div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">What NOT to Include</h3>
+      <ul class="feature-list">
+        <li>Very long explanations — keep it concise and scannable</li>
+        <li>Things that are obvious from the code itself</li>
+        <li>Sensitive credentials or secrets (use environment variables)</li>
+        <li>Extensive API documentation — link to docs instead and use WebFetch</li>
+        <li>Outdated information — stale CLAUDE.md can be worse than none</li>
+      </ul>
+    </div>
+
+    <!-- SECTION: Global CLAUDE.md -->
+    <div class="section">
+      <h2 class="section-title">Global CLAUDE.md (Personal Preferences)</h2>
+      <p>Your <code>~/.claude/CLAUDE.md</code> applies to all projects and is great for personal preferences that you want everywhere.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">markdown — ~/.claude/CLAUDE.md</div></div>
+        <pre><span class="token-comment"># Personal Global Preferences</span>
+
+## My Preferences
+- I prefer functional programming patterns over OOP where practical
+- Always explain non-obvious code changes with inline comments
+- When you complete a task, summarize what you changed and why
+- If a task seems ambiguous, ask ONE clarifying question before proceeding
+
+## My Setup
+- I use nvm for Node.js version management
+- Preferred test runner is Vitest (not Jest) for new projects
+- I use conventional commits: feat/fix/chore/docs/refactor/test
+
+## Things I Dislike
+- Excessive abstraction ("YAGNI" — you ain't gonna need it)
+- Magic numbers without constants
+- Mutation of function arguments</pre>
+      </div>
+    </div>
+
+    <!-- SECTION: Session Memory -->
+    <div class="section">
+      <h2 class="section-title">Session Memory & the /compact Command</h2>
+      <p>Within a session, Claude maintains a conversation context window. As sessions grow long, context fills up — here's how to manage it.</p>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">Terminal — managing context</div></div>
+        <pre><span class="token-comment"># Check current context usage</span>
+<span class="token-prompt">You:</span> /status
+<span class="token-output">  Model: claude-sonnet-4-6
+  Context: 78,432 / 200,000 tokens (39%)
+  Session ID: abc123</span>
+
+<span class="token-comment"># When context is high (~80%), compact it</span>
+<span class="token-prompt">You:</span> /compact retain the auth refactor decisions and JWT schema
+
+<span class="token-output">  Compacting conversation...
+  Context reduced to 12,400 tokens. Retained: auth architecture decisions,
+  JWT token structure, test patterns used.</span>
+
+<span class="token-comment"># Or compact with specific retention hint</span>
+<span class="token-prompt">You:</span> /compact keep the list of files changed and why</pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">CLAUDE.md vs Session Memory</div>
+          <p>CLAUDE.md is for <em>permanent</em> project knowledge (it's always loaded). Session memory is for the <em>current task's</em> context. After a session, important decisions should be added to CLAUDE.md if they're worth remembering long-term.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: CLAUDE.md Best Practices -->
+    <div class="section">
+      <h2 class="section-title">Maintenance Best Practices</h2>
+
+      <ul class="feature-list">
+        <li>Treat CLAUDE.md like real documentation — keep it up to date as the project evolves</li>
+        <li>Add a rule whenever Claude makes a mistake it shouldn't repeat: "Never use class components" if you had to correct that twice</li>
+        <li>Commit CLAUDE.md to git — it's a team resource, not just yours</li>
+        <li>Separate personal preferences into CLAUDE.local.md and add that to .gitignore</li>
+        <li>Use subsystem CLAUDE.md files for large monorepos — a frontend CLAUDE.md in <code>src/frontend/</code>, a separate one in <code>src/api/</code></li>
+        <li>Periodically run <code>/init</code> again and see what it suggests — it might catch outdated entries</li>
+      </ul>
+
+      <div class="highlight-box">
+        <h4>📝 Template: .gitignore Additions for Claude Code</h4>
+        <div class="code-block" style="margin-top:12px">
+          <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">.gitignore</div></div>
+          <pre><span class="token-comment"># Claude Code personal files</span>
+CLAUDE.local.md
+.claude/settings.local.json</pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="module3.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 03</div><div class="label">Core Commands & Sessions</div></div>
+    </a>
+    <a href="module5.html" class="nav-btn nav-btn-next">
+      <span>→</span>
+      <div><div class="dir">Module 05</div><div class="label">Slash Commands & Workflows</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('module4.html');</script>
+</body>
+</html>

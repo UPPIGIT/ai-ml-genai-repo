@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — Complete Course</title>
+<link rel="stylesheet" href="course.css">
+<style>
+.hero {
+  padding: 72px 56px 56px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--cyan)12 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--cyan);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 52px; font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.hero-title .accent {
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-desc {
+  font-size: 17px; color: var(--text2);
+  max-width: 560px; line-height: 1.7;
+  margin-bottom: 32px;
+}
+.hero-stats {
+  display: flex; gap: 32px; flex-wrap: wrap;
+}
+.stat {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 800;
+  color: var(--cyan);
+}
+.stat-label { font-size: 12px; color: var(--text3); }
+
+.terminal-demo {
+  background: #050810;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 48px;
+  max-width: 640px;
+}
+.terminal-bar {
+  background: var(--bg3);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.terminal-bar .dots { display: flex; gap: 5px; }
+.terminal-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-bar .title { margin-left: 8px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--text3); }
+.terminal-body {
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.t-prompt { color: var(--green); }
+.t-cmd { color: var(--text); }
+.t-out { color: var(--text3); }
+.t-cyan { color: var(--cyan); }
+.t-amber { color: var(--amber); }
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 48px 56px;
+}
+.module-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: all .2s;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.module-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--cyan)06, transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.module-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.module-card:hover::before { opacity: 1; }
+.module-card.labs { border-color: var(--amber)44; }
+.module-card.labs:hover { border-color: var(--amber); }
+.module-card.labs::before { background: linear-gradient(135deg, var(--amber)08, transparent); }
+.card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text3);
+  margin-bottom: 12px;
+}
+.card-title2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+.card-desc2 { font-size: 13px; color: var(--text3); line-height: 1.55; }
+.card-topics {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-top: 14px;
+}
+.card-arrow {
+  position: absolute; right: 20px; bottom: 20px;
+  font-size: 18px; color: var(--text3);
+  transition: all .2s;
+}
+.module-card:hover .card-arrow { color: var(--cyan); transform: translateX(4px); }
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle" aria-label="Menu">☰</button>
+
+<main class="main">
+  <div class="hero">
+    <div class="hero-eyebrow">✦ Comprehensive Training Program</div>
+    <h1 class="hero-title">Master <span class="accent">Claude Code</span><br>from Zero to Expert</h1>
+    <p class="hero-desc">
+      A complete, hands-on course covering every feature of Anthropic's agentic coding tool — from first install through advanced MCP integrations, hooks, subagents, and real-world workflows.
+    </p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-val">7</span><span class="stat-label">Modules</span></div>
+      <div class="stat"><span class="stat-val">12+</span><span class="stat-label">Practice Labs</span></div>
+      <div class="stat"><span class="stat-val">50+</span><span class="stat-label">Code Examples</span></div>
+      <div class="stat"><span class="stat-val">∞</span><span class="stat-label">Productivity Gains</span></div>
+    </div>
+
+    <div class="terminal-demo fade-up fade-up-2">
+      <div class="terminal-bar">
+        <div class="dots">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#febc2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+        </div>
+        <div class="title">bash — ~/my-project</div>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">~/my-project $</span> <span class="t-cmd">claude</span></div>
+        <div class="t-out">✻ Welcome to Claude Code!</div>
+        <div class="t-out">  cwd: /home/user/my-project</div>
+        <div style="height:8px"></div>
+        <div><span class="t-amber">You:</span> Refactor the auth module to use JWT, add tests, and open a PR</div>
+        <div style="height:8px"></div>
+        <div><span class="t-cyan">Claude:</span> I'll start by reading the current auth implementation...</div>
+        <div class="t-out">  ● Reading src/auth/index.js</div>
+        <div class="t-out">  ● Reading src/auth/session.js</div>
+        <div class="t-out">  ● Writing src/auth/jwt.js</div>
+        <div class="t-out">  ● Writing tests/auth.test.js</div>
+        <div class="t-out">  ● Running: npm test</div>
+        <div class="t-out">  ✓ All 12 tests passed</div>
+        <div class="t-out">  ● Creating pull request #47...</div>
+        <div class="t-cyan">  Done! PR #47 opened: "feat: migrate auth to JWT"</div>
+        <div><span class="t-amber">You:</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module-grid">
+    <a href="module1.html" class="module-card fade-up fade-up-1">
+      <div class="card-num">MODULE 01</div>
+      <div class="card-title2">What is Claude Code?</div>
+      <div class="card-desc2">Understand the agentic architecture, capabilities, and mental model behind Claude Code.</div>
+      <div class="card-topics">
+        <span class="tag tag-cyan">Agentic AI</span>
+        <span class="tag tag-cyan">Architecture</span>
+        <span class="tag tag-cyan">Use Cases</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module2.html" class="module-card fade-up fade-up-1">
+      <div class="card-num">MODULE 02</div>
+      <div class="card-title2">Installation & Setup</div>
+      <div class="card-desc2">Install on macOS, Linux, and Windows. Configure authentication and your first session.</div>
+      <div class="card-topics">
+        <span class="tag tag-green">macOS</span>
+        <span class="tag tag-green">Linux</span>
+        <span class="tag tag-green">Windows</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module3.html" class="module-card fade-up fade-up-2">
+      <div class="card-num">MODULE 03</div>
+      <div class="card-title2">Core Commands & Sessions</div>
+      <div class="card-desc2">Master CLI flags, session management, conversation control, and core tools.</div>
+      <div class="card-topics">
+        <span class="tag tag-amber">CLI Flags</span>
+        <span class="tag tag-amber">Sessions</span>
+        <span class="tag tag-amber">Tools</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module4.html" class="module-card fade-up fade-up-2">
+      <div class="card-num">MODULE 04</div>
+      <div class="card-title2">CLAUDE.md & Project Memory</div>
+      <div class="card-desc2">Give Claude persistent context with CLAUDE.md files, memory hierarchy, and project conventions.</div>
+      <div class="card-topics">
+        <span class="tag tag-purple">CLAUDE.md</span>
+        <span class="tag tag-purple">Memory</span>
+        <span class="tag tag-purple">Context</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module5.html" class="module-card fade-up fade-up-3">
+      <div class="card-num">MODULE 05</div>
+      <div class="card-title2">Slash Commands & Workflows</div>
+      <div class="card-desc2">Build reusable slash commands, parameterize them, and automate your entire dev lifecycle.</div>
+      <div class="card-topics">
+        <span class="tag tag-cyan">Slash Commands</span>
+        <span class="tag tag-cyan">Automation</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module6.html" class="module-card fade-up fade-up-3">
+      <div class="card-num">MODULE 06</div>
+      <div class="card-title2">MCP Integration</div>
+      <div class="card-desc2">Connect Claude Code to GitHub, Jira, databases, and hundreds of external services via MCP.</div>
+      <div class="card-topics">
+        <span class="tag tag-green">MCP</span>
+        <span class="tag tag-green">GitHub</span>
+        <span class="tag tag-green">APIs</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module7.html" class="module-card fade-up fade-up-3">
+      <div class="card-num">MODULE 07</div>
+      <div class="card-title2">Hooks, Subagents & Advanced</div>
+      <div class="card-desc2">Automate lifecycle events with hooks, parallelize work with subagents, and use CI/CD patterns.</div>
+      <div class="card-topics">
+        <span class="tag tag-amber">Hooks</span>
+        <span class="tag tag-amber">Subagents</span>
+        <span class="tag tag-amber">CI/CD</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module8.html" class="module-card fade-up fade-up-3">
+      <div class="card-num">MODULE 08</div>
+      <div class="card-title2">Skills</div>
+      <div class="card-desc2">Build auto-activating skill packages that bundle executable scripts, reference files, and expert playbooks — the most powerful extensibility mechanism.</div>
+      <div class="card-topics">
+        <span class="tag tag-purple">Auto-invocation</span>
+        <span class="tag tag-purple">Scripts</span>
+        <span class="tag tag-purple">Skill Creator</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="module9.html" class="module-card fade-up fade-up-3">
+      <div class="card-num">MODULE 09</div>
+      <div class="card-title2">GitHub Integration</div>
+      <div class="card-desc2">Turn issues into PRs with @claude, automate code review, set up CI/CD automation patterns, and deploy Claude as a team-wide GitHub collaborator.</div>
+      <div class="card-topics">
+        <span class="tag tag-green">@claude</span>
+        <span class="tag tag-green">GitHub Actions</span>
+        <span class="tag tag-green">Auto-review</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="labs.html" class="module-card labs fade-up fade-up-3">
+      <div class="card-num">🧪 PRACTICE LABS</div>
+      <div class="card-title2">Hands-on Lab Exercises</div>
+      <div class="card-desc2">12 guided labs covering everything from first session to building a full multi-agent workflow.</div>
+      <div class="card-topics">
+        <span class="tag tag-amber">12 Labs</span>
+        <span class="tag tag-amber">Step-by-step</span>
+        <span class="tag tag-amber">Solutions</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+
+  <div style="padding: 0 56px 56px;">
+    <div class="callout callout-info">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Prerequisites</div>
+        <p>Basic terminal/command-line comfort is helpful but not required. You should have a Claude Pro or Max subscription, or an Anthropic API key. No prior AI tool experience needed.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="course.js"></script>
+<script>buildNav('index.html');</script>
+</body>
+</html>

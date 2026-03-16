@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Labs — Claude Code Course</title>
+<link rel="stylesheet" href="course.css">
+<style>
+.labs-intro {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 56px 40px;
+}
+.difficulty-bar {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px;
+}
+.diff-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px;
+  font-size: 12px; font-family: 'JetBrains Mono', monospace;
+  border: 1px solid;
+}
+.diff-beginner { background: var(--green-dim); color: var(--green); border-color: var(--green)44; }
+.diff-intermediate { background: var(--amber-dim); color: var(--amber); border-color: var(--amber)44; }
+.diff-advanced { background: #f43f5e18; color: var(--red); border-color: var(--red)44; }
+
+.labs-content {
+  padding: 40px 56px 64px;
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<button class="menu-toggle">☰</button>
+<main class="main">
+  <div class="labs-intro">
+    <div class="module-tag">🧪 PRACTICE LABS</div>
+    <h1 class="page-title">Hands-on Lab Exercises</h1>
+    <p class="page-desc">12 guided labs taking you from your first session through advanced multi-agent workflows. Each lab includes objectives, step-by-step instructions, and a solution hint.</p>
+    <div class="difficulty-bar">
+      <span class="diff-pill diff-beginner">● Beginner (Labs 1–4)</span>
+      <span class="diff-pill diff-intermediate">● Intermediate (Labs 5–8)</span>
+      <span class="diff-pill diff-advanced">● Advanced (Labs 9–12)</span>
+    </div>
+  </div>
+
+  <div class="labs-content">
+
+    <!-- ───────── BEGINNER ───────── -->
+    <h2 class="section-title" style="margin-bottom:24px">Beginner Labs</h2>
+
+    <!-- Lab 1 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">1</div>
+        <div class="lab-info">
+          <div class="lab-title">First Session — Explore an Unknown Codebase</div>
+          <div class="lab-meta">⏱ 15 min  ·  Difficulty: Beginner  ·  Module: 1, 2</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Install Claude Code and authenticate</li>
+            <li>Launch your first interactive session</li>
+            <li>Use Claude to understand an unfamiliar project</li>
+            <li>Practice the /help and /status commands</li>
+          </ul>
+        </div>
+
+        <h4 style="color:var(--text);margin-bottom:12px;font-family:'Syne',sans-serif">Instructions</h4>
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Set up a sample project</strong>
+              <p>Clone this starter repo or use any existing project you have:</p>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>git clone https://github.com/gothinkster/realworld-example-apps
+cd realworld-example-apps
+# Or use any Node.js/Python/etc project you have</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Launch Claude Code</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>claude</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Ask Claude to explain the project</strong>
+              <p>Type this prompt and observe how Claude reads files:</p>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">prompt</div></div>
+                <pre>Scan this project and give me:
+1. What does this app do?
+2. What's the tech stack?
+3. What are the 5 most important files I should read first?
+4. How do I run it locally?</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Explore the tool calls</strong>
+              <p>Notice how Claude uses <code>Read</code>, <code>Glob</code>, and <code>Grep</code> tools automatically. Watch the tool calls appear in the output.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Try these session commands</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">session commands</div></div>
+                <pre>/help          # See all available commands
+/status        # Check model and context usage
+/cost          # See token usage so far
+Ctrl+C         # Exit</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+
+        <details>
+          <summary>💡 Solution Hint</summary>
+          <p>Claude should read <code>package.json</code>, <code>README.md</code>, and scan the top-level directory structure. If it doesn't do this automatically, prompt: "Please read the package.json and README.md first."</p>
+        </details>
+      </div>
+    </div>
+
+    <!-- Lab 2 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">2</div>
+        <div class="lab-info">
+          <div class="lab-title">Create and Optimize Your CLAUDE.md</div>
+          <div class="lab-meta">⏱ 20 min  ·  Difficulty: Beginner  ·  Module: 4</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Use /init to auto-generate a CLAUDE.md</li>
+            <li>Understand what /init creates</li>
+            <li>Customize it with real project conventions</li>
+            <li>Test that Claude uses the CLAUDE.md in a new session</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Generate a CLAUDE.md with /init</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">session</div></div>
+                <pre>/init</pre>
+              </div>
+              <p>Claude will scan your project and write an initial CLAUDE.md. Review what it generated.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Add your own rules</strong>
+              <p>Open the CLAUDE.md file and add at minimum:</p>
+              <ul class="feature-list">
+                <li>A coding convention rule (e.g., "always use TypeScript strict mode")</li>
+                <li>A testing requirement (e.g., "all functions must have unit tests")</li>
+                <li>A "DO NOT" rule (e.g., "never use var, always use const/let")</li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Test it in a fresh session</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>claude   # Start a new session
+
+# Then ask:
+# "Write a utility function that formats a phone number.
+#  Follow all conventions in CLAUDE.md."</pre>
+              </div>
+              <p>Verify Claude follows the conventions you specified.</p>
+            </div>
+          </li>
+        </ol>
+
+        <details>
+          <summary>💡 Solution Hint</summary>
+          <p>If Claude doesn't follow your CLAUDE.md rules, try being more explicit: "You must follow the rules in CLAUDE.md. Please re-read CLAUDE.md and then rewrite this function." If rules still aren't followed, check that the CLAUDE.md is in the project root (same directory where you run <code>claude</code>).</p>
+        </details>
+      </div>
+    </div>
+
+    <!-- Lab 3 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">3</div>
+        <div class="lab-info">
+          <div class="lab-title">Bug Hunt — Find and Fix a Bug End-to-End</div>
+          <div class="lab-meta">⏱ 25 min  ·  Difficulty: Beginner  ·  Module: 1, 3</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Introduce Claude to a bug description and let it find the root cause</li>
+            <li>Have Claude implement a fix</li>
+            <li>Have Claude write a regression test</li>
+            <li>Practice the "describe → find → fix → test" workflow</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Pick a real bug or create one</strong>
+              <p>If you have a real project, describe a known bug. Otherwise, create this intentional bug in a JS file:</p>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">javascript — intentional bug for practice</div></div>
+                <pre>// utils/discount.js
+function applyDiscount(price, discountPercent) {
+  // BUG: should be (discountPercent / 100), not discountPercent
+  return price - (price * discountPercent);
+}
+
+module.exports = { applyDiscount };</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Report the bug to Claude</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">prompt</div></div>
+                <pre>Bug report: When applying a 10% discount to a $100 item,
+the final price shows as -$900 instead of $90.
+
+The discount function is somewhere in the utils directory.
+Please:
+1. Find the bug
+2. Explain why it happens
+3. Fix it
+4. Write a test that would catch this in future</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Observe the tool calls</strong>
+              <p>Watch Claude use Grep/Glob to find the file, Read to examine it, Write/Edit to fix it, and Bash to run the test.</p>
+            </div>
+          </li>
+        </ol>
+
+        <details>
+          <summary>💡 Solution Hint</summary>
+          <p>The fix is changing <code>price * discountPercent</code> to <code>price * (discountPercent / 100)</code>. A good test case: <code>expect(applyDiscount(100, 10)).toBe(90)</code>. If Claude doesn't write the test automatically, explicitly ask: "Now write a Jest test for this fix."</p>
+        </details>
+      </div>
+    </div>
+
+    <!-- Lab 4 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">4</div>
+        <div class="lab-info">
+          <div class="lab-title">Non-Interactive Mode — Scripted Tasks</div>
+          <div class="lab-meta">⏱ 15 min  ·  Difficulty: Beginner  ·  Module: 3</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Use <code>claude -p</code> for non-interactive tasks</li>
+            <li>Capture output to a file</li>
+            <li>Use JSON output format</li>
+            <li>Pipe input to Claude Code</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Run a simple task non-interactively</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>claude -p "List all JavaScript files in src/ and their sizes" > file-list.txt
+cat file-list.txt</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Try JSON output format</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>claude -p "Count lines of code in each file in src/" \
+  --output-format json | jq '.result'</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Pipe code to Claude for explanation</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>cat src/auth/jwt.ts | claude -p "Explain this code in 3 sentences"</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Restrict tools for safe read-only mode</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>claude -p "Find all TODO comments" \
+  --allowedTools Read,Grep,Glob \
+  --max-turns 5</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ───────── INTERMEDIATE ───────── -->
+    <h2 class="section-title" style="margin-bottom:24px;margin-top:16px">Intermediate Labs</h2>
+
+    <!-- Lab 5 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">5</div>
+        <div class="lab-info">
+          <div class="lab-title">Build Your Slash Command Library</div>
+          <div class="lab-meta">⏱ 30 min  ·  Difficulty: Intermediate  ·  Module: 5</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Create 3 custom slash commands for a real workflow</li>
+            <li>Use the $ARGUMENTS variable for dynamic commands</li>
+            <li>Use shell command injection (!`command`) in a command file</li>
+            <li>Verify commands appear in /help autocomplete</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Create the commands directory</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>mkdir -p .claude/commands</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create a /commit command</strong>
+              <p>Write <code>.claude/commands/commit.md</code> that generates a conventional commit message from the current diff. Include <code>!`git diff --cached`</code> to inject the diff.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create a /review command</strong>
+              <p>Write <code>.claude/commands/review.md</code> that takes an optional focus area via <code>$ARGUMENTS</code> and performs a structured code review of the last commit.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create a /explain command</strong>
+              <p>Write <code>.claude/commands/explain.md</code> that takes a file path as <code>$ARGUMENTS</code> and explains what the file does to a new developer joining the team.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Test all three commands</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">session</div></div>
+                <pre>/help                          # Verify commands appear
+/commit                        # Test commit message generation
+/review security               # Test review with argument
+/explain src/auth/jwt.ts       # Test explain with file path</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+
+        <details>
+          <summary>💡 Solution Hint</summary>
+          <p>For the commit command: use <code>allowed-tools: Bash(git *)</code> and <code>model: claude-haiku-4-5-20251001</code> (it's cheap and fast for this). For the explain command: use <code>allowed-tools: Read</code> only — no need for Bash or Write.</p>
+        </details>
+      </div>
+    </div>
+
+    <!-- Lab 6 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">6</div>
+        <div class="lab-info">
+          <div class="lab-title">Full Feature Implementation with TDD</div>
+          <div class="lab-meta">⏱ 45 min  ·  Difficulty: Intermediate  ·  Module: 1, 3</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Use a test-driven approach with Claude Code</li>
+            <li>Implement a complete feature across multiple files</li>
+            <li>Have Claude run tests and fix failures automatically</li>
+            <li>Practice multi-turn conversations for complex tasks</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Define the feature</strong>
+              <p>Pick a moderately complex feature like: "Add pagination to the users API endpoint" or "Add input validation to the registration form."</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Start with test requirements</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">prompt (turn 1)</div></div>
+                <pre>I want to add pagination to GET /api/users.
+Before writing any code:
+1. Read the current users route and model
+2. Tell me what tests we should write first (TDD approach)
+3. Don't write any implementation yet</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Write tests first</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">prompt (turn 2)</div></div>
+                <pre>Good. Now write the tests you described.
+They should fail right now because the feature isn't implemented yet.
+Run them to confirm they fail.</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Implement until tests pass</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">prompt (turn 3)</div></div>
+                <pre>Now implement the pagination feature.
+Run the tests after each significant change.
+Don't stop until all tests are passing.</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Lab 7 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">7</div>
+        <div class="lab-info">
+          <div class="lab-title">Hook Setup — Auto-Format and Notifications</div>
+          <div class="lab-meta">⏱ 30 min  ·  Difficulty: Intermediate  ·  Module: 7</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Create a PostToolUse hook that auto-formats files after write</li>
+            <li>Create a Stop hook that sends a desktop notification</li>
+            <li>Test hooks are firing correctly</li>
+            <li>Understand async vs sync hooks</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Create the hooks directory and notification script</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>mkdir -p ~/.claude/hooks
+
+cat > ~/.claude/hooks/notify.sh << 'EOF'
+#!/bin/bash
+# Cross-platform notification
+if command -v osascript &>/dev/null; then
+  osascript -e 'display notification "Task complete" with title "Claude Code"'
+elif command -v notify-send &>/dev/null; then
+  notify-send "Claude Code" "Task complete"
+fi
+EOF
+
+chmod +x ~/.claude/hooks/notify.sh</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Configure hooks in .claude/settings.json</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">json</div></div>
+                <pre>{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Write|Edit",
+      "hooks": [{
+        "type": "command",
+        "command": "prettier --write \"${TOOL_INPUT_PATH}\" 2>/dev/null; true"
+      }]
+    }],
+    "Stop": [{
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/hooks/notify.sh",
+        "async": true
+      }]
+    }]
+  }
+}</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Test the hooks</strong>
+              <p>Start a session and ask Claude to write a file. The file should be auto-formatted. When Claude finishes responding, you should get a notification.</p>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">prompt for testing</div></div>
+                <pre>Create a file called test-hooks.ts with a simple function that
+adds two numbers. (Watch for the auto-format notification!)</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Lab 8 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">8</div>
+        <div class="lab-info">
+          <div class="lab-title">Add an MCP Server — GitHub Integration</div>
+          <div class="lab-meta">⏱ 30 min  ·  Difficulty: Intermediate  ·  Module: 6</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Configure the GitHub MCP server</li>
+            <li>Use Claude to search GitHub repos and create issues</li>
+            <li>Understand MCP tool naming conventions</li>
+            <li>Verify the .mcp.json configuration</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Create a GitHub Personal Access Token</strong>
+              <p>Go to GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic). Create a token with <code>repo</code> and <code>issues</code> permissions.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Add the MCP server</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>export GITHUB_TOKEN="ghp_yourtoken"
+
+claude mcp add github \
+  -e GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_TOKEN} \
+  -- npx -y @modelcontextprotocol/server-github
+
+claude mcp list   # Verify it was added</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Test GitHub integration</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">prompts to try</div></div>
+                <pre># List your recent repos
+"Show me my 5 most recently updated GitHub repositories"
+
+# Search issues
+"Search for open issues labeled 'bug' in my [repo-name] repo"
+
+# Create an issue (use a test repo!)
+"Create a GitHub issue in [your-test-repo] titled 'Test from Claude Code'
+ with a description explaining it was created as an MCP integration test"</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ───────── ADVANCED ───────── -->
+    <h2 class="section-title" style="margin-bottom:24px;margin-top:16px">Advanced Labs</h2>
+
+    <!-- Lab 9 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">9</div>
+        <div class="lab-info">
+          <div class="lab-title">Build a Full CI/CD Integration with GitHub Actions</div>
+          <div class="lab-meta">⏱ 45 min  ·  Difficulty: Advanced  ·  Module: 7</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Create a GitHub Actions workflow that runs Claude Code</li>
+            <li>Auto-generate PR descriptions using Claude Code</li>
+            <li>Post AI review comments on pull requests</li>
+            <li>Handle API key secrets securely in CI</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Add ANTHROPIC_API_KEY as a GitHub secret</strong>
+              <p>Go to your repo → Settings → Secrets and variables → Actions → New repository secret. Name it <code>ANTHROPIC_API_KEY</code>.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create the GitHub Actions workflow</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">yaml — .github/workflows/claude-review.yml</div></div>
+                <pre>name: Claude Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Claude Code
+        run: curl -fsSL https://claude.ai/install.sh | bash
+
+      - name: Run PR review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          DIFF=$(git diff origin/main...HEAD)
+          claude -p "Review this PR for issues:
+            $DIFF
+            Output as Markdown with sections:
+            ## Summary, ## Issues Found, ## Suggestions" \
+            --allowedTools Read,Grep,Glob \
+            --max-turns 5 \
+            --output-format text > pr-review.md
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('pr-review.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🤖 Claude Code AI Review\n\n${body}`
+            });</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Open a test PR and verify the comment appears</strong>
+              <p>Create a branch, make a change, and open a PR. The workflow should run and post a review comment automatically.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Lab 10 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">10</div>
+        <div class="lab-info">
+          <div class="lab-title">Multi-Agent Parallel Codebase Audit</div>
+          <div class="lab-meta">⏱ 40 min  ·  Difficulty: Advanced  ·  Module: 7</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Define 3 specialized subagent definitions in .claude/agents/</li>
+            <li>Trigger a parallel audit using all 3 agents</li>
+            <li>Aggregate and compare the results</li>
+            <li>Write findings to a structured audit report</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Create 3 specialized agents</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>mkdir -p .claude/agents
+# Create: .claude/agents/security-auditor.md
+# Create: .claude/agents/performance-analyst.md
+# Create: .claude/agents/accessibility-checker.md</pre>
+              </div>
+              <p>Each agent file should have a description, allowed-tools, and specialized instructions for its domain.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create a /full-audit slash command</strong>
+              <p>Create <code>.claude/commands/audit.md</code> that spawns all 3 agents simultaneously and asks them to analyze <code>$ARGUMENTS</code> (or all of <code>src/</code> if not provided).</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Run the audit and review results</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">session</div></div>
+                <pre>/audit src/components/
+# Wait for all 3 subagents to complete
+# Review the aggregated report</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Lab 11 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">11</div>
+        <div class="lab-info">
+          <div class="lab-title">End-to-End Ticket Workflow with Jira + GitHub MCP</div>
+          <div class="lab-meta">⏱ 60 min  ·  Difficulty: Advanced  ·  Module: 6, 7</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Configure both Jira and GitHub MCP servers</li>
+            <li>Build the /ticket command from Module 6</li>
+            <li>Run a full ticket → implement → PR → update cycle</li>
+            <li>Verify the Jira ticket status is updated automatically</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Configure Jira MCP</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>claude mcp add jira \
+  -e JIRA_HOST="${JIRA_HOST}" \
+  -e JIRA_EMAIL="${JIRA_EMAIL}" \
+  -e JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
+  -- npx -y @anthropic/mcp-jira</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create the /ticket command</strong>
+              <p>Build the full command from Module 6 in <code>.claude/commands/ticket.md</code> with all 10 steps.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create a simple test ticket in Jira</strong>
+              <p>Create a ticket with a clear, implementable task like "Add a /health endpoint to the API."</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Run the workflow</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">session</div></div>
+                <pre>/ticket YOUR-TICKET-ID</pre>
+              </div>
+              <p>Watch the full workflow: read ticket → implement → test → commit → create PR → update Jira.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Lab 12 -->
+    <div class="lab-block">
+      <div class="lab-header">
+        <div class="lab-num">12</div>
+        <div class="lab-info">
+          <div class="lab-title">Capstone — Build Your Team's Complete Claude Code Setup</div>
+          <div class="lab-meta">⏱ 90 min  ·  Difficulty: Advanced  ·  Module: All</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="lab-objectives">
+          <h4>Objectives</h4>
+          <ul>
+            <li>Combine everything from the course into a production-ready setup</li>
+            <li>Create a complete CLAUDE.md for a real project</li>
+            <li>Build a command library of 5+ commands</li>
+            <li>Configure hooks for auto-format, tests, and notifications</li>
+            <li>Set up at least 1 MCP integration</li>
+            <li>Document everything for your team</li>
+          </ul>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <strong>Choose a real project</strong>
+              <p>Use an actual project you or your team works on. This is most valuable when applied to real work.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Create a comprehensive CLAUDE.md</strong>
+              <p>Cover: tech stack, architecture, coding standards, testing requirements, common commands, and at least 5 "DO NOT" rules based on mistakes that actually get made.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Build a command library</strong>
+              <p>Required: <code>/commit</code>, <code>/review</code>, <code>/pr</code>. Plus 2 project-specific commands (e.g., <code>/deploy-staging</code>, <code>/db-migration</code>).</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Configure .claude/settings.json</strong>
+              <p>Required: auto-format hook, completion notification hook, and safe permission rules.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Add 1 MCP integration</strong>
+              <p>Connect whichever is most valuable for your workflow: GitHub, Jira, PostgreSQL, or Slack.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <strong>Commit and document</strong>
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><div class="code-lang">bash</div></div>
+                <pre>git add CLAUDE.md .claude/ .mcp.json
+git commit -m "chore: add team Claude Code configuration"
+# Push and share with your team!</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+
+        <div class="callout callout-tip" style="margin-top:20px">
+          <div class="callout-icon">🎓</div>
+          <div class="callout-body">
+            <div class="callout-title">Course Complete!</div>
+            <p>If you've made it through all 12 labs, you have a production-ready Claude Code setup and deep understanding of every major feature. The best next step: use it daily and refine your CLAUDE.md and commands based on real experience.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /labs-content -->
+
+  <div class="page-nav">
+    <a href="module7.html" class="nav-btn">
+      <span>←</span>
+      <div><div class="dir">Module 07</div><div class="label">Hooks, Subagents & Advanced</div></div>
+    </a>
+    <a href="index.html" class="nav-btn nav-btn-next">
+      <span>↑</span>
+      <div><div class="dir">Back to</div><div class="label">Course Overview</div></div>
+    </a>
+  </div>
+</main>
+<script src="course.js"></script>
+<script>buildNav('labs.html');</script>
+</body>
+</html>
