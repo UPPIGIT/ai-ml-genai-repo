@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flask — Complete Course Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080c12; --surface:#0d1520; --border:rgba(255,255,255,0.07);
+    --text:#e8edf5; --muted:#6b7a93;
+    --flask:#e8501a;
+    --m1:#e8501a; --m2:#f97316; --m3:#fbbf24; --m4:#34d399;
+    --m5:#38bdf8; --m6:#a78bfa; --m7:#f472b6; --m8:#c8f135;
+    --m9:#fb923c; --m10:#60a5fa; --m11:#e879f9; --m12:#4ade80;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+
+  /* HERO */
+  .hero{position:relative;padding:70px 52px 56px;border-bottom:1px solid var(--border);overflow:hidden;}
+  .hero::after{content:'';position:absolute;top:-80px;right:-140px;width:540px;height:540px;background:radial-gradient(circle,rgba(232,80,26,.09) 0%,transparent 68%);pointer-events:none;}
+  .hero::before{content:'';position:absolute;bottom:-60px;left:20%;width:400px;height:400px;background:radial-gradient(circle,rgba(251,191,36,.04) 0%,transparent 65%);pointer-events:none;}
+
+  .level-pills{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+  .pill{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;padding:4px 12px;border-radius:100px;border:1px solid;}
+  .pill.beginner{background:rgba(52,211,153,.08);color:#34d399;border-color:rgba(52,211,153,.25);}
+  .pill.intermediate{background:rgba(251,191,36,.08);color:#fbbf24;border-color:rgba(251,191,36,.25);}
+  .pill.advanced{background:rgba(232,80,26,.1);color:#f97316;border-color:rgba(249,115,22,.3);}
+  .pill.pro{background:rgba(232,80,26,.15);color:#e8501a;border-color:rgba(232,80,26,.4);}
+
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(232,80,26,.1);border:1px solid rgba(232,80,26,.3);color:#f97316;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;padding:5px 14px;border-radius:100px;margin-bottom:22px;}
+  .hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--flask);border-radius:50%;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.8);}}
+  h1{font-family:'Syne',sans-serif;font-size:clamp(34px,4.5vw,62px);font-weight:800;line-height:1.05;letter-spacing:-.02em;margin-bottom:14px;}
+  h1 em{color:var(--flask);font-style:normal;}
+  .hero-sub{color:var(--muted);font-size:15px;max-width:580px;margin-bottom:36px;line-height:1.7;}
+  .stats-row{display:flex;flex-wrap:wrap;gap:30px;}
+  .stat{display:flex;flex-direction:column;gap:2px;}
+  .stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--flask);}
+  .stat-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+
+  /* FLASK LOGO */
+  .flask-bg{position:absolute;right:60px;top:50%;transform:translateY(-50%);opacity:.05;width:200px;height:200px;font-size:180px;line-height:1;user-select:none;}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:100;background:rgba(8,12,18,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 52px;display:flex;overflow-x:auto;scrollbar-width:none;}
+  .nav::-webkit-scrollbar{display:none;}
+  .nav a{display:flex;align-items:center;gap:6px;padding:13px 15px;color:var(--muted);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.05em;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;}
+  .nav a:hover{color:var(--text);border-bottom-color:rgba(255,255,255,.15);}
+  .ndot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+  /* MAIN */
+  .main{padding:0 52px 80px;max-width:1440px;margin:0 auto;}
+
+  /* PHASE BANNER */
+  .phase-banner{display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:10px;margin-top:48px;margin-bottom:6px;}
+  .phase-banner .ph-icon{font-size:18px;}
+  .phase-banner .ph-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;opacity:.7;}
+  .phase-banner .ph-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-top:1px;}
+
+  /* MODULE SECTION */
+  .mod-section{padding:28px 0 0;}
+  .mod-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+  .mod-num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border-radius:100px;color:#080c12;font-weight:600;}
+  .mod-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
+  .mod-sub{color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;}
+  .mod-level{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;padding:3px 9px;border-radius:100px;border:1px solid;}
+
+  /* GRID */
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:13px;}
+
+  /* TOPIC CARD */
+  .tc{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;position:relative;}
+  .tc:hover{border-color:rgba(255,255,255,.13);transform:translateY(-2px);}
+  .tc-stripe{position:absolute;top:0;left:0;right:0;height:2px;}
+  .tc-head{padding:17px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .tc-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:100px;border:1px solid;}
+  .tc-tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.07em;color:var(--muted);background:rgba(255,255,255,.04);padding:2px 7px;border-radius:100px;}
+  .tc-body{padding:10px 20px 18px;}
+  .tc-title{font-family:'Syne',sans-serif;font-size:14.5px;font-weight:700;margin-bottom:13px;line-height:1.3;}
+
+  /* TOPIC GROUP */
+  .tg{margin-bottom:13px;}
+  .tg:last-of-type{margin-bottom:0;}
+  .tg-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+  .tg-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+  .topics{display:flex;flex-direction:column;gap:2px;}
+  .ti{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#8ea3be;padding:2px 0;line-height:1.55;}
+  .ti::before{content:'→';font-family:'JetBrains Mono',monospace;font-size:9px;color:#2e3f55;flex-shrink:0;margin-top:3px;}
+  .ti.h{color:#cdd8e8;font-weight:500;}
+  .ti.h::before{color:var(--flask);}
+
+  /* CODE SNIPPET */
+  .snippet{background:#060a10;border:1px solid rgba(232,80,26,.15);border-radius:8px;padding:12px 14px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.65;overflow-x:auto;white-space:pre;}
+  .kw{color:#a78bfa;} .fn{color:#34d399;} .st{color:#fbbf24;}
+  .cm{color:#3a4e5e;} .dec{color:#f97316;} .var{color:#7dd3fc;}
+  .num{color:#fb923c;} .cls{color:#60a5fa;}
+
+  /* TAGS */
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px;padding-top:11px;border-top:1px solid var(--border);}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.04);color:#4a5e78;border:1px solid rgba(255,255,255,.07);}
+  .tag.hot{background:rgba(232,80,26,.08);color:rgba(249,115,22,.7);border-color:rgba(232,80,26,.2);}
+
+  /* PROJECT BLOCK */
+  .proj{background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.13);border-radius:9px;padding:13px 15px;margin-top:12px;}
+  .proj-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.13em;text-transform:uppercase;color:#c8f135;opacity:.7;margin-bottom:3px;}
+  .proj-name{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:700;color:#c8f135;margin-bottom:5px;}
+  .proj-stack{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(200,241,53,.4);margin-bottom:7px;}
+  .proj-items{display:flex;flex-direction:column;gap:3px;}
+  .proj-d{font-size:11.5px;color:rgba(200,241,53,.45);display:flex;gap:6px;align-items:flex-start;}
+  .proj-d::before{content:'✓';color:rgba(200,241,53,.6);font-size:9px;margin-top:2px;flex-shrink:0;}
+
+  /* CAPSTONE */
+  .capstone-wrap{margin-top:52px;border:1px solid rgba(232,80,26,.25);border-radius:16px;overflow:hidden;}
+  .cap-head{background:linear-gradient(135deg,rgba(232,80,26,.1),rgba(249,115,22,.06));padding:30px 36px 24px;}
+  .cap-head h2{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--flask);margin-bottom:8px;}
+  .cap-head p{color:var(--muted);font-size:13px;max-width:700px;line-height:1.7;}
+  .cap-body{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(232,80,26,.1);}
+  .cap-col{padding:22px 26px;border-right:1px solid rgba(255,255,255,.05);}
+  .cap-col:last-child{border-right:none;}
+  .cap-col-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--flask);margin-bottom:11px;}
+  .cap-item{font-size:12px;color:#8ea3be;padding:3px 0;display:flex;gap:7px;}
+  .cap-item::before{content:'→';font-family:'JetBrains Mono',monospace;font-size:9px;color:#2e3f55;flex-shrink:0;margin-top:3px;}
+
+  /* CHEATSHEET */
+  .cheat{margin-top:40px;background:rgba(232,80,26,.04);border:1px solid rgba(232,80,26,.14);border-radius:14px;padding:28px 36px;}
+  .cheat h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--flask);margin-bottom:6px;}
+  .cheat-sub{color:var(--muted);font-size:12px;margin-bottom:18px;}
+  .cheat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .cheat-col-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--flask);margin-bottom:10px;}
+  .cheat-item{font-size:11.5px;color:var(--muted);padding:2px 0;font-family:'JetBrains Mono',monospace;}
+  .cheat-item span{color:#7dd3fc;}
+
+  footer{border-top:1px solid var(--border);padding:26px 52px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;flex-wrap:wrap;gap:10px;}
+
+  @media(max-width:768px){
+    .hero,.main,footer{padding-left:18px;padding-right:18px;}
+    .nav{padding:0 18px;}
+    .card-grid{grid-template-columns:1fr;}
+    .cap-body{grid-template-columns:1fr;}
+    .cheat-grid{grid-template-columns:1fr 1fr;}
+    .flask-bg{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="flask-bg">🍶</div>
+  <div class="hero-eyebrow">FLASK · COMPLETE COURSE · BEGINNER TO PRO</div>
+  <div class="level-pills">
+    <span class="pill beginner">● Beginner</span>
+    <span class="pill intermediate">● Intermediate</span>
+    <span class="pill advanced">● Advanced</span>
+    <span class="pill pro">● Production / Pro</span>
+  </div>
+  <h1>Flask — <em>Beginner</em><br>to Production</h1>
+  <p class="hero-sub">The complete Flask curriculum — from your first route to a fully deployed, production-hardened web application with authentication, databases, REST APIs, testing, and cloud deployment.</p>
+  <div class="stats-row">
+    <div class="stat"><span class="stat-num">12</span><span class="stat-label">Modules</span></div>
+    <div class="stat"><span class="stat-num">60+</span><span class="stat-label">Topics</span></div>
+    <div class="stat"><span class="stat-num">4</span><span class="stat-label">Skill Levels</span></div>
+    <div class="stat"><span class="stat-num">15+</span><span class="stat-label">Projects</span></div>
+    <div class="stat"><span class="stat-num">20+</span><span class="stat-label">Extensions</span></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#m1"><span class="ndot" style="background:var(--m1)"></span>01 · Hello Flask</a>
+  <a href="#m2"><span class="ndot" style="background:var(--m2)"></span>02 · Routing</a>
+  <a href="#m3"><span class="ndot" style="background:var(--m3)"></span>03 · Templates</a>
+  <a href="#m4"><span class="ndot" style="background:var(--m4)"></span>04 · Forms</a>
+  <a href="#m5"><span class="ndot" style="background:var(--m5)"></span>05 · Databases</a>
+  <a href="#m6"><span class="ndot" style="background:var(--m6)"></span>06 · Auth</a>
+  <a href="#m7"><span class="ndot" style="background:var(--m7)"></span>07 · REST APIs</a>
+  <a href="#m8"><span class="ndot" style="background:var(--m8)"></span>08 · File Handling</a>
+  <a href="#m9"><span class="ndot" style="background:var(--m9)"></span>09 · Advanced Flask</a>
+  <a href="#m10"><span class="ndot" style="background:var(--m10)"></span>10 · Testing</a>
+  <a href="#m11"><span class="ndot" style="background:var(--m11)"></span>11 · Performance</a>
+  <a href="#m12"><span class="ndot" style="background:var(--m12)"></span>12 · Deployment</a>
+</nav>
+
+<main class="main">
+
+<!-- ══ PHASE 1: BEGINNER ══ -->
+<div class="phase-banner" style="background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.12);">
+  <span class="ph-icon">🌱</span>
+  <div>
+    <div class="ph-label" style="color:#34d399">Phase 1 · Beginner</div>
+    <div class="ph-title">Core Flask — Routing, Templates & Forms</div>
+  </div>
+</div>
+
+<!-- MODULE 01 -->
+<section class="mod-section" id="m1">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m1)">Module 01</span>
+    <span class="mod-title">Hello Flask — Getting Started</span>
+    <span class="mod-level" style="color:#34d399;border-color:rgba(52,211,153,.3)">Beginner</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m1)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m1);border-color:rgba(232,80,26,.3)">01.1</span>
+        <span class="tc-tag">Setup · First App</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Flask Setup & Your First Application</div>
+        <div class="tg">
+          <div class="tg-lbl">What is Flask?</div>
+          <div class="topics">
+            <div class="ti h">Flask: micro web framework — minimal core, extensible by design</div>
+            <div class="ti">Flask vs Django: philosophy differences — choose Flask when you need control</div>
+            <div class="ti">WSGI protocol: how Python web frameworks talk to web servers</div>
+            <div class="ti">Werkzeug: WSGI utility library Flask is built on</div>
+            <div class="ti">Jinja2: templating engine bundled with Flask</div>
+            <div class="ti">Click: CLI framework used for flask run, flask shell</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Setup & Installation</div>
+          <div class="topics">
+            <div class="ti h">pip install flask — current stable version (3.x)</div>
+            <div class="ti">Virtual environments: python -m venv venv and activation per OS</div>
+            <div class="ti">Project structure: flat (beginner) vs application factory (production)</div>
+            <div class="ti">requirements.txt vs pyproject.toml for dependency management</div>
+            <div class="ti">FLASK_APP, FLASK_ENV, FLASK_DEBUG environment variables</div>
+            <div class="ti">python-dotenv: auto-load .env on flask run</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Minimal Application</div>
+          <div class="topics">
+            <div class="ti h">from flask import Flask; app = Flask(__name__)</div>
+            <div class="ti">__name__ purpose: locate templates and static files correctly</div>
+            <div class="ti">@app.route('/'): register URL rule with view function</div>
+            <div class="ti">Return types: string, Response, tuple (body, status, headers)</div>
+            <div class="ti">app.run(debug=True, host='0.0.0.0', port=5000)</div>
+            <div class="ti">flask run vs python app.py — differences and when to use each</div>
+            <div class="ti">Debug mode: auto-reload on code change, interactive debugger in browser</div>
+            <div class="ti">Reloader: Werkzeug reloader process and stat-based detection</div>
+          </div>
+        </div>
+        <div class="snippet"><span class="kw">from</span> flask <span class="kw">import</span> Flask
+
+app = <span class="cls">Flask</span>(__name__)
+
+<span class="dec">@app.route</span>(<span class="st">'/'</span>)
+<span class="kw">def</span> <span class="fn">index</span>():
+    <span class="kw">return</span> <span class="st">'&lt;h1&gt;Hello, Flask!&lt;/h1&gt;'</span>
+
+<span class="kw">if</span> __name__ == <span class="st">'__main__'</span>:
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)</div>
+        <div class="tags">
+          <span class="tag hot">Flask</span><span class="tag hot">WSGI</span><span class="tag">Werkzeug</span>
+          <span class="tag">Jinja2</span><span class="tag">python-dotenv</span><span class="tag">Debug Mode</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m1)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m1);border-color:rgba(232,80,26,.3)">01.2</span>
+        <span class="tc-tag">Request · Response · Context</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Request, Response & Flask Contexts</div>
+        <div class="tg">
+          <div class="tg-lbl">Request Object</div>
+          <div class="topics">
+            <div class="ti h">from flask import request — thread-local proxy to current request</div>
+            <div class="ti">request.method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS</div>
+            <div class="ti">request.args: URL query string parameters (ImmutableMultiDict)</div>
+            <div class="ti">request.form: POST form data (ImmutableMultiDict)</div>
+            <div class="ti">request.json: parsed JSON body — requires Content-Type: application/json</div>
+            <div class="ti">request.data: raw bytes body when content type is unknown</div>
+            <div class="ti">request.files: uploaded files (ImmutableMultiDict of FileStorage)</div>
+            <div class="ti">request.headers: HTTP headers as dict-like object</div>
+            <div class="ti">request.cookies: cookie dictionary</div>
+            <div class="ti">request.remote_addr: client IP address</div>
+            <div class="ti">request.url, request.path, request.host, request.base_url</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Response Object</div>
+          <div class="topics">
+            <div class="ti h">make_response(): build explicit Response objects</div>
+            <div class="ti">Setting headers: response.headers['X-Custom'] = 'value'</div>
+            <div class="ti">Setting cookies: response.set_cookie(key, value, max_age, httponly, secure)</div>
+            <div class="ti">Deleting cookies: response.delete_cookie(key)</div>
+            <div class="ti">Status codes: return body, 201 or make_response(body, 404)</div>
+            <div class="ti">jsonify(): create JSON response with correct Content-Type</div>
+            <div class="ti">redirect(url, code=302): redirect to another URL</div>
+            <div class="ti">url_for(): generate URLs by endpoint name — reverse URL lookup</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask Contexts</div>
+          <div class="topics">
+            <div class="ti h">Application context (g, current_app): app-level state per request</div>
+            <div class="ti">Request context (request, session): request-scoped state</div>
+            <div class="ti">g object: store per-request data (DB connection, current user)</div>
+            <div class="ti">current_app proxy: access app config from anywhere</div>
+            <div class="ti">with app.app_context(): push context in scripts/tests</div>
+            <div class="ti">Context lifecycle: pushed before request, popped after response</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">request</span><span class="tag hot">response</span><span class="tag hot">url_for</span>
+          <span class="tag">jsonify</span><span class="tag">g object</span><span class="tag">redirect</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 02 -->
+<section class="mod-section" id="m2">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m2)">Module 02</span>
+    <span class="mod-title">Routing & URL Building</span>
+    <span class="mod-level" style="color:#34d399;border-color:rgba(52,211,153,.3)">Beginner</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m2)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m2);border-color:rgba(249,115,22,.3)">02.1</span>
+        <span class="tc-tag">Routes · URL Rules</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Routing System — Complete</div>
+        <div class="tg">
+          <div class="tg-lbl">Route Definitions</div>
+          <div class="topics">
+            <div class="ti h">@app.route(rule, methods=, endpoint=, strict_slashes=)</div>
+            <div class="ti">Multiple routes to one view: stack multiple @app.route decorators</div>
+            <div class="ti">app.add_url_rule(): programmatic route registration</div>
+            <div class="ti">Trailing slash rules: /about/ (canonical) vs /about (redirect or 404)</div>
+            <div class="ti">HTTP methods: methods=['GET', 'POST'] — default is GET only</div>
+            <div class="ti">@app.get, @app.post, @app.put, @app.patch, @app.delete (Flask 2.0+)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">URL Variables & Converters</div>
+          <div class="topics">
+            <div class="ti h">&lt;variable&gt;: default string converter (no slashes)</div>
+            <div class="ti">&lt;int:id&gt;: integer converter — rejects non-integer URLs</div>
+            <div class="ti">&lt;float:value&gt;: floating point converter</div>
+            <div class="ti">&lt;path:subpath&gt;: string with slashes — matches full subpath</div>
+            <div class="ti">&lt;uuid:uid&gt;: UUID string converter</div>
+            <div class="ti">Custom converters: subclass BaseConverter, register with app.url_map</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">URL Building</div>
+          <div class="topics">
+            <div class="ti h">url_for('endpoint', **values): generate URLs — always use this, never hardcode</div>
+            <div class="ti">External URLs: url_for('view', _external=True) → absolute URL</div>
+            <div class="ti">url_for with query params: url_for('search', q='flask', page=2)</div>
+            <div class="ti">Static files: url_for('static', filename='css/style.css')</div>
+            <div class="ti">Blueprint endpoints: url_for('auth.login') — blueprint_name.view_name</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Error Handlers</div>
+          <div class="topics">
+            <div class="ti h">@app.errorhandler(404): custom 404 Not Found page</div>
+            <div class="ti">@app.errorhandler(500): custom 500 Internal Server Error</div>
+            <div class="ti">@app.errorhandler(403): forbidden access handler</div>
+            <div class="ti">abort(404): trigger HTTP error from any view function</div>
+            <div class="ti">HTTPException: catch-all for any Werkzeug HTTP exception</div>
+            <div class="ti">Custom error classes: inherit from HTTPException</div>
+          </div>
+        </div>
+        <div class="snippet"><span class="dec">@app.route</span>(<span class="st">'/user/&lt;int:user_id&gt;/post/&lt;int:post_id&gt;'</span>)
+<span class="kw">def</span> <span class="fn">user_post</span>(user_id, post_id):
+    <span class="kw">return</span> <span class="fn">f</span><span class="st">'User {user_id} — Post {post_id}'</span>
+
+<span class="dec">@app.errorhandler</span>(<span class="num">404</span>)
+<span class="kw">def</span> <span class="fn">not_found</span>(e):
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">'404.html'</span>), <span class="num">404</span></div>
+        <div class="tags">
+          <span class="tag hot">@app.route</span><span class="tag hot">url_for</span><span class="tag hot">Converters</span>
+          <span class="tag">errorhandler</span><span class="tag">abort</span><span class="tag">methods</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m2)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m2);border-color:rgba(249,115,22,.3)">02.2</span>
+        <span class="tc-tag">Blueprints</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Blueprints — Modular Application Structure</div>
+        <div class="tg">
+          <div class="tg-lbl">Blueprint Basics</div>
+          <div class="topics">
+            <div class="ti h">Blueprint('name', __name__, url_prefix='/prefix'): create module</div>
+            <div class="ti">Register with app.register_blueprint(bp) in application factory</div>
+            <div class="ti">Blueprint-level routes, error handlers, template filters, before_request</div>
+            <div class="ti">Blueprint templates: blueprint-specific templates folder</div>
+            <div class="ti">Blueprint static files: static_folder, static_url_path parameters</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Recommended Project Structure</div>
+          <div class="topics">
+            <div class="ti h">app/__init__.py: application factory create_app() function</div>
+            <div class="ti">app/auth/: auth blueprint — routes.py, forms.py, models.py</div>
+            <div class="ti">app/main/: main blueprint — routes.py, forms.py</div>
+            <div class="ti">app/api/: API blueprint — routes.py, schemas.py</div>
+            <div class="ti">app/models.py: shared database models</div>
+            <div class="ti">app/extensions.py: db, login_manager, mail, cache instances</div>
+            <div class="ti">config.py: DevelopmentConfig, TestingConfig, ProductionConfig</div>
+            <div class="ti">migrations/: Alembic migration scripts</div>
+            <div class="ti">tests/: test modules mirroring app structure</div>
+          </div>
+        </div>
+        <div class="snippet"><span class="cm"># app/auth/__init__.py</span>
+<span class="kw">from</span> flask <span class="kw">import</span> Blueprint
+auth = <span class="cls">Blueprint</span>(<span class="st">'auth'</span>, __name__, url_prefix=<span class="st">'/auth'</span>)
+<span class="kw">from</span> . <span class="kw">import</span> routes
+
+<span class="cm"># app/__init__.py</span>
+<span class="kw">def</span> <span class="fn">create_app</span>(config=<span class="st">'default'</span>):
+    app = <span class="cls">Flask</span>(__name__)
+    app.config.<span class="fn">from_object</span>(config_map[config])
+    <span class="kw">from</span> .auth <span class="kw">import</span> auth
+    app.<span class="fn">register_blueprint</span>(auth)
+    <span class="kw">return</span> app</div>
+        <div class="tags">
+          <span class="tag hot">Blueprint</span><span class="tag hot">Application Factory</span>
+          <span class="tag">url_prefix</span><span class="tag">register_blueprint</span><span class="tag">Project Structure</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 03 -->
+<section class="mod-section" id="m3">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m3);color:#080c12">Module 03</span>
+    <span class="mod-title">Templates with Jinja2</span>
+    <span class="mod-level" style="color:#34d399;border-color:rgba(52,211,153,.3)">Beginner</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m3)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m3);border-color:rgba(251,191,36,.3)">03.1</span>
+        <span class="tc-tag">Jinja2 · Templates</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Jinja2 Templating — Complete</div>
+        <div class="tg">
+          <div class="tg-lbl">Rendering Templates</div>
+          <div class="topics">
+            <div class="ti h">render_template('index.html', key=value, **context): render and return</div>
+            <div class="ti">Template folder: templates/ at root or per-blueprint</div>
+            <div class="ti">render_template_string(html_str): render from string — avoid in production</div>
+            <div class="ti">Auto-escape: HTML-safe by default for .html files, disable with |safe</div>
+            <div class="ti">Markup(): mark a string as safe HTML explicitly</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Jinja2 Syntax</div>
+          <div class="topics">
+            <div class="ti h">{{ variable }}: output expression — HTML-escaped automatically</div>
+            <div class="ti">{% statement %}: control structures — if, for, set, block, include</div>
+            <div class="ti">{# comment #}: template comments — not rendered in output</div>
+            <div class="ti">{% if cond %}...{% elif %}...{% else %}...{% endif %}</div>
+            <div class="ti">{% for item in items %}...{% else %}...{% endfor %}</div>
+            <div class="ti">loop.index, loop.index0, loop.first, loop.last, loop.length</div>
+            <div class="ti">{% set var = value %}: assign variable inside template</div>
+            <div class="ti">{% with %}: scoped variable assignment block</div>
+            <div class="ti">Whitespace control: {%- -%} strip surrounding whitespace</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Filters & Tests</div>
+          <div class="topics">
+            <div class="ti h">Built-in filters: upper, lower, title, capitalize, trim, truncate</div>
+            <div class="ti">safe: mark as HTML-safe, escape: force escape</div>
+            <div class="ti">default(value, 'fallback'): show fallback if variable is falsy</div>
+            <div class="ti">length, count: get length of string or list</div>
+            <div class="ti">join, sort, groupby, unique, map, select, reject</div>
+            <div class="ti">int, float, string: type coercion filters</div>
+            <div class="ti">format: string formatting — {{ '%s is %d'|format(name, age) }}</div>
+            <div class="ti">Custom filters: app.template_filter() decorator</div>
+            <div class="ti">Tests: is defined, is none, is string, is number, is mapping</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Template Inheritance</div>
+          <div class="topics">
+            <div class="ti h">{% extends 'base.html' %}: inherit from parent template</div>
+            <div class="ti">{% block name %}...{% endblock %}: define overridable regions</div>
+            <div class="ti">{{ super() }}: include parent block content in override</div>
+            <div class="ti">{% include 'partial.html' %}: embed another template inline</div>
+            <div class="ti">{% include ... ignore missing %}: safe include</div>
+            <div class="ti">{% import 'macros.html' as m %}: import macro library</div>
+            <div class="ti">{% from 'macros.html' import input_field %}: named import</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Macros</div>
+          <div class="topics">
+            <div class="ti h">{% macro name(params) %}...{% endmacro %}: reusable template snippets</div>
+            <div class="ti">caller variable: capture content passed to macro</div>
+            <div class="ti">varargs, kwargs: accept dynamic arguments in macros</div>
+            <div class="ti">Practical use: form fields, cards, pagination, alerts</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-specific Template Globals</div>
+          <div class="topics">
+            <div class="ti h">url_for(), get_flashed_messages(), config, request, session, g</div>
+            <div class="ti">@app.context_processor: inject variables into all templates</div>
+            <div class="ti">@app.template_global: register global function for templates</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Jinja2</span><span class="tag hot">Template Inheritance</span>
+          <span class="tag hot">Macros</span><span class="tag">Filters</span>
+          <span class="tag">context_processor</span><span class="tag">url_for</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m3)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m3);border-color:rgba(251,191,36,.3)">03.2</span>
+        <span class="tc-tag">Static Files · Flash Messages</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Static Files, Flash Messages & Sessions</div>
+        <div class="tg">
+          <div class="tg-lbl">Static Files</div>
+          <div class="topics">
+            <div class="ti h">static/ folder: CSS, JS, images served by Flask in development</div>
+            <div class="ti">url_for('static', filename='css/style.css'): always use this for paths</div>
+            <div class="ti">Custom static folder: Flask(__name__, static_folder='assets')</div>
+            <div class="ti">Cache busting: include version/hash in filename or URL query param</div>
+            <div class="ti">Flask-Assets: bundle, minify, compile SASS/LESS in development</div>
+            <div class="ti">CDN integration: override static URL for production CDN serving</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flash Messages</div>
+          <div class="topics">
+            <div class="ti h">flash('message', category='success'): queue one-time message</div>
+            <div class="ti">get_flashed_messages(with_categories=True): retrieve in template</div>
+            <div class="ti">Categories: success, info, warning, danger — map to CSS classes</div>
+            <div class="ti">Flash messages stored in session — consumed once on next request</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Sessions</div>
+          <div class="topics">
+            <div class="ti h">session: server-side dict stored in signed cookie (secret key required)</div>
+            <div class="ti">session['key'] = value: set session data</div>
+            <div class="ti">session.get('key', default): safe read</div>
+            <div class="ti">session.pop('key'): remove from session</div>
+            <div class="ti">session.clear(): clear entire session</div>
+            <div class="ti">session.permanent = True: use PERMANENT_SESSION_LIFETIME</div>
+            <div class="ti">SECRET_KEY: required for session signing — use secrets.token_hex(32)</div>
+            <div class="ti">Flask-Session: server-side session storage (Redis, DB, filesystem)</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Project</div>
+          <div class="proj-name">Personal Blog (Static)</div>
+          <div class="proj-stack">Flask + Jinja2 + Bootstrap</div>
+          <div class="proj-items">
+            <div class="proj-d">base.html with nav, footer, flash message block</div>
+            <div class="proj-d">Homepage listing posts, individual post page, about page</div>
+            <div class="proj-d">Jinja2 macros for post cards and pagination component</div>
+            <div class="proj-d">Custom 404 and 500 error pages</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">flash()</span><span class="tag hot">session</span>
+          <span class="tag">Static Files</span><span class="tag">SECRET_KEY</span><span class="tag">Flask-Session</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 04 -->
+<section class="mod-section" id="m4">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m4);color:#080c12">Module 04</span>
+    <span class="mod-title">Forms & User Input Handling</span>
+    <span class="mod-level" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Intermediate</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m4)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m4);border-color:rgba(52,211,153,.3)">04.1</span>
+        <span class="tc-tag">WTForms · Flask-WTF</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Forms with Flask-WTF & WTForms</div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-WTF Setup</div>
+          <div class="topics">
+            <div class="ti h">pip install flask-wtf — bundles WTForms + CSRF protection</div>
+            <div class="ti">WTF_CSRF_ENABLED = True: CSRF protection on by default</div>
+            <div class="ti">CSRFProtect(app): global CSRF protection for all POST forms</div>
+            <div class="ti">{{ form.hidden_tag() }} or {{ form.csrf_token }}: CSRF field in HTML</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Form Classes</div>
+          <div class="topics">
+            <div class="ti h">class LoginForm(FlaskForm): define form as Python class</div>
+            <div class="ti">StringField, PasswordField, EmailField, TextAreaField, BooleanField</div>
+            <div class="ti">IntegerField, FloatField, DecimalField, DateField, DateTimeField</div>
+            <div class="ti">SelectField, SelectMultipleField: dropdowns with choices</div>
+            <div class="ti">RadioField: radio button group</div>
+            <div class="ti">FileField, MultipleFileField: file upload fields</div>
+            <div class="ti">SubmitField: submit button with label</div>
+            <div class="ti">FieldList, FormField: nested and repeating field groups</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Validators</div>
+          <div class="topics">
+            <div class="ti h">DataRequired, InputRequired: field must have a value</div>
+            <div class="ti">Length(min=2, max=50): string length bounds</div>
+            <div class="ti">Email(): valid email format with email-validator</div>
+            <div class="ti">EqualTo('field'): passwords match validation</div>
+            <div class="ti">NumberRange(min=0, max=100): numeric bounds</div>
+            <div class="ti">Regexp(r'^[a-zA-Z]+$'): regex pattern validation</div>
+            <div class="ti">URL(): valid URL validation</div>
+            <div class="ti">Optional(): allow empty field to skip other validators</div>
+            <div class="ti">validate_fieldname(): custom per-field validator method</div>
+            <div class="ti">Custom validators: function validators(form, field)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Using Forms in Views</div>
+          <div class="topics">
+            <div class="ti h">form = LoginForm(): instantiate in GET request</div>
+            <div class="ti">form = LoginForm(request.form): populate with POST data</div>
+            <div class="ti">form.validate_on_submit(): True if POST and all validators pass</div>
+            <div class="ti">form.errors: dict of field errors when validation fails</div>
+            <div class="ti">form.field.data: access validated field value</div>
+            <div class="ti">PRG pattern: Post-Redirect-Get to prevent duplicate submissions</div>
+          </div>
+        </div>
+        <div class="snippet"><span class="kw">from</span> flask_wtf <span class="kw">import</span> FlaskForm
+<span class="kw">from</span> wtforms <span class="kw">import</span> StringField, PasswordField, SubmitField
+<span class="kw">from</span> wtforms.validators <span class="kw">import</span> DataRequired, Email, Length
+
+<span class="kw">class</span> <span class="cls">LoginForm</span>(FlaskForm):
+    email = <span class="cls">StringField</span>(<span class="st">'Email'</span>, validators=[<span class="cls">DataRequired</span>(), <span class="cls">Email</span>()])
+    password = <span class="cls">PasswordField</span>(<span class="st">'Password'</span>, validators=[<span class="cls">Length</span>(min=<span class="num">8</span>)])
+    submit = <span class="cls">SubmitField</span>(<span class="st">'Log In'</span>)
+
+<span class="dec">@app.route</span>(<span class="st">'/login'</span>, methods=[<span class="st">'GET'</span>, <span class="st">'POST'</span>])
+<span class="kw">def</span> <span class="fn">login</span>():
+    form = <span class="cls">LoginForm</span>()
+    <span class="kw">if</span> form.<span class="fn">validate_on_submit</span>():
+        <span class="cm"># process form.email.data, form.password.data</span>
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="fn">url_for</span>(<span class="st">'dashboard'</span>))
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">'login.html'</span>, form=form)</div>
+        <div class="tags">
+          <span class="tag hot">Flask-WTF</span><span class="tag hot">WTForms</span><span class="tag hot">CSRF</span>
+          <span class="tag">Validators</span><span class="tag">validate_on_submit</span><span class="tag">PRG Pattern</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ PHASE 2: INTERMEDIATE ══ -->
+<div class="phase-banner" style="background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.12);margin-top:40px;">
+  <span class="ph-icon">⚡</span>
+  <div>
+    <div class="ph-label" style="color:#fbbf24">Phase 2 · Intermediate</div>
+    <div class="ph-title">Databases, Authentication & REST APIs</div>
+  </div>
+</div>
+
+<!-- MODULE 05 -->
+<section class="mod-section" id="m5">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m5);color:#080c12">Module 05</span>
+    <span class="mod-title">Databases with Flask-SQLAlchemy</span>
+    <span class="mod-level" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Intermediate</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m5)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m5);border-color:rgba(56,189,248,.3)">05.1</span>
+        <span class="tc-tag">SQLAlchemy · Models</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Flask-SQLAlchemy & Data Models</div>
+        <div class="tg">
+          <div class="tg-lbl">Setup</div>
+          <div class="topics">
+            <div class="ti h">pip install flask-sqlalchemy flask-migrate</div>
+            <div class="ti">SQLALCHEMY_DATABASE_URI: sqlite:///app.db, postgresql://, mysql://</div>
+            <div class="ti">db = SQLAlchemy() in extensions.py, db.init_app(app) in factory</div>
+            <div class="ti">SQLALCHEMY_TRACK_MODIFICATIONS = False: disable event overhead</div>
+            <div class="ti">Connection pooling: SQLALCHEMY_POOL_SIZE, POOL_TIMEOUT, POOL_RECYCLE</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Model Definition</div>
+          <div class="topics">
+            <div class="ti h">class User(db.Model): define table with column attributes</div>
+            <div class="ti">__tablename__: explicit table name, defaults to class name lowercase</div>
+            <div class="ti">Column types: Integer, String(n), Text, Boolean, Float, DateTime, JSON, Enum</div>
+            <div class="ti">Column options: primary_key, nullable, unique, index, default, server_default</div>
+            <div class="ti">ForeignKey: db.Column(db.Integer, db.ForeignKey('user.id'))</div>
+            <div class="ti">db.relationship(): ORM-level access to related objects</div>
+            <div class="ti">backref vs back_populates: bidirectional relationship setup</div>
+            <div class="ti">lazy loading: 'select', 'joined', 'subquery', 'dynamic'</div>
+            <div class="ti">__repr__: meaningful string representation for debugging</div>
+            <div class="ti">Hybrid properties: @hybrid_property for computed columns</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Relationships</div>
+          <div class="topics">
+            <div class="ti h">One-to-Many: User → Posts (ForeignKey on child, relationship on parent)</div>
+            <div class="ti">Many-to-Many: db.Table association table with two ForeignKeys</div>
+            <div class="ti">One-to-One: uselist=False on relationship</div>
+            <div class="ti">Self-referential: followers/following pattern</div>
+            <div class="ti">Association proxy: access many-to-many targets directly</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">CRUD Operations</div>
+          <div class="topics">
+            <div class="ti h">db.session.add(obj): stage object for INSERT</div>
+            <div class="ti">db.session.commit(): flush all pending changes to database</div>
+            <div class="ti">db.session.rollback(): revert uncommitted changes</div>
+            <div class="ti">db.session.delete(obj): stage for DELETE</div>
+            <div class="ti">db.session.get(Model, id): fetch by primary key (SQLAlchemy 2.x)</div>
+            <div class="ti">User.query.all(): all rows (legacy style)</div>
+            <div class="ti">db.session.execute(select(User)): modern 2.x query style</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Querying</div>
+          <div class="topics">
+            <div class="ti h">filter_by(username='alice'): exact keyword match</div>
+            <div class="ti">filter(User.age > 18): expression-based filtering</div>
+            <div class="ti">or_(), and_(), not_(): combine filter conditions</div>
+            <div class="ti">ilike('%term%'): case-insensitive LIKE for search</div>
+            <div class="ti">in_([1,2,3]): column IN list of values</div>
+            <div class="ti">order_by(User.created_at.desc()): sorting</div>
+            <div class="ti">limit(n).offset(m): pagination</div>
+            <div class="ti">paginate(page, per_page): Flask-SQLAlchemy pagination helper</div>
+            <div class="ti">first(), first_or_404(), one(), one_or_none()</div>
+            <div class="ti">count(): COUNT query without loading objects</div>
+            <div class="ti">with_entities(): select specific columns — avoid loading full objects</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-Migrate (Alembic)</div>
+          <div class="topics">
+            <div class="ti h">flask db init: create migrations/ directory</div>
+            <div class="ti">flask db migrate -m "add users table": auto-generate migration</div>
+            <div class="ti">flask db upgrade: apply pending migrations</div>
+            <div class="ti">flask db downgrade -1: roll back last migration</div>
+            <div class="ti">Always review auto-generated migrations before applying</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Project</div>
+          <div class="proj-name">Blog with Database</div>
+          <div class="proj-stack">Flask + SQLAlchemy + Flask-Migrate + SQLite</div>
+          <div class="proj-items">
+            <div class="proj-d">User, Post, Comment, Tag models with relationships</div>
+            <div class="proj-d">Full CRUD: create/edit/delete posts and comments</div>
+            <div class="proj-d">Pagination and search with ilike()</div>
+            <div class="proj-d">Alembic migrations from initial schema to v2 with new columns</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Flask-SQLAlchemy</span><span class="tag hot">db.Model</span>
+          <span class="tag hot">Flask-Migrate</span><span class="tag">Relationships</span>
+          <span class="tag">paginate</span><span class="tag">filter</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 06 -->
+<section class="mod-section" id="m6">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m6)">Module 06</span>
+    <span class="mod-title">Authentication & Authorization</span>
+    <span class="mod-level" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Intermediate</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(167,139,250,.3)">06.1</span>
+        <span class="tc-tag">Flask-Login · Sessions</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Session-Based Authentication with Flask-Login</div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-Login Setup</div>
+          <div class="topics">
+            <div class="ti h">login_manager = LoginManager(app): setup extension</div>
+            <div class="ti">@login_manager.user_loader: callback to load user from session</div>
+            <div class="ti">login_manager.login_view = 'auth.login': redirect for unauthorized</div>
+            <div class="ti">login_manager.login_message: flash message for unauthorized access</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">UserMixin & User Model</div>
+          <div class="topics">
+            <div class="ti h">UserMixin: provides is_authenticated, is_active, is_anonymous, get_id()</div>
+            <div class="ti">Password hashing: werkzeug.security.generate_password_hash / check_password_hash</div>
+            <div class="ti">bcrypt: pip install flask-bcrypt — stronger hashing with work factor</div>
+            <div class="ti">Never store plain text passwords — ever</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Login/Logout Flow</div>
+          <div class="topics">
+            <div class="ti h">login_user(user, remember=True): set session and cookie</div>
+            <div class="ti">logout_user(): clear session and remove remember cookie</div>
+            <div class="ti">current_user proxy: access logged-in user anywhere</div>
+            <div class="ti">@login_required: decorator to protect view functions</div>
+            <div class="ti">Remember me: REMEMBER_COOKIE_DURATION, secure cookie</div>
+            <div class="ti">next parameter: redirect to originally requested URL after login</div>
+            <div class="ti">Login rate limiting: Flask-Limiter to prevent brute force</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Role-Based Access Control (RBAC)</div>
+          <div class="topics">
+            <div class="ti h">Roles table: admin, editor, user — many-to-many with User</div>
+            <div class="ti">Custom @roles_required decorator with abort(403)</div>
+            <div class="ti">Permission bitfields: bitmask-based granular permissions</div>
+            <div class="ti">Flask-Principal: identity, needs, and permission declarations</div>
+            <div class="ti">Template checks: {% if current_user.is_admin %} guards</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Flask-Login</span><span class="tag hot">login_required</span>
+          <span class="tag">UserMixin</span><span class="tag">bcrypt</span>
+          <span class="tag">RBAC</span><span class="tag">current_user</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(167,139,250,.3)">06.2</span>
+        <span class="tc-tag">JWT · OAuth2 · Email Verify</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">JWT, OAuth2 & Email Verification</div>
+        <div class="tg">
+          <div class="tg-lbl">JWT Authentication</div>
+          <div class="topics">
+            <div class="ti h">Flask-JWT-Extended: access + refresh token pair</div>
+            <div class="ti">@jwt_required(): protect routes requiring valid JWT</div>
+            <div class="ti">get_jwt_identity(): extract user ID from token payload</div>
+            <div class="ti">create_access_token(identity=user_id, expires_delta=timedelta(hours=1))</div>
+            <div class="ti">create_refresh_token(): long-lived token to get new access tokens</div>
+            <div class="ti">JWT_SECRET_KEY: separate from Flask SECRET_KEY</div>
+            <div class="ti">Token blacklisting: revoke tokens on logout using Redis set</div>
+            <div class="ti">JWT in cookies vs Authorization: Bearer header — trade-offs</div>
+            <div class="ti">Refresh token rotation: issue new refresh token on each use</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">OAuth2 / Social Login</div>
+          <div class="topics">
+            <div class="ti h">Authlib: OAuth 2.0 client for Google, GitHub, Facebook, Twitter</div>
+            <div class="ti">OAuth flow: redirect → provider → callback → exchange code → user info</div>
+            <div class="ti">State parameter: CSRF protection for OAuth redirect</div>
+            <div class="ti">Linking social accounts to existing users by email</div>
+            <div class="ti">Flask-Dance: pre-built OAuth providers with minimal config</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Email Verification & Password Reset</div>
+          <div class="topics">
+            <div class="ti h">itsdangerous: TimedSerializer for secure email tokens</div>
+            <div class="ti">Flask-Mail: send emails via SMTP, Gmail, SendGrid, Mailgun</div>
+            <div class="ti">Email verification flow: register → send token → click link → activate</div>
+            <div class="ti">Password reset flow: request → send token (1hr TTL) → click → reset</div>
+            <div class="ti">Celery integration: send emails asynchronously as background tasks</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Flask-JWT-Extended</span><span class="tag hot">OAuth2</span>
+          <span class="tag">Authlib</span><span class="tag">Flask-Mail</span>
+          <span class="tag">itsdangerous</span><span class="tag">Token Blacklist</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 07 -->
+<section class="mod-section" id="m7">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m7)">Module 07</span>
+    <span class="mod-title">Building REST APIs with Flask</span>
+    <span class="mod-level" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Intermediate</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m7)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m7);border-color:rgba(244,114,182,.3)">07.1</span>
+        <span class="tc-tag">REST · Flask-RESTful · Marshmallow</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">REST API Design & Serialization</div>
+        <div class="tg">
+          <div class="tg-lbl">REST Principles</div>
+          <div class="topics">
+            <div class="ti h">Resource-based URLs: /users, /users/&lt;id&gt;, /users/&lt;id&gt;/posts</div>
+            <div class="ti">HTTP methods: GET (read), POST (create), PUT (replace), PATCH (update), DELETE</div>
+            <div class="ti">Status codes: 200 OK, 201 Created, 204 No Content, 400 Bad Request, 401, 403, 404, 409 Conflict, 422 Unprocessable, 500</div>
+            <div class="ti">Idempotency: GET/PUT/DELETE are idempotent, POST is not</div>
+            <div class="ti">Content negotiation: Accept and Content-Type headers</div>
+            <div class="ti">Versioning: URL (/api/v1/), header, or query param strategies</div>
+            <div class="ti">Pagination: page+per_page, cursor-based, Link headers</div>
+            <div class="ti">HATEOAS: embed links to related resources in responses</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-RESTful</div>
+          <div class="topics">
+            <div class="ti h">Resource class: inherit from Resource, define get/post/put/delete methods</div>
+            <div class="ti">api.add_resource(UserResource, '/users/&lt;int:id&gt;')</div>
+            <div class="ti">reqparse: parse and validate request arguments (deprecated in favor of Marshmallow)</div>
+            <div class="ti">marshal_with(): serialize output with field definitions</div>
+            <div class="ti">Error handling: abort(code, message=) and custom error responses</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Marshmallow — Serialization & Validation</div>
+          <div class="topics">
+            <div class="ti h">Schema: define fields for serialization and deserialization</div>
+            <div class="ti">Flask-Marshmallow: SQLAlchemy integration with auto-schema</div>
+            <div class="ti">schema.dump(obj): Python object → dict (serialize)</div>
+            <div class="ti">schema.load(data): dict → validated Python object (deserialize)</div>
+            <div class="ti">schema.loads(json_str): deserialize from JSON string</div>
+            <div class="ti">Validation errors: schema.validate() returns error dict</div>
+            <div class="ti">Nested schemas: embed related resources in response</div>
+            <div class="ti">@validates('field'): custom field-level validation method</div>
+            <div class="ti">@pre_load, @post_load, @pre_dump, @post_dump: lifecycle hooks</div>
+            <div class="ti">Meta.exclude, Meta.only: control which fields appear</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-RESTX / Apiflask</div>
+          <div class="topics">
+            <div class="ti h">Flask-RESTX: auto Swagger UI from Resource + Namespace decorators</div>
+            <div class="ti">APIFlask: OpenAPI 3 spec auto-generated from type annotations</div>
+            <div class="ti">@api.expect(model): document and validate request body</div>
+            <div class="ti">@api.marshal_with(model): document and serialize response</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Project</div>
+          <div class="proj-name">Task Management REST API</div>
+          <div class="proj-stack">Flask + Flask-RESTful + Marshmallow + JWT + SQLAlchemy</div>
+          <div class="proj-items">
+            <div class="proj-d">Full CRUD for tasks, projects, users</div>
+            <div class="proj-d">JWT authentication with refresh token rotation</div>
+            <div class="proj-d">Marshmallow schemas with nested serialization</div>
+            <div class="proj-d">Pagination, filtering, sorting on list endpoints</div>
+            <div class="proj-d">Swagger UI documentation via Flask-RESTX</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Flask-RESTful</span><span class="tag hot">Marshmallow</span>
+          <span class="tag hot">REST</span><span class="tag">Flask-RESTX</span>
+          <span class="tag">Serialization</span><span class="tag">Pagination</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 08 -->
+<section class="mod-section" id="m8">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m8);color:#080c12">Module 08</span>
+    <span class="mod-title">File Uploads, Email & Background Tasks</span>
+    <span class="mod-level" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Intermediate</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m8)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m8);border-color:rgba(200,241,53,.3)">08.1</span>
+        <span class="tc-tag">File Uploads · Storage</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">File Uploads, Processing & Cloud Storage</div>
+        <div class="tg">
+          <div class="tg-lbl">File Upload Handling</div>
+          <div class="topics">
+            <div class="ti h">request.files['field']: access uploaded file as FileStorage object</div>
+            <div class="ti">file.filename: original filename — never trust directly</div>
+            <div class="ti">secure_filename(file.filename): sanitize filename from werkzeug.utils</div>
+            <div class="ti">file.save(path): write file to disk</div>
+            <div class="ti">MAX_CONTENT_LENGTH: limit upload size (e.g. 16MB)</div>
+            <div class="ti">ALLOWED_EXTENSIONS: whitelist .jpg, .png, .pdf, etc.</div>
+            <div class="ti">Validating MIME type: python-magic — don't trust file extension alone</div>
+            <div class="ti">Unique filenames: uuid4() + original extension to avoid collisions</div>
+            <div class="ti">Flask-Uploads: organized upload sets with type validation</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Image Processing</div>
+          <div class="topics">
+            <div class="ti h">Pillow: resize, crop, convert, thumbnail, watermark</div>
+            <div class="ti">Generating thumbnails on upload: store original + thumbnail</div>
+            <div class="ti">EXIF data stripping for privacy on user-uploaded photos</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Cloud Storage</div>
+          <div class="topics">
+            <div class="ti h">AWS S3: boto3 upload_file, generate_presigned_url</div>
+            <div class="ti">Azure Blob Storage: azure-storage-blob BlobServiceClient</div>
+            <div class="ti">Google Cloud Storage: google-cloud-storage bucket.blob().upload_from_file()</div>
+            <div class="ti">Cloudinary: transformation URL API, direct browser upload</div>
+            <div class="ti">Pre-signed upload URLs: browser uploads directly to S3 bypassing Flask</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">File Uploads</span><span class="tag hot">secure_filename</span>
+          <span class="tag">Pillow</span><span class="tag">S3 boto3</span><span class="tag">Cloudinary</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m8)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m8);border-color:rgba(200,241,53,.3)">08.2</span>
+        <span class="tc-tag">Celery · Flask-Mail · WebSockets</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Background Tasks, Email & Real-Time</div>
+        <div class="tg">
+          <div class="tg-lbl">Celery with Flask</div>
+          <div class="topics">
+            <div class="ti h">celery.conf.update(app.config): share Flask config with Celery</div>
+            <div class="ti">make_celery(app): factory pattern for Flask-integrated Celery</div>
+            <div class="ti">@celery.task: define background tasks</div>
+            <div class="ti">task.delay() / task.apply_async(): enqueue tasks</div>
+            <div class="ti">Celery Beat: periodic tasks — daily reports, cleanup jobs</div>
+            <div class="ti">Flower: Celery monitoring dashboard</div>
+            <div class="ti">Redis vs RabbitMQ as broker: when to use each</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-Mail</div>
+          <div class="topics">
+            <div class="ti h">MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD</div>
+            <div class="ti">Message(subject, recipients, body, html, sender)</div>
+            <div class="ti">mail.send(msg): synchronous send</div>
+            <div class="ti">Attachments: msg.attach(filename, content_type, data)</div>
+            <div class="ti">HTML emails with Jinja2 templates: render_template for email body</div>
+            <div class="ti">Providers: Gmail SMTP, SendGrid, Mailgun, AWS SES via SMTP</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-SocketIO (Real-Time)</div>
+          <div class="topics">
+            <div class="ti h">socketio = SocketIO(app, cors_allowed_origins='*'): setup</div>
+            <div class="ti">@socketio.on('message'): handle incoming events</div>
+            <div class="ti">emit('event', data): send event to client</div>
+            <div class="ti">Rooms: join_room(), leave_room() — broadcast to groups</div>
+            <div class="ti">Namespaces: separate socket.io channels per feature</div>
+            <div class="ti">Use cases: chat, notifications, live dashboards, collaborative editing</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Celery</span><span class="tag hot">Flask-Mail</span>
+          <span class="tag hot">Flask-SocketIO</span><span class="tag">WebSockets</span>
+          <span class="tag">Rooms</span><span class="tag">Redis Broker</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ PHASE 3: ADVANCED ══ -->
+<div class="phase-banner" style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.14);margin-top:40px;">
+  <span class="ph-icon">🔥</span>
+  <div>
+    <div class="ph-label" style="color:#f97316">Phase 3 · Advanced</div>
+    <div class="ph-title">Caching, Testing, Performance & Architecture</div>
+  </div>
+</div>
+
+<!-- MODULE 09 -->
+<section class="mod-section" id="m9">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m9)">Module 09</span>
+    <span class="mod-title">Advanced Flask — Hooks, Signals & Middleware</span>
+    <span class="mod-level" style="color:#f97316;border-color:rgba(249,115,22,.3)">Advanced</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m9)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m9);border-color:rgba(251,146,60,.3)">09.1</span>
+        <span class="tc-tag">Hooks · Signals · Middleware</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Request Lifecycle, Signals & WSGI Middleware</div>
+        <div class="tg">
+          <div class="tg-lbl">Request Lifecycle Hooks</div>
+          <div class="topics">
+            <div class="ti h">@app.before_request: run before every request — auth checks, DB setup</div>
+            <div class="ti">@app.after_request: modify every response — add headers, log</div>
+            <div class="ti">@app.teardown_request: cleanup after request, even on errors</div>
+            <div class="ti">@app.teardown_appcontext: cleanup when app context is popped</div>
+            <div class="ti">@blueprint.before_request: hooks scoped to a specific blueprint</div>
+            <div class="ti">Execution order: app before_request → blueprint before_request → view</div>
+            <div class="ti">Returning from before_request: short-circuit request with early response</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask Signals (Blinker)</div>
+          <div class="topics">
+            <div class="ti h">request_started, request_finished, got_request_exception</div>
+            <div class="ti">appcontext_pushed, appcontext_popped, appcontext_tearing_down</div>
+            <div class="ti">message_flashed: react to flash() calls</div>
+            <div class="ti">Custom signals: Namespace().signal('user-registered')</div>
+            <div class="ti">signal.connect(handler): subscribe to signal events</div>
+            <div class="ti">signal.send(app, **kwargs): emit a signal with context</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">WSGI Middleware</div>
+          <div class="topics">
+            <div class="ti h">Wrapping Flask app: app.wsgi_app = ProxyFix(app.wsgi_app)</div>
+            <div class="ti">ProxyFix: fix IP and scheme behind reverse proxy (Nginx)</div>
+            <div class="ti">DispatcherMiddleware: serve multiple WSGI apps at different paths</div>
+            <div class="ti">Custom middleware: class wrapping __call__(environ, start_response)</div>
+            <div class="ti">Request timing middleware: measure request duration</div>
+            <div class="ti">HTTPS redirect middleware: force SSL in production</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Configuration Management</div>
+          <div class="topics">
+            <div class="ti h">config classes: class DevelopmentConfig, ProductionConfig, TestingConfig</div>
+            <div class="ti">app.config.from_object(config_obj): load from class</div>
+            <div class="ti">app.config.from_envvar('CONFIG_PATH'): load from file path in env</div>
+            <div class="ti">Instance folder: app.instance_path for secrets outside source control</div>
+            <div class="ti">Pydantic-settings: typed config with validation and env override</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask CLI & Custom Commands</div>
+          <div class="topics">
+            <div class="ti h">@app.cli.command('seed-db'): custom flask CLI commands</div>
+            <div class="ti">@click.option, @click.argument: CLI arguments with Click</div>
+            <div class="ti">flask shell: REPL with app context pre-loaded</div>
+            <div class="ti">app.shell_context_processor: inject objects into flask shell</div>
+            <div class="ti">Blueprint CLI groups: bp.cli.command() for modular commands</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">before_request</span><span class="tag hot">Signals</span>
+          <span class="tag hot">WSGI Middleware</span><span class="tag">ProxyFix</span>
+          <span class="tag">Config Classes</span><span class="tag">Flask CLI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m9)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m9);border-color:rgba(251,146,60,.3)">09.2</span>
+        <span class="tc-tag">Caching · Rate Limiting · Admin</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Caching, Rate Limiting & Flask-Admin</div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-Caching</div>
+          <div class="topics">
+            <div class="ti h">cache = Cache(app, config={'CACHE_TYPE': 'RedisCache'})</div>
+            <div class="ti">@cache.cached(timeout=300): cache entire view function response</div>
+            <div class="ti">@cache.memoize(timeout=60): cache function result by arguments</div>
+            <div class="ti">cache.get(key), cache.set(key, value, timeout): manual cache ops</div>
+            <div class="ti">cache.delete(key), cache.clear(): invalidation</div>
+            <div class="ti">Cache backends: SimpleCache, RedisCache, MemcachedCache, FileSystemCache</div>
+            <div class="ti">Cache-aside pattern: check cache → DB fallback → populate cache</div>
+            <div class="ti">Cache invalidation strategy: on update, delete related cache keys</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-Limiter (Rate Limiting)</div>
+          <div class="topics">
+            <div class="ti h">limiter = Limiter(app, key_func=get_remote_address)</div>
+            <div class="ti">@limiter.limit("100/hour"): per-route rate limits</div>
+            <div class="ti">@limiter.limit("5/minute", key_func=lambda: current_user.id): per-user</div>
+            <div class="ti">Decorating blueprints: apply limits at blueprint level</div>
+            <div class="ti">Storage backend: Redis for distributed rate limiting</div>
+            <div class="ti">429 Too Many Requests with Retry-After header</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Flask-Admin</div>
+          <div class="topics">
+            <div class="ti h">Admin(app, name='Dashboard', template_mode='bootstrap4')</div>
+            <div class="ti">ModelView: auto CRUD interface for SQLAlchemy models</div>
+            <div class="ti">column_list, form_columns: customize visible fields</div>
+            <div class="ti">column_searchable_list: add search bar over specified columns</div>
+            <div class="ti">column_filters: dropdown filters in list view</div>
+            <div class="ti">Access control: override is_accessible(), inaccessible_callback()</div>
+            <div class="ti">Custom views: BaseView + @expose() for non-model admin pages</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Flask-Caching</span><span class="tag hot">Flask-Limiter</span>
+          <span class="tag hot">Flask-Admin</span><span class="tag">RedisCache</span>
+          <span class="tag">Rate Limiting</span><span class="tag">ModelView</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 10 -->
+<section class="mod-section" id="m10">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m10);color:#080c12">Module 10</span>
+    <span class="mod-title">Testing Flask Applications</span>
+    <span class="mod-level" style="color:#f97316;border-color:rgba(249,115,22,.3)">Advanced</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m10)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m10);border-color:rgba(96,165,250,.3)">10.1</span>
+        <span class="tc-tag">pytest · Test Client · Fixtures</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Testing Flask — Unit, Integration & E2E</div>
+        <div class="tg">
+          <div class="tg-lbl">Test Setup</div>
+          <div class="topics">
+            <div class="ti h">TESTING = True: disables error catching so exceptions propagate</div>
+            <div class="ti">In-memory SQLite: SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'</div>
+            <div class="ti">app fixture: create_app with TestingConfig, push/pop app context</div>
+            <div class="ti">client fixture: app.test_client() — sends requests without HTTP</div>
+            <div class="ti">runner fixture: app.test_cli_runner() — invoke CLI commands</div>
+            <div class="ti">db fixture: create tables, yield, drop tables — isolation per test</div>
+            <div class="ti">Factory fixtures: functions that create model instances</div>
+            <div class="ti">conftest.py: share fixtures across all test modules</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Testing Views & Routes</div>
+          <div class="topics">
+            <div class="ti h">client.get('/path'): HTTP GET with optional headers, query string</div>
+            <div class="ti">client.post('/path', json={...}): POST with JSON body</div>
+            <div class="ti">client.post('/path', data={...}, follow_redirects=True): form POST</div>
+            <div class="ti">response.status_code, response.json, response.data: assert on response</div>
+            <div class="ti">Testing authenticated views: log in via client.post, check session</div>
+            <div class="ti">Testing with JWT: set Authorization header in test requests</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Mocking in Flask Tests</div>
+          <div class="topics">
+            <div class="ti h">unittest.mock.patch: mock external services (email, S3, APIs)</div>
+            <div class="ti">monkeypatch.setattr: pytest-style patching</div>
+            <div class="ti">responses library: mock requests HTTP calls</div>
+            <div class="ti">freezegun: freeze time in tests with datetime-dependent logic</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Coverage & Quality</div>
+          <div class="topics">
+            <div class="ti h">pytest --cov=app --cov-report=html: line coverage report</div>
+            <div class="ti">Aim for 80%+ coverage on core business logic</div>
+            <div class="ti">pytest-flask: extra fixtures and markers for Flask testing</div>
+            <div class="ti">Playwright / Selenium: end-to-end browser tests for Flask HTML apps</div>
+          </div>
+        </div>
+        <div class="snippet"><span class="cm"># conftest.py</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> app <span class="kw">import</span> create_app
+<span class="kw">from</span> app.extensions <span class="kw">import</span> db <span class="kw">as</span> _db
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="st">'session'</span>)
+<span class="kw">def</span> <span class="fn">app</span>():
+    app = <span class="fn">create_app</span>(<span class="st">'testing'</span>)
+    <span class="kw">with</span> app.<span class="fn">app_context</span>():
+        _db.<span class="fn">create_all</span>()
+        <span class="kw">yield</span> app
+        _db.<span class="fn">drop_all</span>()
+
+<span class="dec">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">client</span>(app):
+    <span class="kw">return</span> app.<span class="fn">test_client</span>()</div>
+        <div class="tags">
+          <span class="tag hot">pytest</span><span class="tag hot">test_client</span><span class="tag hot">fixtures</span>
+          <span class="tag">conftest.py</span><span class="tag">coverage</span><span class="tag">mocking</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULE 11 -->
+<section class="mod-section" id="m11">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m11)">Module 11</span>
+    <span class="mod-title">Performance, Security & Optimization</span>
+    <span class="mod-level" style="color:#f97316;border-color:rgba(249,115,22,.3)">Advanced</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m11)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m11);border-color:rgba(232,121,249,.3)">11.1</span>
+        <span class="tc-tag">Security · Performance</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Security Hardening & Performance</div>
+        <div class="tg">
+          <div class="tg-lbl">Security Best Practices</div>
+          <div class="topics">
+            <div class="ti h">CSRF: Flask-WTF CSRFProtect + validate_csrf for API AJAX calls</div>
+            <div class="ti">XSS: Jinja2 auto-escaping + Content Security Policy header</div>
+            <div class="ti">SQL injection: always use parameterized queries — never string concat</div>
+            <div class="ti">Secure cookies: SESSION_COOKIE_SECURE, SESSION_COOKIE_HTTPONLY, SAMESITE</div>
+            <div class="ti">Flask-Talisman: force HTTPS + set security headers (HSTS, CSP, X-Frame)</div>
+            <div class="ti">Input validation: validate on server — never trust client-side only</div>
+            <div class="ti">Secret key rotation: use secrets.token_hex(32) and rotate periodically</div>
+            <div class="ti">Dependency scanning: pip-audit or safety for known CVEs</div>
+            <div class="ti">CORS: Flask-CORS — whitelist origins, methods, headers explicitly</div>
+            <div class="ti">File upload security: validate MIME type, scan for malware</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Performance Optimization</div>
+          <div class="topics">
+            <div class="ti h">Query optimization: use .with_entities() to select only needed columns</div>
+            <div class="ti">N+1 problem: use selectinload() or joinedload() for relationships</div>
+            <div class="ti">Database indexes: add indexes on foreign keys and frequently filtered columns</div>
+            <div class="ti">Connection pooling: configure pool_size, max_overflow properly</div>
+            <div class="ti">Flask-Caching: cache expensive view and function results</div>
+            <div class="ti">Compression: Flask-Compress — gzip responses automatically</div>
+            <div class="ti">Profiling: Flask-Profiler, werkzeug ProfilerMiddleware, cProfile</div>
+            <div class="ti">Async views: async def view() with asyncio for I/O-bound operations</div>
+            <div class="ti">Gunicorn workers: worker_class=gevent for concurrent I/O</div>
+            <div class="ti">CDN: serve static assets from CloudFront/Cloudflare — not Flask</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Logging & Error Monitoring</div>
+          <div class="topics">
+            <div class="ti h">app.logger: built-in logger — use at INFO/WARNING/ERROR levels</div>
+            <div class="ti">Structured logging: loguru or python-json-logger for machine-readable logs</div>
+            <div class="ti">Sentry: pip install sentry-sdk[flask] — exception tracking and alerting</div>
+            <div class="ti">Flask-LogConfig: YAML/JSON logging configuration</div>
+            <div class="ti">Request ID middleware: attach unique ID for trace correlation</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Flask-Talisman</span><span class="tag hot">Security Headers</span>
+          <span class="tag hot">N+1 Fix</span><span class="tag">Sentry</span>
+          <span class="tag">Flask-CORS</span><span class="tag">Profiling</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ PHASE 4: PRODUCTION ══ -->
+<div class="phase-banner" style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.12);margin-top:40px;">
+  <span class="ph-icon">🚀</span>
+  <div>
+    <div class="ph-label" style="color:#4ade80">Phase 4 · Production</div>
+    <div class="ph-title">Deployment, Docker, CI/CD & Cloud</div>
+  </div>
+</div>
+
+<!-- MODULE 12 -->
+<section class="mod-section" id="m12">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m12);color:#080c12">Module 12</span>
+    <span class="mod-title">Production Deployment</span>
+    <span class="mod-level" style="color:#4ade80;border-color:rgba(74,222,128,.3)">Pro / Production</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m12)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m12);border-color:rgba(74,222,128,.3)">12.1</span>
+        <span class="tc-tag">Gunicorn · Nginx · Docker</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Production Server Stack</div>
+        <div class="tg">
+          <div class="tg-lbl">Gunicorn WSGI Server</div>
+          <div class="topics">
+            <div class="ti h">gunicorn "app:create_app()": run Flask app in production</div>
+            <div class="ti">--workers: 2*CPU+1 sync workers, or gevent for async I/O</div>
+            <div class="ti">--worker-class gevent: concurrency for I/O-bound Flask</div>
+            <div class="ti">--bind 0.0.0.0:8000: bind to all interfaces</div>
+            <div class="ti">--timeout 30: kill stuck workers after 30 seconds</div>
+            <div class="ti">--access-logfile, --error-logfile: log configuration</div>
+            <div class="ti">gunicorn.conf.py: config file for all gunicorn settings</div>
+            <div class="ti">Graceful reload: kill -HUP PID — zero-downtime config reload</div>
+            <div class="ti">uWSGI: alternative WSGI server with more config options</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Nginx Reverse Proxy</div>
+          <div class="topics">
+            <div class="ti h">Nginx → Gunicorn via Unix socket or TCP port</div>
+            <div class="ti">proxy_pass http://127.0.0.1:8000: forward to Gunicorn</div>
+            <div class="ti">proxy_set_header: forward X-Real-IP, X-Forwarded-For, Host</div>
+            <div class="ti">client_max_body_size: increase for file uploads</div>
+            <div class="ti">Static files: Nginx serves /static directly — never hits Flask</div>
+            <div class="ti">SSL termination: Nginx handles HTTPS, Flask sees HTTP internally</div>
+            <div class="ti">Certbot: free Let's Encrypt SSL certificates auto-renewal</div>
+            <div class="ti">Gzip compression at Nginx level for all responses</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Docker & Docker Compose</div>
+          <div class="topics">
+            <div class="ti h">Multi-stage Dockerfile: builder stage + slim production image</div>
+            <div class="ti">Non-root user inside container — security best practice</div>
+            <div class="ti">docker-compose.yml: app + postgres + redis + nginx services</div>
+            <div class="ti">Health checks: check Gunicorn process is accepting connections</div>
+            <div class="ti">Environment variables via .env file and docker-compose env_file</div>
+            <div class="ti">Named volumes: persist PostgreSQL and Redis data</div>
+            <div class="ti">Network isolation: app network, internal DB network</div>
+          </div>
+        </div>
+        <div class="snippet"><span class="cm"># Dockerfile (multi-stage)</span>
+<span class="kw">FROM</span> python:<span class="num">3.12</span>-slim <span class="kw">AS</span> builder
+<span class="kw">COPY</span> requirements.txt .
+<span class="kw">RUN</span> pip install --user -r requirements.txt
+
+<span class="kw">FROM</span> python:<span class="num">3.12</span>-slim
+<span class="kw">COPY</span> --from=builder /root/.local /root/.local
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> useradd -m appuser && chown -R appuser /app
+<span class="kw">USER</span> appuser
+<span class="kw">CMD</span> [<span class="st">"gunicorn"</span>, <span class="st">"--workers=4"</span>, <span class="st">"--bind=0.0.0.0:8000"</span>, <span class="st">"app:create_app()"</span>]</div>
+        <div class="tags">
+          <span class="tag hot">Gunicorn</span><span class="tag hot">Nginx</span><span class="tag hot">Docker</span>
+          <span class="tag">Docker Compose</span><span class="tag">SSL</span><span class="tag">Certbot</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m12)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m12);border-color:rgba(74,222,128,.3)">12.2</span>
+        <span class="tc-tag">CI/CD · Cloud · Monitoring</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">CI/CD Pipelines & Cloud Deployment</div>
+        <div class="tg">
+          <div class="tg-lbl">GitHub Actions CI/CD</div>
+          <div class="topics">
+            <div class="ti h">On push to main: run tests → build Docker image → push → deploy</div>
+            <div class="ti">Matrix testing: test across Python 3.10, 3.11, 3.12</div>
+            <div class="ti">Secret management: GitHub encrypted secrets for API keys</div>
+            <div class="ti">Branch protection: CI must pass before merge to main</div>
+            <div class="ti">Deployment job: SSH to server and docker pull + restart containers</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Cloud Platforms</div>
+          <div class="topics">
+            <div class="ti h">Render: deploy from GitHub — free tier, zero config Docker</div>
+            <div class="ti">Railway: Dockerfile or Nixpacks auto-detect — instant deploys</div>
+            <div class="ti">Fly.io: global edge deployment — fly.toml + flyctl deploy</div>
+            <div class="ti">Heroku: Procfile: web: gunicorn app:create_app()</div>
+            <div class="ti">AWS Elastic Beanstalk: .ebextensions config + eb deploy</div>
+            <div class="ti">AWS ECS + Fargate: Docker containers with ALB load balancer</div>
+            <div class="ti">Azure App Service: Docker deployment from ACR</div>
+            <div class="ti">Google Cloud Run: fully serverless container deployment</div>
+            <div class="ti">DigitalOcean Droplet: manual Nginx + Gunicorn + systemd setup</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Database in Production</div>
+          <div class="topics">
+            <div class="ti h">Neon / Supabase: serverless Postgres — free tier for small apps</div>
+            <div class="ti">AWS RDS: managed Postgres/MySQL — automated backups, snapshots</div>
+            <div class="ti">Run Alembic migrations: flask db upgrade in deploy step before restart</div>
+            <div class="ti">Connection pooling: PgBouncer between Flask and Postgres at scale</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Production Monitoring</div>
+          <div class="topics">
+            <div class="ti h">Sentry: exception tracking with stack traces and user context</div>
+            <div class="ti">Prometheus + Grafana: metrics dashboards and alerting</div>
+            <div class="ti">UptimeRobot / Better Uptime: external uptime monitoring</div>
+            <div class="ti">Structured logging → Datadog / Elastic Stack / Loki</div>
+            <div class="ti">systemd service: auto-restart Flask/Gunicorn on server reboot</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Capstone Project</div>
+          <div class="proj-name">Full-Stack Flask SaaS App</div>
+          <div class="proj-stack">Flask + PostgreSQL + Redis + Celery + Docker + GitHub Actions + Render/Railway</div>
+          <div class="proj-items">
+            <div class="proj-d">Blueprints: auth, dashboard, API, admin — full application factory</div>
+            <div class="proj-d">JWT + session auth, email verification, password reset</div>
+            <div class="proj-d">Stripe payments: subscription plans with webhook handling</div>
+            <div class="proj-d">Celery background tasks: emails, PDF generation, data exports</div>
+            <div class="proj-d">Redis caching + rate limiting on all public endpoints</div>
+            <div class="proj-d">Docker Compose locally, CI/CD pipeline to cloud on push to main</div>
+            <div class="proj-d">Sentry error tracking + Prometheus metrics in production</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">GitHub Actions</span><span class="tag hot">Render</span>
+          <span class="tag hot">Fly.io</span><span class="tag">ECS Fargate</span>
+          <span class="tag">Sentry</span><span class="tag">PgBouncer</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CHEATSHEET -->
+<div class="cheat">
+  <h2>Flask Extensions — Quick Reference</h2>
+  <div class="cheat-sub">pip install these — the core Flask ecosystem</div>
+  <div class="cheat-grid">
+    <div>
+      <div class="cheat-col-title">Auth & Security</div>
+      <div class="cheat-item"><span>flask-login</span> — session auth</div>
+      <div class="cheat-item"><span>flask-jwt-extended</span> — JWT tokens</div>
+      <div class="cheat-item"><span>flask-bcrypt</span> — password hashing</div>
+      <div class="cheat-item"><span>flask-talisman</span> — security headers</div>
+      <div class="cheat-item"><span>authlib</span> — OAuth2 client</div>
+      <div class="cheat-item"><span>flask-cors</span> — CORS headers</div>
+      <div class="cheat-item"><span>itsdangerous</span> — signed tokens</div>
+    </div>
+    <div>
+      <div class="cheat-col-title">Database & ORM</div>
+      <div class="cheat-item"><span>flask-sqlalchemy</span> — ORM</div>
+      <div class="cheat-item"><span>flask-migrate</span> — Alembic CLI</div>
+      <div class="cheat-item"><span>marshmallow</span> — serialization</div>
+      <div class="cheat-item"><span>flask-marshmallow</span> — integration</div>
+      <div class="cheat-item"><span>pymongo</span> — MongoDB</div>
+      <div class="cheat-item"><span>redis</span> — Redis client</div>
+    </div>
+    <div>
+      <div class="cheat-col-title">Forms & APIs</div>
+      <div class="cheat-item"><span>flask-wtf</span> — forms + CSRF</div>
+      <div class="cheat-item"><span>flask-restful</span> — REST resources</div>
+      <div class="cheat-item"><span>flask-restx</span> — REST + Swagger</div>
+      <div class="cheat-item"><span>apiflask</span> — OpenAPI 3 auto</div>
+      <div class="cheat-item"><span>flask-socketio</span> — WebSockets</div>
+      <div class="cheat-item"><span>flask-mail</span> — SMTP email</div>
+    </div>
+    <div>
+      <div class="cheat-col-title">Performance & Ops</div>
+      <div class="cheat-item"><span>flask-caching</span> — response cache</div>
+      <div class="cheat-item"><span>flask-limiter</span> — rate limiting</div>
+      <div class="cheat-item"><span>flask-admin</span> — admin dashboard</div>
+      <div class="cheat-item"><span>celery</span> — task queue</div>
+      <div class="cheat-item"><span>sentry-sdk[flask]</span> — error tracking</div>
+      <div class="cheat-item"><span>gunicorn</span> — WSGI server</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <span style="color:var(--text);font-weight:500">Flask — Complete Course Index · Beginner to Production</span>
+  <span>12 Modules · 4 Phases · 60+ Topics · 15+ Projects</span>
+  <span style="color:var(--flask)">Hello World → Production SaaS</span>
+</footer>
+
+</body>
+</html>

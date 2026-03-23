@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Mastery — Complete Course Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080c12; --surface:#0d1520; --surface2:#0f1a28;
+    --border:rgba(255,255,255,0.07);
+    --accent:#3b82f6; --accent-g:#c8f135; --accent-o:#f97316;
+    --text:#e8edf5; --muted:#6b7a93;
+    --m1:#3b82f6;  /* blue   - Fundamentals */
+    --m2:#a78bfa;  /* violet - OOP */
+    --m3:#34d399;  /* green  - Stdlib */
+    --m4:#f97316;  /* orange - Files & OS */
+    --m5:#38bdf8;  /* sky    - Third-party */
+    --m6:#fb923c;  /* amber  - Databases */
+    --m7:#f472b6;  /* pink   - Web & APIs */
+    --m8:#fbbf24;  /* yellow - Async & Concurrency */
+    --m9:#c8f135;  /* lime   - Testing & Quality */
+    --m10:#e879f9; /* fuchsia- Advanced */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+
+  /* ── HERO ── */
+  .hero{position:relative;padding:72px 52px 56px;border-bottom:1px solid var(--border);overflow:hidden;}
+  .hero::after{content:'';position:absolute;top:-80px;right:-160px;width:560px;height:560px;background:radial-gradient(circle,rgba(59,130,246,.08) 0%,transparent 70%);pointer-events:none;}
+  .hero::before{content:'';position:absolute;bottom:-60px;left:25%;width:420px;height:420px;background:radial-gradient(circle,rgba(200,241,53,.04) 0%,transparent 65%);pointer-events:none;}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#60a5fa;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;padding:5px 14px;border-radius:100px;margin-bottom:26px;}
+  .hero-eyebrow::before{content:'';width:6px;height:6px;background:#3b82f6;border-radius:50%;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.8);}}
+  .hero h1{font-family:'Syne',sans-serif;font-size:clamp(34px,4.5vw,62px);font-weight:800;line-height:1.05;letter-spacing:-.02em;margin-bottom:14px;}
+  .hero h1 em{color:#60a5fa;font-style:normal;}
+  .hero-sub{color:var(--muted);font-size:15px;max-width:580px;margin-bottom:36px;line-height:1.7;}
+  .stats-row{display:flex;flex-wrap:wrap;gap:32px;}
+  .stat{display:flex;flex-direction:column;gap:2px;}
+  .stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#60a5fa;}
+  .stat-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+
+  /* ── PYTHON LOGO SVG ── */
+  .py-logo{position:absolute;right:52px;top:50%;transform:translateY(-50%);opacity:.06;width:220px;height:220px;}
+
+  /* ── NAV ── */
+  .mod-nav{position:sticky;top:0;z-index:100;background:rgba(8,12,18,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 52px;display:flex;overflow-x:auto;scrollbar-width:none;}
+  .mod-nav::-webkit-scrollbar{display:none;}
+  .mod-nav a{display:flex;align-items:center;gap:6px;padding:13px 16px;color:var(--muted);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.05em;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;}
+  .mod-nav a:hover{color:var(--text);border-bottom-color:rgba(255,255,255,.15);}
+  .ndot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+  /* ── MAIN ── */
+  .main{padding:0 52px 80px;max-width:1440px;margin:0 auto;}
+
+  /* ── MODULE SECTION ── */
+  .mod-section{padding:48px 0 0;}
+  .mod-header{display:flex;align-items:center;gap:16px;margin-bottom:26px;flex-wrap:wrap;}
+  .mod-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border-radius:100px;color:#080c12;font-weight:600;}
+  .mod-title{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;}
+  .mod-desc{color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace;}
+
+  /* ── CARD GRID ── */
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;}
+
+  /* ── TOPIC CARD ── */
+  .tc{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;position:relative;}
+  .tc:hover{border-color:rgba(255,255,255,.13);transform:translateY(-2px);}
+  .tc-stripe{position:absolute;top:0;left:0;right:0;height:2px;}
+  .tc-head{padding:17px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .tc-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:100px;border:1px solid;}
+  .tc-tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:var(--muted);background:rgba(255,255,255,.04);padding:2px 7px;border-radius:100px;}
+  .tc-body{padding:10px 20px 18px;}
+  .tc-title{font-family:'Syne',sans-serif;font-size:14.5px;font-weight:700;margin-bottom:13px;line-height:1.3;}
+
+  /* ── TOPIC GROUP ── */
+  .tg{margin-bottom:13px;}
+  .tg:last-of-type{margin-bottom:0;}
+  .tg-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+  .tg-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+  .topics{display:flex;flex-direction:column;gap:2px;}
+  .ti{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#8ea3be;padding:2px 0;line-height:1.55;}
+  .ti::before{content:'→';font-family:'JetBrains Mono',monospace;font-size:9px;color:#2e4060;flex-shrink:0;margin-top:3px;}
+  .ti.h{color:#cdd8e8;font-weight:500;}
+  .ti.h::before{color:#3b82f6;}
+  .ti.code{font-family:'JetBrains Mono',monospace;font-size:11px;color:#7dd3fc;background:rgba(59,130,246,.06);padding:1px 6px;border-radius:4px;display:inline;}
+  .ti.code::before{display:none;}
+
+  /* ── CODE SNIPPET ── */
+  .snippet{background:#070b11;border:1px solid rgba(59,130,246,.15);border-radius:8px;padding:12px 14px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7dd3fc;line-height:1.6;overflow-x:auto;}
+  .snippet .kw{color:#a78bfa;}
+  .snippet .fn{color:#34d399;}
+  .snippet .st{color:#fbbf24;}
+  .snippet .cm{color:#3a4e66;}
+  .snippet .num{color:#f97316;}
+
+  /* ── TAGS ── */
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;padding-top:11px;border-top:1px solid var(--border);}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.04);color:#4a5e78;border:1px solid rgba(255,255,255,.07);}
+  .tag.hot{background:rgba(59,130,246,.08);color:rgba(96,165,250,.7);border-color:rgba(59,130,246,.2);}
+  .tag.db{background:rgba(249,115,22,.07);color:rgba(251,146,60,.65);border-color:rgba(249,115,22,.18);}
+
+  /* ── DB CARD VARIANT ── */
+  .tc.db-card{background:rgba(249,115,22,.03);}
+
+  /* ── PROJECT BLOCK ── */
+  .proj{background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.13);border-radius:9px;padding:13px 15px;margin-top:12px;}
+  .proj-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-g);opacity:.7;margin-bottom:3px;}
+  .proj-name{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:700;color:var(--accent-g);margin-bottom:4px;}
+  .proj-items{display:flex;flex-direction:column;gap:3px;}
+  .proj-item{font-size:11.5px;color:rgba(200,241,53,.45);display:flex;gap:6px;align-items:flex-start;}
+  .proj-item::before{content:'✓';color:rgba(200,241,53,.6);font-size:9px;margin-top:2px;flex-shrink:0;}
+
+  /* ── CHEATSHEET BANNER ── */
+  .cheat-banner{margin-top:48px;background:linear-gradient(135deg,rgba(59,130,246,.07),rgba(167,139,250,.06));border:1px solid rgba(59,130,246,.2);border-radius:14px;padding:30px 36px;}
+  .cheat-banner h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#60a5fa;margin-bottom:8px;}
+  .cheat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px;}
+  .cheat-col-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#60a5fa;margin-bottom:10px;}
+  .cheat-item{font-size:11.5px;color:var(--muted);padding:2px 0;font-family:'JetBrains Mono',monospace;}
+  .cheat-item span{color:#7dd3fc;}
+
+  footer{border-top:1px solid var(--border);padding:26px 52px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;flex-wrap:wrap;gap:10px;}
+
+  @media(max-width:768px){
+    .hero,.main,footer{padding-left:18px;padding-right:18px;}
+    .mod-nav{padding:0 18px;}
+    .card-grid{grid-template-columns:1fr;}
+    .cheat-grid{grid-template-columns:1fr 1fr;}
+    .py-logo{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <!-- Python logo watermark -->
+  <svg class="py-logo" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#fff" d="M126.9 0C62.2 0 66 28.5 66 28.5l.1 29.5h62v8.9H41.6S0 61.4 0 126.8s37 64 37 64h22.1v-30.8s-1.2-37 36.4-37h62.7s35.2.6 35.2-34V35.4S198.9 0 126.9 0zM92.3 20.4a11.3 11.3 0 110 22.6 11.3 11.3 0 010-22.6z"/>
+    <path fill="#fff" d="M129.1 256c64.7 0 60.9-28.5 60.9-28.5l-.1-29.5h-62v-8.9h86.5s41.6 4.6 41.6-60.9-37-64-37-64h-22.1v30.8s1.2 37-36.4 37h-62.7s-35.2-.6-35.2 34v58.3S57.1 256 129.1 256zm34.6-20.4a11.3 11.3 0 110-22.6 11.3 11.3 0 010 22.6z"/>
+  </svg>
+
+  <div class="hero-eyebrow">PYTHON MASTERY · COMPLETE COURSE INDEX · BEGINNER TO ADVANCED</div>
+  <h1>Python — <em>Complete</em><br>Course Index</h1>
+  <p class="hero-sub">From core syntax to databases, APIs, concurrency, and production-quality code. Every module, library, and operation a professional Python developer needs — structured and detailed.</p>
+  <div class="stats-row">
+    <div class="stat"><span class="stat-num">10</span><span class="stat-label">Modules</span></div>
+    <div class="stat"><span class="stat-num">50+</span><span class="stat-label">Topics</span></div>
+    <div class="stat"><span class="stat-num">6</span><span class="stat-label">DB Engines</span></div>
+    <div class="stat"><span class="stat-num">30+</span><span class="stat-label">Key Libraries</span></div>
+    <div class="stat"><span class="stat-num">15+</span><span class="stat-label">Projects</span></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="mod-nav">
+  <a href="#m1"><span class="ndot" style="background:var(--m1)"></span>01 · Fundamentals</a>
+  <a href="#m2"><span class="ndot" style="background:var(--m2)"></span>02 · OOP</a>
+  <a href="#m3"><span class="ndot" style="background:var(--m3)"></span>03 · Stdlib</a>
+  <a href="#m4"><span class="ndot" style="background:var(--m4)"></span>04 · Files & OS</a>
+  <a href="#m5"><span class="ndot" style="background:var(--m5)"></span>05 · Data Libraries</a>
+  <a href="#m6"><span class="ndot" style="background:var(--m6)"></span>06 · Databases</a>
+  <a href="#m7"><span class="ndot" style="background:var(--m7)"></span>07 · Web & APIs</a>
+  <a href="#m8"><span class="ndot" style="background:var(--m8)"></span>08 · Async & Concurrency</a>
+  <a href="#m9"><span class="ndot" style="background:var(--m9)"></span>09 · Testing & Quality</a>
+  <a href="#m10"><span class="ndot" style="background:var(--m10)"></span>10 · Advanced Python</a>
+</nav>
+
+<main class="main">
+
+<!-- ═══════════════ MODULE 01 — FUNDAMENTALS ═══════════════ -->
+<section class="mod-section" id="m1">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m1)">Module 01</span>
+    <span class="mod-title">Python Fundamentals</span>
+    <span class="mod-desc">Syntax · Data Types · Control Flow · Functions</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m1)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m1);border-color:rgba(59,130,246,.3)">01.1</span>
+        <span class="tc-tag">Core Syntax</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Variables, Data Types & Operators</div>
+        <div class="tg">
+          <div class="tg-lbl">Variables & Naming</div>
+          <div class="topics">
+            <div class="ti h">Dynamic typing: variables hold references, not values</div>
+            <div class="ti">Naming conventions: snake_case, UPPER_CONST, _private, __dunder__</div>
+            <div class="ti">Multiple assignment: a, b, c = 1, 2, 3 and a = b = c = 0</div>
+            <div class="ti">Walrus operator :=  — assignment inside expressions</div>
+            <div class="ti">del statement: removing variable references</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Numeric Types</div>
+          <div class="topics">
+            <div class="ti h">int: arbitrary precision integers, no overflow in Python</div>
+            <div class="ti">float: IEEE 754 double precision, floating point pitfalls</div>
+            <div class="ti">complex: a + bj syntax, .real, .imag attributes</div>
+            <div class="ti">Decimal: exact decimal arithmetic for finance — decimal.Decimal</div>
+            <div class="ti">Fraction: exact rational arithmetic — fractions.Fraction</div>
+            <div class="ti">Numeric operators: +, -, *, /, //, %, ** — integer vs float division</div>
+            <div class="ti">Bitwise operators: &, |, ^, ~, <<, >> with practical uses</div>
+            <div class="ti">math module: floor, ceil, sqrt, log, factorial, isnan, isinf</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Strings</div>
+          <div class="topics">
+            <div class="ti h">String literals: single, double, triple-quoted, raw r"", byte b""</div>
+            <div class="ti">f-strings: expressions, format specs, nested, debug with =</div>
+            <div class="ti">String methods: split, join, strip, replace, find, startswith, endswith</div>
+            <div class="ti">String formatting: f-strings, .format(), % operator — when to use each</div>
+            <div class="ti">Slicing: [start:stop:step], negative indices, reversal [::-1]</div>
+            <div class="ti">String immutability: why you can't assign s[0] = 'x'</div>
+            <div class="ti">textwrap, string module: useful utilities</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Boolean & Comparison</div>
+          <div class="topics">
+            <div class="ti h">Truthiness rules: what's falsy in Python (0, '', [], {}, None, False)</div>
+            <div class="ti">Comparison: ==, !=, <, >, <=, >=, is, is not, in, not in</div>
+            <div class="ti">Identity vs equality: is vs == — the None check rule</div>
+            <div class="ti">Short-circuit evaluation: and, or, not with non-boolean operands</div>
+            <div class="ti">Chained comparisons: 0 < x < 10 — Pythonic and correct</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Variables</span><span class="tag hot">Strings</span>
+          <span class="tag">int/float</span><span class="tag">Decimal</span><span class="tag">f-strings</span><span class="tag">Operators</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m1)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m1);border-color:rgba(59,130,246,.3)">01.2</span>
+        <span class="tc-tag">Collections</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Data Structures — Lists, Tuples, Dicts, Sets</div>
+        <div class="tg">
+          <div class="tg-lbl">Lists</div>
+          <div class="topics">
+            <div class="ti h">Mutable ordered sequences — most-used collection in Python</div>
+            <div class="ti">Creation: [], list(), list comprehension</div>
+            <div class="ti">Methods: append, extend, insert, remove, pop, clear, sort, reverse, copy</div>
+            <div class="ti">Slicing and step: list[1:5:2], copy via list[:]</div>
+            <div class="ti">Nested lists: 2D grids, matrix operations</div>
+            <div class="ti">List comprehensions: [expr for x in iterable if condition]</div>
+            <div class="ti">Performance: O(1) append, O(n) insert/delete in middle</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Tuples</div>
+          <div class="topics">
+            <div class="ti h">Immutable ordered sequences — hashable, usable as dict keys</div>
+            <div class="ti">Packing and unpacking: a, b = b, a — Pythonic swap</div>
+            <div class="ti">Named tuples: collections.namedtuple and typing.NamedTuple</div>
+            <div class="ti">Single-element tuple gotcha: (1,) not (1)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Dictionaries</div>
+          <div class="topics">
+            <div class="ti h">Key-value store — ordered by insertion (Python 3.7+)</div>
+            <div class="ti">Creation: {}, dict(), dict comprehension {k: v for ...}</div>
+            <div class="ti">Access: d[key], d.get(key, default), d.setdefault(key, default)</div>
+            <div class="ti">Methods: keys, values, items, update, pop, popitem, clear</div>
+            <div class="ti">Merging: {**d1, **d2} and d1 | d2 (Python 3.9+)</div>
+            <div class="ti">collections.defaultdict: auto-initialize missing keys</div>
+            <div class="ti">collections.OrderedDict: explicit ordering with move_to_end</div>
+            <div class="ti">collections.Counter: frequency counting with most_common(n)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Sets</div>
+          <div class="topics">
+            <div class="ti h">Unordered unique elements — backed by hash table</div>
+            <div class="ti">Set operations: union |, intersection &, difference -, symmetric_difference ^</div>
+            <div class="ti">Methods: add, remove, discard, pop, clear, issubset, issuperset</div>
+            <div class="ti">frozenset: immutable, hashable set for use as dict key</div>
+            <div class="ti">Deduplication pattern: list(set(items))</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">list</span><span class="tag hot">dict</span><span class="tag hot">set</span>
+          <span class="tag">tuple</span><span class="tag">Counter</span><span class="tag">defaultdict</span><span class="tag">namedtuple</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m1)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m1);border-color:rgba(59,130,246,.3)">01.3</span>
+        <span class="tc-tag">Control Flow · Functions</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Control Flow, Functions & Comprehensions</div>
+        <div class="tg">
+          <div class="tg-lbl">Control Flow</div>
+          <div class="topics">
+            <div class="ti h">if/elif/else: one-liners, ternary x if cond else y</div>
+            <div class="ti">for loop: iterating iterables, range(), enumerate(), zip()</div>
+            <div class="ti">while loop: break, continue, else clause on loops</div>
+            <div class="ti">match/case: structural pattern matching (Python 3.10+)</div>
+            <div class="ti">Nested loops and loop labels via exceptions (avoid in practice)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Functions</div>
+          <div class="topics">
+            <div class="ti h">def: positional, keyword, default, *args, **kwargs</div>
+            <div class="ti">Keyword-only args: def f(a, *, b) — b must be passed as keyword</div>
+            <div class="ti">Positional-only args: def f(a, b, /) — Python 3.8+</div>
+            <div class="ti">Type annotations: def f(x: int) -> str — PEP 484</div>
+            <div class="ti">Docstrings: Google, NumPy, Sphinx styles</div>
+            <div class="ti">First-class functions: pass as argument, return from function</div>
+            <div class="ti">Closures: enclosing scope capture, nonlocal keyword</div>
+            <div class="ti">Lambda: anonymous functions — use sparingly</div>
+            <div class="ti">functools: partial, reduce, lru_cache, cache, wraps</div>
+            <div class="ti">Recursion: base case, stack depth, sys.setrecursionlimit</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Comprehensions & Generators</div>
+          <div class="topics">
+            <div class="ti h">List comprehensions: [f(x) for x in data if condition]</div>
+            <div class="ti">Dict comprehensions: {k: v for k, v in pairs}</div>
+            <div class="ti">Set comprehensions: {x*2 for x in range(10)}</div>
+            <div class="ti">Generator expressions: (x**2 for x in range(1000)) — lazy, memory-efficient</div>
+            <div class="ti">yield keyword: turning a function into a generator</div>
+            <div class="ti">yield from: delegating to sub-generator</div>
+            <div class="ti">itertools: chain, product, combinations, permutations, groupby, islice</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Mini Project</div>
+          <div class="proj-name">Data Pipeline CLI Tool</div>
+          <div class="proj-items">
+            <div class="proj-item">Read CSV → filter → transform → aggregate using pure Python collections</div>
+            <div class="proj-item">CLI with argparse: --input, --filter, --output flags</div>
+            <div class="proj-item">Generator-based streaming for large files (>1GB)</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Functions</span><span class="tag hot">Generators</span>
+          <span class="tag">match/case</span><span class="tag">itertools</span><span class="tag">functools</span><span class="tag">lambda</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 02 — OOP ═══════════════ -->
+<section class="mod-section" id="m2">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m2)">Module 02</span>
+    <span class="mod-title">Object-Oriented Programming</span>
+    <span class="mod-desc">Classes · Inheritance · Magic Methods · Patterns</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m2)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m2);border-color:rgba(167,139,250,.3)">02.1</span>
+        <span class="tc-tag">Classes & Methods</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Classes, Instances & Special Methods</div>
+        <div class="tg">
+          <div class="tg-lbl">Class Basics</div>
+          <div class="topics">
+            <div class="ti h">class keyword, __init__, self — the instance constructor</div>
+            <div class="ti">Instance attributes vs class attributes — shared vs per-object state</div>
+            <div class="ti">Instance methods, @classmethod, @staticmethod — when each applies</div>
+            <div class="ti">@property, @setter, @deleter — controlled attribute access</div>
+            <div class="ti">Private (_x) and name-mangled (__x) attributes</div>
+            <div class="ti">__slots__: memory-optimized classes — disables __dict__</div>
+            <div class="ti">Dataclasses: @dataclass, field(), __post_init__, frozen, order</div>
+            <div class="ti">typing.NamedTuple: typed immutable records</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Magic / Dunder Methods</div>
+          <div class="topics">
+            <div class="ti h">__repr__ vs __str__: developer vs user string representation</div>
+            <div class="ti">__eq__, __hash__: equality and hashability — implement together</div>
+            <div class="ti">__lt__, __le__, __gt__, __ge__: comparison operators with @functools.total_ordering</div>
+            <div class="ti">__len__, __getitem__, __setitem__, __delitem__: sequence/mapping protocol</div>
+            <div class="ti">__iter__, __next__: making objects iterable</div>
+            <div class="ti">__contains__: in operator support</div>
+            <div class="ti">__call__: making instances callable like functions</div>
+            <div class="ti">__enter__, __exit__: context manager protocol</div>
+            <div class="ti">__add__, __mul__, __iadd__: arithmetic operator overloading</div>
+            <div class="ti">__bool__: truthiness of custom objects</div>
+            <div class="ti">__getattr__, __setattr__, __delattr__: attribute access hooks</div>
+            <div class="ti">__init_subclass__, __class_getitem__: metaclass-lite customization</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Classes</span><span class="tag hot">Dunder Methods</span>
+          <span class="tag">@property</span><span class="tag">@dataclass</span><span class="tag">__slots__</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m2)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m2);border-color:rgba(167,139,250,.3)">02.2</span>
+        <span class="tc-tag">Inheritance · Polymorphism</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Inheritance, ABCs & Design Patterns</div>
+        <div class="tg">
+          <div class="tg-lbl">Inheritance</div>
+          <div class="topics">
+            <div class="ti h">Single inheritance: super() calls and cooperative inheritance</div>
+            <div class="ti">Multiple inheritance: MRO (C3 linearization), diamond problem</div>
+            <div class="ti">isinstance() and issubclass() for safe type checking</div>
+            <div class="ti">Method overriding: when to call super().__init__ and when not to</div>
+            <div class="ti">Mixin classes: composing behavior without full inheritance hierarchy</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Abstract Base Classes</div>
+          <div class="topics">
+            <div class="ti h">abc.ABC + @abstractmethod: enforce interface contracts</div>
+            <div class="ti">@abstractclassmethod, @abstractstaticmethod, @abstractproperty</div>
+            <div class="ti">typing.Protocol: structural subtyping — duck typing with type checking</div>
+            <div class="ti">@runtime_checkable: enables isinstance() with Protocol</div>
+            <div class="ti">collections.abc: Iterable, Iterator, Sequence, Mapping, Callable</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Design Patterns in Python</div>
+          <div class="topics">
+            <div class="ti h">Singleton: __new__ override or module-level instance</div>
+            <div class="ti">Factory: classmethod factories, factory function pattern</div>
+            <div class="ti">Observer: event system with callback lists</div>
+            <div class="ti">Decorator pattern: wrapping objects without subclassing</div>
+            <div class="ti">Strategy: passing behavior as callables</div>
+            <div class="ti">Repository: abstracting data access behind an interface</div>
+            <div class="ti">Dependency Injection: passing dependencies vs importing globals</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Mini Project</div>
+          <div class="proj-name">Plugin System</div>
+          <div class="proj-items">
+            <div class="proj-item">Abstract BasePlugin with register() and execute() methods</div>
+            <div class="proj-item">Plugin registry using class decorator + dict lookup</div>
+            <div class="proj-item">3 concrete plugins: CSV exporter, JSON exporter, HTML exporter</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Inheritance</span><span class="tag hot">ABC</span>
+          <span class="tag">Protocol</span><span class="tag">Mixins</span><span class="tag">MRO</span><span class="tag">Design Patterns</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 03 — STANDARD LIBRARY ═══════════════ -->
+<section class="mod-section" id="m3">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m3);color:#080c12">Module 03</span>
+    <span class="mod-title">Python Standard Library — Essential Modules</span>
+    <span class="mod-desc">Built-in batteries — no pip required</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m3)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m3);border-color:rgba(52,211,153,.3)">03.1</span>
+        <span class="tc-tag">datetime · time · calendar</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Date, Time & Timezone Handling</div>
+        <div class="tg">
+          <div class="tg-lbl">datetime module</div>
+          <div class="topics">
+            <div class="ti h">datetime.date, datetime.time, datetime.datetime, datetime.timedelta</div>
+            <div class="ti">Creating: datetime.now(), datetime.utcnow(), date.today()</div>
+            <div class="ti">Parsing strings: datetime.strptime(s, fmt) — format codes cheatsheet</div>
+            <div class="ti">Formatting: dt.strftime(fmt) — ISO 8601, human-readable, timestamps</div>
+            <div class="ti">Arithmetic: dt + timedelta(days=7), dt2 - dt1 → timedelta</div>
+            <div class="ti">Replacing fields: dt.replace(hour=0, minute=0, second=0)</div>
+            <div class="ti">Epoch timestamps: dt.timestamp(), datetime.fromtimestamp(ts)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Timezones</div>
+          <div class="topics">
+            <div class="ti h">Naive vs aware datetimes — always use aware in production</div>
+            <div class="ti">datetime.timezone.utc — the safe default</div>
+            <div class="ti">zoneinfo (Python 3.9+): IANA timezone database access</div>
+            <div class="ti">Converting between timezones: dt.astimezone(tz)</div>
+            <div class="ti">pytz: legacy timezone library still common in existing codebases</div>
+            <div class="ti">arrow / pendulum: third-party libraries for nicer date/time APIs</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">datetime</span><span class="tag hot">timedelta</span>
+          <span class="tag">zoneinfo</span><span class="tag">strftime</span><span class="tag">strptime</span><span class="tag">timezone</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m3)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m3);border-color:rgba(52,211,153,.3)">03.2</span>
+        <span class="tc-tag">re · json · csv · pathlib</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Regex, JSON, CSV & Path Operations</div>
+        <div class="tg">
+          <div class="tg-lbl">re — Regular Expressions</div>
+          <div class="topics">
+            <div class="ti h">re.match, re.search, re.findall, re.finditer, re.sub, re.split</div>
+            <div class="ti">Raw strings: always use r"pattern" to avoid backslash hell</div>
+            <div class="ti">Character classes: \d, \w, \s, \D, \W, \S, [a-z], [^abc]</div>
+            <div class="ti">Quantifiers: *, +, ?, {n}, {n,m}, greedy vs lazy (?)</div>
+            <div class="ti">Groups: (), (?:) non-capturing, (?P&lt;name&gt;) named groups</div>
+            <div class="ti">Lookahead/lookbehind: (?=...), (?!...), (?&lt;=...), (?&lt;!...)</div>
+            <div class="ti">Flags: re.IGNORECASE, re.MULTILINE, re.DOTALL, re.VERBOSE</div>
+            <div class="ti">re.compile(): pre-compile for performance in loops</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">json module</div>
+          <div class="topics">
+            <div class="ti h">json.dumps(): Python object → JSON string</div>
+            <div class="ti">json.loads(): JSON string → Python object</div>
+            <div class="ti">json.dump() / json.load(): read/write JSON files</div>
+            <div class="ti">Custom serialization: default= parameter for non-serializable types</div>
+            <div class="ti">Pretty printing: indent=2, sort_keys=True</div>
+            <div class="ti">Handling datetime, Decimal, UUID in JSON</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">csv module</div>
+          <div class="topics">
+            <div class="ti h">csv.reader / csv.writer: row-by-row reading and writing</div>
+            <div class="ti">csv.DictReader / csv.DictWriter: column-name access</div>
+            <div class="ti">Dialect: delimiter, quotechar, lineterminator, skipinitialspace</div>
+            <div class="ti">Handling encoding: open with encoding='utf-8', newline=''</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">pathlib module</div>
+          <div class="topics">
+            <div class="ti h">Path objects: Path('.'), Path.home(), Path.cwd()</div>
+            <div class="ti">Navigation: path / 'subdir' / 'file.txt' — OS-agnostic</div>
+            <div class="ti">Reading/writing: path.read_text(), path.write_text(), path.read_bytes()</div>
+            <div class="ti">Inspection: path.exists(), path.is_file(), path.is_dir(), path.stat()</div>
+            <div class="ti">Listing: path.iterdir(), path.glob('**/*.py'), path.rglob('*.txt')</div>
+            <div class="ti">Manipulation: path.mkdir(parents=True, exist_ok=True), path.rename(), path.unlink()</div>
+            <div class="ti">Parts: path.stem, path.suffix, path.parent, path.name</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">re</span><span class="tag hot">json</span>
+          <span class="tag hot">pathlib</span><span class="tag">csv</span>
+          <span class="tag">Named Groups</span><span class="tag">Glob</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m3)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m3);border-color:rgba(52,211,153,.3)">03.3</span>
+        <span class="tc-tag">collections · functools · itertools</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Power Modules — collections, functools, itertools</div>
+        <div class="tg">
+          <div class="tg-lbl">collections</div>
+          <div class="topics">
+            <div class="ti h">Counter: frequency maps, arithmetic, most_common(n), subtract</div>
+            <div class="ti">defaultdict: auto-initialize missing keys — groupby pattern</div>
+            <div class="ti">OrderedDict: insertion-ordered, move_to_end(), LRU cache pattern</div>
+            <div class="ti">deque: O(1) append and appendleft — queues and sliding windows</div>
+            <div class="ti">namedtuple: lightweight immutable record with field names</div>
+            <div class="ti">ChainMap: layered dict lookup — config override pattern</div>
+            <div class="ti">UserDict, UserList, UserString: base classes for custom containers</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">functools</div>
+          <div class="topics">
+            <div class="ti h">@lru_cache(maxsize=128): memoize expensive function calls</div>
+            <div class="ti">@cache: unbounded memoization (Python 3.9+)</div>
+            <div class="ti">partial(): freeze some arguments of a function</div>
+            <div class="ti">reduce(): left fold over an iterable</div>
+            <div class="ti">@wraps: preserve wrapped function metadata in decorators</div>
+            <div class="ti">@total_ordering: define __eq__ + one comparison, get the rest free</div>
+            <div class="ti">@singledispatch: function overloading by first argument type</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">itertools</div>
+          <div class="topics">
+            <div class="ti h">chain(*iterables): flatten multiple iterables</div>
+            <div class="ti">chain.from_iterable(): flatten one level of nesting</div>
+            <div class="ti">islice(iterable, n): lazy first-n elements</div>
+            <div class="ti">product(a, b): Cartesian product — nested loop replacement</div>
+            <div class="ti">combinations(it, r) / permutations(it, r): combinatorics</div>
+            <div class="ti">groupby(it, key): group consecutive elements — sort first!</div>
+            <div class="ti">accumulate(it, func): running totals and prefix computations</div>
+            <div class="ti">zip_longest(a, b, fillvalue=None): zip with unequal lengths</div>
+            <div class="ti">takewhile / dropwhile: conditional iteration</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Other Key Stdlib Modules</div>
+          <div class="topics">
+            <div class="ti h">logging: levels, handlers, formatters, rotating file handler</div>
+            <div class="ti">argparse: CLI argument parsing with subcommands</div>
+            <div class="ti">sys: argv, path, stdin/stdout, exit, exc_info</div>
+            <div class="ti">os: environ, getcwd, listdir, makedirs, path utilities</div>
+            <div class="ti">copy: copy.copy() shallow vs copy.deepcopy() deep</div>
+            <div class="ti">pprint: pretty-print nested structures</div>
+            <div class="ti">hashlib: md5, sha256, sha512 — hashing data</div>
+            <div class="ti">secrets: cryptographically secure random — tokens, passwords</div>
+            <div class="ti">uuid: UUID4 for unique IDs in systems</div>
+            <div class="ti">enum: Enum, IntEnum, Flag — typed constants</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">collections</span><span class="tag hot">itertools</span><span class="tag hot">functools</span>
+          <span class="tag">logging</span><span class="tag">argparse</span><span class="tag">hashlib</span><span class="tag">enum</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 04 — FILES & OS ═══════════════ -->
+<section class="mod-section" id="m4">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m4)">Module 04</span>
+    <span class="mod-title">File I/O, OS & System Operations</span>
+    <span class="mod-desc">Files · Directories · Processes · Environment</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m4)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m4);border-color:rgba(249,115,22,.3)">04.1</span>
+        <span class="tc-tag">File Operations</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Reading, Writing & Managing Files</div>
+        <div class="tg">
+          <div class="tg-lbl">File I/O Basics</div>
+          <div class="topics">
+            <div class="ti h">open(): modes r, w, a, x, b, t, + — mode combinations</div>
+            <div class="ti">Context manager: with open(f) as fp — always use this pattern</div>
+            <div class="ti">read(), readline(), readlines() — bulk vs line-by-line vs list</div>
+            <div class="ti">Iterating file object directly: for line in fp — memory-efficient</div>
+            <div class="ti">write(), writelines() — writing strings and lists of strings</div>
+            <div class="ti">Encoding: utf-8, latin-1, errors='ignore'/'replace'/'strict'</div>
+            <div class="ti">Binary files: rb/wb mode, reading bytes, struct.pack/unpack</div>
+            <div class="ti">seek() and tell(): random access in files</div>
+            <div class="ti">tempfile: NamedTemporaryFile, TemporaryDirectory for safe temp files</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">File Formats</div>
+          <div class="topics">
+            <div class="ti h">JSON: json.load/dump, custom encoders for datetime/Decimal</div>
+            <div class="ti">CSV: csv.DictReader/DictWriter, large file streaming</div>
+            <div class="ti">YAML: PyYAML — safe_load, safe_dump, custom representers</div>
+            <div class="ti">TOML: tomllib (Python 3.11+) and tomli for config files</div>
+            <div class="ti">INI/CFG: configparser — read application config files</div>
+            <div class="ti">Excel: openpyxl — read/write .xlsx, cell formatting, charts</div>
+            <div class="ti">PDF: PyMuPDF (fitz) — extract text, metadata, images</div>
+            <div class="ti">ZIP/TAR: zipfile, tarfile — compress, extract, inspect archives</div>
+            <div class="ti">Pickle: serialize Python objects — security warning for untrusted data</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">shutil — High-Level File Operations</div>
+          <div class="topics">
+            <div class="ti h">shutil.copy(), copy2(): copy files with/without metadata</div>
+            <div class="ti">shutil.copytree(): recursively copy directories</div>
+            <div class="ti">shutil.move(): move/rename files and directories</div>
+            <div class="ti">shutil.rmtree(): recursively delete directory tree</div>
+            <div class="ti">shutil.make_archive(): create zip/tar archives</div>
+            <div class="ti">shutil.disk_usage(): check disk space before large operations</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">watchdog — File System Monitoring</div>
+          <div class="topics">
+            <div class="ti h">Observer + EventHandler pattern for watching directories</div>
+            <div class="ti">on_created, on_modified, on_deleted, on_moved events</div>
+            <div class="ti">Use case: hot-reload configs, trigger processing on new files</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">open()</span><span class="tag hot">pathlib</span><span class="tag hot">shutil</span>
+          <span class="tag">YAML</span><span class="tag">TOML</span><span class="tag">openpyxl</span><span class="tag">zipfile</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m4)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m4);border-color:rgba(249,115,22,.3)">04.2</span>
+        <span class="tc-tag">OS · Subprocess · Environment</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">OS Operations, Processes & Environment</div>
+        <div class="tg">
+          <div class="tg-lbl">os module</div>
+          <div class="topics">
+            <div class="ti h">os.environ: read/write environment variables — os.getenv(k, default)</div>
+            <div class="ti">os.getcwd(), os.chdir(): current working directory</div>
+            <div class="ti">os.listdir(), os.scandir(): list directory contents</div>
+            <div class="ti">os.makedirs(path, exist_ok=True): create nested directories</div>
+            <div class="ti">os.remove(), os.rmdir(): delete files and empty dirs</div>
+            <div class="ti">os.rename(), os.replace(): rename/move atomically</div>
+            <div class="ti">os.walk(): recursive directory tree traversal</div>
+            <div class="ti">os.path: join, basename, dirname, exists, isfile, isdir, abspath</div>
+            <div class="ti">os.stat(): file size, modification time, permissions</div>
+            <div class="ti">os.getpid(), os.getppid(): process identity</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">subprocess module</div>
+          <div class="topics">
+            <div class="ti h">subprocess.run(): run shell commands and capture output</div>
+            <div class="ti">capture_output=True: capture stdout and stderr</div>
+            <div class="ti">check=True: raise CalledProcessError on non-zero exit code</div>
+            <div class="ti">text=True: decode bytes output to str automatically</div>
+            <div class="ti">subprocess.Popen: long-running processes, streaming stdout line by line</div>
+            <div class="ti">shell=True: run string command — security risk with user input</div>
+            <div class="ti">timeout: prevent hanging on slow or stuck processes</div>
+            <div class="ti">Piping: stdin=PIPE, communicate(input=b'...')</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Environment & Config</div>
+          <div class="topics">
+            <div class="ti h">python-dotenv: load .env files into os.environ</div>
+            <div class="ti">pydantic-settings: typed settings from env vars with validation</div>
+            <div class="ti">12-factor app config: never hardcode, always environment variables</div>
+            <div class="ti">platform module: OS detection, machine type, Python version</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Mini Project</div>
+          <div class="proj-name">File Organizer + Watcher</div>
+          <div class="proj-items">
+            <div class="proj-item">Watch a downloads folder with watchdog</div>
+            <div class="proj-item">Auto-move files by extension to organized subfolders</div>
+            <div class="proj-item">Log all operations with timestamps to rotating log file</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">os</span><span class="tag hot">subprocess</span>
+          <span class="tag">dotenv</span><span class="tag">pydantic-settings</span><span class="tag">watchdog</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 05 — DATA LIBRARIES ═══════════════ -->
+<section class="mod-section" id="m5">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m5);color:#080c12">Module 05</span>
+    <span class="mod-title">Data Libraries — NumPy, Pandas & Visualization</span>
+    <span class="mod-desc">pandas · numpy · matplotlib · seaborn · plotly</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m5)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m5);border-color:rgba(56,189,248,.3)">05.1</span>
+        <span class="tc-tag">NumPy</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">NumPy — Numerical Computing</div>
+        <div class="tg">
+          <div class="tg-lbl">Array Operations</div>
+          <div class="topics">
+            <div class="ti h">np.array(): creating from lists, nested lists — dtype, shape</div>
+            <div class="ti">Array creation: zeros, ones, full, eye, arange, linspace, random</div>
+            <div class="ti">Shape manipulation: reshape, flatten, ravel, squeeze, expand_dims</div>
+            <div class="ti">Indexing: basic, boolean masking, fancy indexing, np.where</div>
+            <div class="ti">Slicing: arr[1:5, ::2] — multi-dimensional slicing</div>
+            <div class="ti">Broadcasting: rules for operations on different-shaped arrays</div>
+            <div class="ti">Vectorized operations: element-wise arithmetic without loops</div>
+            <div class="ti">Aggregations: sum, mean, std, min, max, argmin, argmax, axis parameter</div>
+            <div class="ti">Sorting: np.sort, np.argsort, np.partition</div>
+            <div class="ti">Stacking: hstack, vstack, dstack, concatenate, stack</div>
+            <div class="ti">Linear algebra: np.dot, np.matmul (@), linalg.inv, linalg.eig</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">NumPy</span><span class="tag">Broadcasting</span>
+          <span class="tag">Vectorization</span><span class="tag">Boolean Masking</span><span class="tag">linalg</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m5)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m5);border-color:rgba(56,189,248,.3)">05.2</span>
+        <span class="tc-tag">Pandas</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Pandas — Data Analysis & Manipulation</div>
+        <div class="tg">
+          <div class="tg-lbl">Core Data Structures</div>
+          <div class="topics">
+            <div class="ti h">Series: 1D labeled array — index, values, dtype</div>
+            <div class="ti">DataFrame: 2D table — columns, index, dtypes</div>
+            <div class="ti">Index types: RangeIndex, DatetimeIndex, MultiIndex</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Loading & Saving Data</div>
+          <div class="topics">
+            <div class="ti h">pd.read_csv(), read_excel(), read_json(), read_parquet(), read_sql()</div>
+            <div class="ti">Parameters: sep, header, index_col, dtype, parse_dates, nrows, chunksize</div>
+            <div class="ti">df.to_csv(), to_excel(), to_json(), to_parquet(), to_sql()</div>
+            <div class="ti">Chunked reading for large files: pd.read_csv(..., chunksize=10000)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Selection & Filtering</div>
+          <div class="topics">
+            <div class="ti h">df[col], df[[cols]], df.loc[row, col], df.iloc[i, j]</div>
+            <div class="ti">Boolean filtering: df[df['age'] > 30]</div>
+            <div class="ti">Multiple conditions: & | ~ with parentheses</div>
+            <div class="ti">df.query("age > 30 and city == 'Mumbai'") — readable string queries</div>
+            <div class="ti">df.filter(items=, like=, regex=): column/row filtering</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Transformations</div>
+          <div class="topics">
+            <div class="ti h">df.apply(func): apply function row-wise or column-wise</div>
+            <div class="ti">df[col].map(func/dict): element-wise transformation or mapping</div>
+            <div class="ti">df.assign(new_col=lambda df: ...): add derived columns fluently</div>
+            <div class="ti">df.pipe(func): chain transformations cleanly</div>
+            <div class="ti">String methods: df[col].str.lower(), strip(), replace(), contains()</div>
+            <div class="ti">DateTime: df[col].dt.year, month, day, hour, day_of_week</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Aggregation & Grouping</div>
+          <div class="topics">
+            <div class="ti h">df.groupby(col).agg({'sales': 'sum', 'count': 'count'})</div>
+            <div class="ti">Named aggregations: .agg(total=('sales','sum'), avg=('price','mean'))</div>
+            <div class="ti">df.pivot_table(): cross-tabular summaries</div>
+            <div class="ti">df.resample('M'): time-series resampling by period</div>
+            <div class="ti">df.rolling(7).mean(): rolling window statistics</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Merging & Reshaping</div>
+          <div class="topics">
+            <div class="ti h">pd.merge(df1, df2, on=, how=): inner, left, right, outer joins</div>
+            <div class="ti">pd.concat([df1, df2], axis=0/1): stack rows or columns</div>
+            <div class="ti">df.melt(): wide to long format</div>
+            <div class="ti">df.pivot(): long to wide format</div>
+            <div class="ti">df.stack() / df.unstack(): MultiIndex reshaping</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Cleaning</div>
+          <div class="topics">
+            <div class="ti h">df.isna(), df.fillna(), df.dropna() — null handling</div>
+            <div class="ti">df.drop_duplicates(subset=): deduplicate rows</div>
+            <div class="ti">df.astype(): type conversion with error handling</div>
+            <div class="ti">df.rename(columns=): rename columns with dict</div>
+            <div class="ti">df.clip(): cap outliers at min/max bounds</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Mini Project</div>
+          <div class="proj-name">Sales Analytics Dashboard</div>
+          <div class="proj-items">
+            <div class="proj-item">Load multi-sheet Excel sales report with pd.read_excel</div>
+            <div class="proj-item">Clean: handle nulls, fix dtypes, standardize categories</div>
+            <div class="proj-item">GroupBy: region × product × month revenue breakdown</div>
+            <div class="proj-item">Export: to_parquet for fast reload + to_excel formatted report</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">pandas</span><span class="tag hot">groupby</span><span class="tag hot">merge</span>
+          <span class="tag">pivot_table</span><span class="tag">resample</span><span class="tag">str methods</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m5)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m5);border-color:rgba(56,189,248,.3)">05.3</span>
+        <span class="tc-tag">Visualization</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">matplotlib, seaborn & plotly</div>
+        <div class="tg">
+          <div class="tg-lbl">matplotlib</div>
+          <div class="topics">
+            <div class="ti h">Figure / Axes API: plt.subplots(nrows, ncols) — always use object API</div>
+            <div class="ti">Plot types: line, bar, scatter, histogram, pie, errorbar, fill_between</div>
+            <div class="ti">Customization: title, xlabel, ylabel, legend, xlim, ylim, grid</div>
+            <div class="ti">Multiple subplots: fig, axes = plt.subplots(2, 3, figsize=(12, 8))</div>
+            <div class="ti">Twin axes: ax.twinx() for dual-axis charts</div>
+            <div class="ti">Saving: fig.savefig('chart.png', dpi=150, bbox_inches='tight')</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">seaborn</div>
+          <div class="topics">
+            <div class="ti h">Statistical charts: sns.histplot, kdeplot, boxplot, violinplot</div>
+            <div class="ti">Categorical: sns.barplot, countplot, stripplot, swarmplot</div>
+            <div class="ti">Relational: sns.scatterplot, lineplot, regplot</div>
+            <div class="ti">heatmap: correlation matrices, pivot table visualization</div>
+            <div class="ti">FacetGrid: small multiples by category</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Plotly</div>
+          <div class="topics">
+            <div class="ti h">plotly.express: one-line interactive charts with hover, zoom, pan</div>
+            <div class="ti">px.line, bar, scatter, pie, histogram, choropleth, treemap</div>
+            <div class="ti">plotly.graph_objects: full control over traces and layout</div>
+            <div class="ti">Dash: build interactive web dashboards with Python only</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">matplotlib</span><span class="tag hot">seaborn</span><span class="tag hot">plotly</span>
+          <span class="tag">Dash</span><span class="tag">FacetGrid</span><span class="tag">subplots</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 06 — DATABASES ═══════════════ -->
+<section class="mod-section" id="m6">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m6)">Module 06</span>
+    <span class="mod-title">Database Connections & Operations</span>
+    <span class="mod-desc">SQLite · PostgreSQL · MySQL · MongoDB · Redis · SQLAlchemy</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc db-card">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(249,115,22,.3)">06.1</span>
+        <span class="tc-tag">SQLite · sqlite3</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">SQLite — Built-in Relational DB</div>
+        <div class="tg">
+          <div class="tg-lbl">Connection & Cursor</div>
+          <div class="topics">
+            <div class="ti h">sqlite3.connect('db.sqlite3') — file-based or :memory: in-memory DB</div>
+            <div class="ti">Context manager: with sqlite3.connect(...) as conn — auto-commit/rollback</div>
+            <div class="ti">conn.cursor() — execute SQL statements</div>
+            <div class="ti">conn.row_factory = sqlite3.Row — access columns by name</div>
+            <div class="ti">check_same_thread=False for multi-threaded use</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">CRUD Operations</div>
+          <div class="topics">
+            <div class="ti h">CREATE TABLE: column types, PRIMARY KEY, AUTOINCREMENT, NOT NULL</div>
+            <div class="ti">INSERT: cursor.execute("INSERT INTO ...", (val1, val2)) — parameterized</div>
+            <div class="ti">SELECT: fetchone(), fetchall(), fetchmany(n), iterating cursor</div>
+            <div class="ti">UPDATE: WHERE clause, returning affected rowcount</div>
+            <div class="ti">DELETE: soft delete pattern (is_deleted flag)</div>
+            <div class="ti">cursor.executemany(): bulk insert from a list of tuples</div>
+            <div class="ti">Parameterized queries: ? placeholders — SQL injection prevention</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Advanced SQLite</div>
+          <div class="topics">
+            <div class="ti h">Transactions: BEGIN, COMMIT, ROLLBACK — atomicity guarantee</div>
+            <div class="ti">Indexes: CREATE INDEX for faster WHERE and JOIN operations</div>
+            <div class="ti">PRAGMA: journal_mode=WAL, foreign_keys=ON, cache_size</div>
+            <div class="ti">Backup: conn.backup(dest_conn)</div>
+          </div>
+        </div>
+        <div class="snippet">
+<span class="kw">import</span> sqlite3
+<span class="kw">with</span> sqlite3.<span class="fn">connect</span>(<span class="st">"users.db"</span>) <span class="kw">as</span> conn:
+    conn.row_factory = sqlite3.Row
+    cur = conn.<span class="fn">cursor</span>()
+    cur.<span class="fn">execute</span>(<span class="st">"SELECT * FROM users WHERE age > ?"</span>, (<span class="num">25</span>,))
+    <span class="kw">for</span> row <span class="kw">in</span> cur.<span class="fn">fetchall</span>():
+        <span class="fn">print</span>(row[<span class="st">"name"</span>], row[<span class="st">"email"</span>])
+        </div>
+        <div class="tags">
+          <span class="tag db">sqlite3</span><span class="tag">CRUD</span>
+          <span class="tag">Transactions</span><span class="tag">WAL</span><span class="tag">Parameterized</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc db-card">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(249,115,22,.3)">06.2</span>
+        <span class="tc-tag">PostgreSQL · psycopg2/3</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">PostgreSQL — Production Relational DB</div>
+        <div class="tg">
+          <div class="tg-lbl">psycopg2 (Sync)</div>
+          <div class="topics">
+            <div class="ti h">psycopg2.connect(host, dbname, user, password, port)</div>
+            <div class="ti">Connection pooling: psycopg2.pool.ThreadedConnectionPool</div>
+            <div class="ti">cursor.execute(query, params): %s placeholders for all types</div>
+            <div class="ti">cursor.mogrify(): preview parameterized query before executing</div>
+            <div class="ti">copy_expert(): bulk COPY for millions of rows</div>
+            <div class="ti">RealDictCursor: return rows as dicts</div>
+            <div class="ti">Server-side cursors: cursor named='name' for large result sets</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">psycopg3 (Async)</div>
+          <div class="topics">
+            <div class="ti h">async with await psycopg.AsyncConnection.connect(...) — native async</div>
+            <div class="ti">Connection pooling: psycopg_pool.AsyncConnectionPool</div>
+            <div class="ti">Binary protocol: faster data transfer for large queries</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">PostgreSQL-Specific Features</div>
+          <div class="topics">
+            <div class="ti h">JSONB columns: store and query semi-structured data with operators</div>
+            <div class="ti">Array columns: integer[], text[] — avoid the junction table</div>
+            <div class="ti">RETURNING clause: INSERT ... RETURNING id, created_at</div>
+            <div class="ti">ON CONFLICT DO UPDATE: upsert pattern</div>
+            <div class="ti">CTEs (WITH): readable multi-step queries</div>
+            <div class="ti">Window functions: ROW_NUMBER, RANK, LEAD, LAG, PARTITION BY</div>
+            <div class="ti">LISTEN/NOTIFY: real-time pub/sub between app and DB</div>
+            <div class="ti">pg_trgm: trigram-based fuzzy text search</div>
+            <div class="ti">pgvector extension: vector similarity search in SQL</div>
+          </div>
+        </div>
+        <div class="snippet">
+<span class="kw">import</span> psycopg2
+<span class="kw">from</span> psycopg2.extras <span class="kw">import</span> RealDictCursor
+
+conn = psycopg2.<span class="fn">connect</span>(<span class="st">dsn=DATABASE_URL</span>)
+<span class="kw">with</span> conn, conn.<span class="fn">cursor</span>(cursor_factory=RealDictCursor) <span class="kw">as</span> cur:
+    cur.<span class="fn">execute</span>(
+        <span class="st">"INSERT INTO orders (user_id, total) VALUES (%s,%s) RETURNING id"</span>,
+        (user_id, total)
+    )
+    order_id = cur.<span class="fn">fetchone</span>()[<span class="st">"id"</span>]
+        </div>
+        <div class="tags">
+          <span class="tag db">psycopg2</span><span class="tag db">psycopg3</span>
+          <span class="tag">JSONB</span><span class="tag">RETURNING</span><span class="tag">Upsert</span><span class="tag">pgvector</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc db-card">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(249,115,22,.3)">06.3</span>
+        <span class="tc-tag">SQLAlchemy ORM</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">SQLAlchemy — ORM & Query Builder</div>
+        <div class="tg">
+          <div class="tg-lbl">Core Setup</div>
+          <div class="topics">
+            <div class="ti h">create_engine(DATABASE_URL, pool_size=5, echo=True)</div>
+            <div class="ti">Declarative base: class Base(DeclarativeBase) — mapped models</div>
+            <div class="ti">Column types: Integer, String, Text, Float, Boolean, DateTime, JSON, Enum</div>
+            <div class="ti">Relationships: relationship("Model", back_populates=, lazy=)</div>
+            <div class="ti">ForeignKey, UniqueConstraint, Index, CheckConstraint</div>
+            <div class="ti">Base.metadata.create_all(engine): create all tables</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Session & CRUD</div>
+          <div class="topics">
+            <div class="ti h">Session factory: SessionLocal = sessionmaker(bind=engine)</div>
+            <div class="ti">Context-managed sessions: with SessionLocal() as session</div>
+            <div class="ti">session.add(obj), session.add_all([objs]): stage for insert</div>
+            <div class="ti">session.commit(), session.rollback(), session.close()</div>
+            <div class="ti">session.get(Model, id): fetch by primary key — cache-aware</div>
+            <div class="ti">session.delete(obj): mark for deletion</div>
+            <div class="ti">session.merge(obj): upsert by primary key</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Querying</div>
+          <div class="topics">
+            <div class="ti h">select(Model): new SQLAlchemy 2.0 style query</div>
+            <div class="ti">.where(Model.col == val): filter conditions</div>
+            <div class="ti">.filter(or_(cond1, cond2)): OR conditions</div>
+            <div class="ti">.join(OtherModel, condition): JOIN tables</div>
+            <div class="ti">.order_by(Model.col.desc()): sorting</div>
+            <div class="ti">.limit(n).offset(m): pagination</div>
+            <div class="ti">session.scalars(stmt): get list of model instances</div>
+            <div class="ti">session.execute(stmt): get Row objects for complex projections</div>
+            <div class="ti">func.count, func.sum, func.avg: aggregation functions</div>
+            <div class="ti">Lazy vs eager loading: selectinload(), joinedload() to solve N+1</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Async SQLAlchemy</div>
+          <div class="topics">
+            <div class="ti h">create_async_engine with asyncpg driver</div>
+            <div class="ti">AsyncSession: async with async_session() as session</div>
+            <div class="ti">await session.execute(stmt): all DB calls are awaitable</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Alembic — Migrations</div>
+          <div class="topics">
+            <div class="ti h">alembic init: set up migration environment</div>
+            <div class="ti">alembic revision --autogenerate: detect model changes</div>
+            <div class="ti">alembic upgrade head: apply all pending migrations</div>
+            <div class="ti">alembic downgrade -1: roll back last migration</div>
+            <div class="ti">env.py: configure target_metadata for autogenerate</div>
+          </div>
+        </div>
+        <div class="snippet">
+<span class="kw">from</span> sqlalchemy.orm <span class="kw">import</span> Session
+<span class="kw">from</span> sqlalchemy <span class="kw">import</span> select
+
+<span class="kw">with</span> <span class="fn">Session</span>(engine) <span class="kw">as</span> session:
+    stmt = <span class="fn">select</span>(User).<span class="fn">where</span>(User.is_active == <span class="kw">True</span>).<span class="fn">limit</span>(<span class="num">10</span>)
+    users = session.<span class="fn">scalars</span>(stmt).<span class="fn">all</span>()
+        </div>
+        <div class="tags">
+          <span class="tag db">SQLAlchemy 2.0</span><span class="tag db">Alembic</span>
+          <span class="tag">ORM</span><span class="tag">Relationships</span><span class="tag">Migrations</span><span class="tag">AsyncSession</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc db-card">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(249,115,22,.3)">06.4</span>
+        <span class="tc-tag">MongoDB · Motor</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">MongoDB — Document Database</div>
+        <div class="tg">
+          <div class="tg-lbl">PyMongo (Sync)</div>
+          <div class="topics">
+            <div class="ti h">MongoClient(MONGO_URI): connection with auth and replica sets</div>
+            <div class="ti">db = client['mydb'], col = db['users']: database and collection access</div>
+            <div class="ti">insert_one(doc), insert_many(docs): insert documents</div>
+            <div class="ti">find_one(filter), find(filter): query documents</div>
+            <div class="ti">update_one(filter, {"$set": {...}}): partial update</div>
+            <div class="ti">update_many(filter, update): bulk update</div>
+            <div class="ti">delete_one(filter), delete_many(filter)</div>
+            <div class="ti">find_one_and_update(..., return_document=True): atomic update+fetch</div>
+            <div class="ti">Projection: find({}, {"name": 1, "email": 1, "_id": 0})</div>
+            <div class="ti">Sorting: .sort("age", -1) — descending</div>
+            <div class="ti">Pagination: .skip(n).limit(m)</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Query Operators</div>
+          <div class="topics">
+            <div class="ti h">Comparison: $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin</div>
+            <div class="ti">Logical: $and, $or, $not, $nor</div>
+            <div class="ti">Array: $elemMatch, $all, $size</div>
+            <div class="ti">Element: $exists, $type</div>
+            <div class="ti">Update operators: $set, $unset, $inc, $push, $pull, $addToSet</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Aggregation Pipeline</div>
+          <div class="topics">
+            <div class="ti h">col.aggregate([stage1, stage2, ...]): composable pipeline</div>
+            <div class="ti">$match: filter documents early in pipeline</div>
+            <div class="ti">$project: reshape and select fields</div>
+            <div class="ti">$group: aggregate by field — $sum, $avg, $count, $first, $last</div>
+            <div class="ti">$sort, $limit, $skip: pagination and ordering</div>
+            <div class="ti">$lookup: LEFT JOIN with another collection</div>
+            <div class="ti">$unwind: flatten arrays into multiple documents</div>
+            <div class="ti">$addFields, $set: computed fields</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Motor (Async MongoDB)</div>
+          <div class="topics">
+            <div class="ti h">motor.motor_asyncio.AsyncIOMotorClient</div>
+            <div class="ti">await col.insert_one(), await col.find_one() — fully async</div>
+            <div class="ti">async for doc in col.find(): async cursor iteration</div>
+          </div>
+        </div>
+        <div class="snippet">
+<span class="kw">from</span> pymongo <span class="kw">import</span> MongoClient
+client = <span class="fn">MongoClient</span>(MONGO_URI)
+col = client[<span class="st">"shop"</span>][<span class="st">"products"</span>]
+results = col.<span class="fn">find</span>({<span class="st">"price"</span>: {<span class="st">"$lt"</span>: <span class="num">1000</span>}, <span class="st">"stock"</span>: {<span class="st">"$gt"</span>: <span class="num">0</span>}})
+<span class="kw">for</span> doc <span class="kw">in</span> results.<span class="fn">sort</span>(<span class="st">"price"</span>, <span class="num">1</span>).<span class="fn">limit</span>(<span class="num">20</span>):
+    <span class="fn">print</span>(doc[<span class="st">"name"</span>], doc[<span class="st">"price"</span>])
+        </div>
+        <div class="tags">
+          <span class="tag db">PyMongo</span><span class="tag db">Motor</span>
+          <span class="tag">Aggregation</span><span class="tag">$lookup</span><span class="tag">$unwind</span><span class="tag">Async</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc db-card">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(249,115,22,.3)">06.5</span>
+        <span class="tc-tag">Redis · redis-py</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Redis — In-Memory Cache & Data Structures</div>
+        <div class="tg">
+          <div class="tg-lbl">Connection</div>
+          <div class="topics">
+            <div class="ti h">redis.Redis(host, port, db, password, decode_responses=True)</div>
+            <div class="ti">ConnectionPool: share connections across threads</div>
+            <div class="ti">redis.asyncio.Redis: async client for FastAPI/asyncio apps</div>
+            <div class="ti">redis.from_url("redis://user:pass@host:6379/0")</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Data Structures</div>
+          <div class="topics">
+            <div class="ti h">Strings: set/get/getset/incr/decr/append — with EX TTL</div>
+            <div class="ti">Hashes: hset/hget/hmget/hgetall/hdel — per-object field storage</div>
+            <div class="ti">Lists: lpush/rpush/lpop/rpop/lrange/llen — queues and stacks</div>
+            <div class="ti">Sets: sadd/smembers/srem/sismember/sinter/sunion/sdiff</div>
+            <div class="ti">Sorted Sets: zadd/zrange/zrangebyscore/zrank — leaderboards</div>
+            <div class="ti">Streams: XADD/XREAD — append-only log, event sourcing</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Patterns</div>
+          <div class="topics">
+            <div class="ti h">Cache-aside: read cache first → DB miss → populate cache with TTL</div>
+            <div class="ti">Session storage: store JWT/session data with sliding expiry</div>
+            <div class="ti">Rate limiting: INCR + EXPIRE per key per time window</div>
+            <div class="ti">Pub/Sub: publish messages, subscribe to channels — real-time events</div>
+            <div class="ti">Distributed locks: SET key value NX EX — mutex pattern</div>
+            <div class="ti">Task queues: Celery + Redis as broker for background jobs</div>
+            <div class="ti">Semantic cache: store LLM responses keyed by embedding hash</div>
+          </div>
+        </div>
+        <div class="snippet">
+<span class="kw">import</span> redis, json
+r = redis.<span class="fn">Redis</span>(host=<span class="st">"localhost"</span>, decode_responses=<span class="kw">True</span>)
+
+<span class="cm"># Cache-aside pattern</span>
+<span class="kw">def</span> <span class="fn">get_user</span>(user_id: int):
+    cached = r.<span class="fn">get</span>(<span class="st">f"user:{user_id}"</span>)
+    <span class="kw">if</span> cached:
+        <span class="kw">return</span> json.<span class="fn">loads</span>(cached)
+    user = db.<span class="fn">fetch_user</span>(user_id)
+    r.<span class="fn">set</span>(<span class="st">f"user:{user_id}"</span>, json.<span class="fn">dumps</span>(user), ex=<span class="num">300</span>)
+    <span class="kw">return</span> user
+        </div>
+        <div class="tags">
+          <span class="tag db">redis-py</span><span class="tag">Cache-Aside</span>
+          <span class="tag">Pub/Sub</span><span class="tag">Rate Limiting</span><span class="tag">Sorted Sets</span><span class="tag">Celery</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc db-card">
+      <div class="tc-stripe" style="background:var(--m6)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m6);border-color:rgba(249,115,22,.3)">06.6</span>
+        <span class="tc-tag">MySQL · SQLite → Cloud</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">MySQL & Cloud Database Connections</div>
+        <div class="tg">
+          <div class="tg-lbl">MySQL / MariaDB</div>
+          <div class="topics">
+            <div class="ti h">mysql-connector-python: official connector, connection pooling</div>
+            <div class="ti">PyMySQL: pure-Python driver, drop-in MySQLdb replacement</div>
+            <div class="ti">aiomysql: async MySQL for asyncio applications</div>
+            <div class="ti">SQLAlchemy with MySQL: mysql+pymysql:// and mysql+aiomysql://</div>
+            <div class="ti">MySQL-specific: AUTO_INCREMENT, ENUM column, ON DUPLICATE KEY UPDATE</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Cloud Databases</div>
+          <div class="topics">
+            <div class="ti h">Supabase: PostgreSQL with REST/realtime API — supabase-py client</div>
+            <div class="ti">PlanetScale: serverless MySQL — connect with PyMySQL over SSL</div>
+            <div class="ti">Neon: serverless Postgres — psycopg2/asyncpg with SSL URL</div>
+            <div class="ti">MongoDB Atlas: cloud MongoDB — connection string with SRV</div>
+            <div class="ti">Azure SQL: pyodbc + ODBC driver 17/18 for SQL Server</div>
+            <div class="ti">Google BigQuery: google-cloud-bigquery + pandas read_gbq()</div>
+            <div class="ti">AWS RDS: same drivers, connection through SSL cert verification</div>
+            <div class="ti">Connection string security: never commit, always env vars</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Connection Best Practices</div>
+          <div class="topics">
+            <div class="ti h">Always use connection pooling in production — never open per request</div>
+            <div class="ti">Connection timeouts: connect_timeout, read_timeout, write_timeout</div>
+            <div class="ti">SSL/TLS: verify server certificate for production connections</div>
+            <div class="ti">Health checks: test connection on startup, reconnect on failure</div>
+            <div class="ti">Secrets: AWS Secrets Manager, Azure Key Vault, Vault by HashiCorp</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Capstone DB Project</div>
+          <div class="proj-name">Multi-DB Application Backend</div>
+          <div class="proj-items">
+            <div class="proj-item">PostgreSQL + SQLAlchemy: users, orders, products with Alembic migrations</div>
+            <div class="proj-item">MongoDB: product reviews and flexible catalog attributes</div>
+            <div class="proj-item">Redis: session cache, rate limiter, and real-time notifications</div>
+            <div class="proj-item">FastAPI: async endpoints using all three databases concurrently</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag db">MySQL</span><span class="tag db">Supabase</span><span class="tag db">BigQuery</span>
+          <span class="tag">SSL</span><span class="tag">Connection Pooling</span><span class="tag">Secrets</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 07 — WEB & APIs ═══════════════ -->
+<section class="mod-section" id="m7">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m7)">Module 07</span>
+    <span class="mod-title">Web Development & HTTP APIs</span>
+    <span class="mod-desc">FastAPI · Flask · requests · httpx · websockets</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m7)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m7);border-color:rgba(244,114,182,.3)">07.1</span>
+        <span class="tc-tag">FastAPI</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">FastAPI — Modern Async Web Framework</div>
+        <div class="tg">
+          <div class="tg-lbl">Core FastAPI</div>
+          <div class="topics">
+            <div class="ti h">ASGI + Starlette + Uvicorn stack — why it's fast</div>
+            <div class="ti">Path operations: @app.get, post, put, patch, delete</div>
+            <div class="ti">Path params, query params, request bodies with Pydantic</div>
+            <div class="ti">Response models: response_model=, status_code=, response_class=</div>
+            <div class="ti">Dependency injection: Depends() — auth, DB sessions, config</div>
+            <div class="ti">Middleware: CORS, GZip, trusted host, custom request logging</div>
+            <div class="ti">Background tasks: send email/analytics after response is sent</div>
+            <div class="ti">Lifespan: startup and shutdown events for DB pools, ML models</div>
+            <div class="ti">File uploads: UploadFile, SpooledTemporaryFile</div>
+            <div class="ti">Streaming responses: StreamingResponse, FileResponse</div>
+            <div class="ti">API routers: APIRouter for splitting endpoints into modules</div>
+            <div class="ti">Auto docs: /docs (Swagger UI), /redoc (ReDoc) — zero config</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Authentication Patterns</div>
+          <div class="topics">
+            <div class="ti h">API key: header X-API-Key with Depends()</div>
+            <div class="ti">JWT: python-jose / PyJWT — create, verify, decode tokens</div>
+            <div class="ti">OAuth2PasswordBearer: bearer token flow</div>
+            <div class="ti">HTTPBasic: username/password for simple internal APIs</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">FastAPI</span><span class="tag hot">Pydantic</span>
+          <span class="tag">Depends()</span><span class="tag">JWT</span><span class="tag">StreamingResponse</span><span class="tag">APIRouter</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m7)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m7);border-color:rgba(244,114,182,.3)">07.2</span>
+        <span class="tc-tag">requests · httpx · BeautifulSoup</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">HTTP Clients & Web Scraping</div>
+        <div class="tg">
+          <div class="tg-lbl">requests (Sync)</div>
+          <div class="topics">
+            <div class="ti h">requests.get/post/put/delete/patch: basic HTTP methods</div>
+            <div class="ti">params=, json=, data=, headers=, auth=, timeout=</div>
+            <div class="ti">r.status_code, r.json(), r.text, r.content</div>
+            <div class="ti">r.raise_for_status(): raise on 4xx/5xx responses</div>
+            <div class="ti">Session: requests.Session() — connection pooling, persistent headers</div>
+            <div class="ti">Retry: HTTPAdapter + Retry for automatic retries with backoff</div>
+            <div class="ti">Streaming: requests.get(url, stream=True) for large downloads</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">httpx (Async)</div>
+          <div class="topics">
+            <div class="ti h">httpx.AsyncClient: async HTTP client with requests-like API</div>
+            <div class="ti">async with httpx.AsyncClient() as client: — connection reuse</div>
+            <div class="ti">HTTP/2 support: http2=True for multiplexed connections</div>
+            <div class="ti">Concurrent requests: asyncio.gather with multiple await client.get()</div>
+            <div class="ti">Mocking: httpx.MockTransport for unit testing HTTP calls</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Web Scraping</div>
+          <div class="topics">
+            <div class="ti h">BeautifulSoup4: parse HTML — find, find_all, select CSS, NavigableString</div>
+            <div class="ti">lxml: fast HTML/XML parser backend for BeautifulSoup</div>
+            <div class="ti">Playwright: browser automation for JS-rendered pages</div>
+            <div class="ti">Scrapy: full scraping framework with spider + pipeline pattern</div>
+            <div class="ti">Respecting robots.txt and rate limiting scrapers</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">requests</span><span class="tag hot">httpx</span>
+          <span class="tag">BeautifulSoup</span><span class="tag">Playwright</span><span class="tag">Scrapy</span><span class="tag">AsyncClient</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 08 — ASYNC & CONCURRENCY ═══════════════ -->
+<section class="mod-section" id="m8">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m8);color:#080c12">Module 08</span>
+    <span class="mod-title">Async, Concurrency & Parallelism</span>
+    <span class="mod-desc">asyncio · threading · multiprocessing · Celery</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m8)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m8);border-color:rgba(251,191,36,.3)">08.1</span>
+        <span class="tc-tag">asyncio</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">asyncio — Cooperative Concurrency</div>
+        <div class="tg">
+          <div class="tg-lbl">Core Concepts</div>
+          <div class="topics">
+            <div class="ti h">Event loop: single thread, tasks interleave at await points</div>
+            <div class="ti">async def: coroutine function — returns coroutine object when called</div>
+            <div class="ti">await expr: suspend coroutine until expr completes</div>
+            <div class="ti">asyncio.run(coro): entry point for top-level coroutine</div>
+            <div class="ti">asyncio.create_task(coro): schedule coroutine to run concurrently</div>
+            <div class="ti">asyncio.gather(*coros): run multiple coroutines, collect results</div>
+            <div class="ti">asyncio.wait_for(coro, timeout=5): timeout individual coroutine</div>
+            <div class="ti">async for, async with: async iteration and context managers</div>
+            <div class="ti">asyncio.Queue: async producer-consumer pattern</div>
+            <div class="ti">asyncio.Semaphore: limit concurrent coroutines</div>
+            <div class="ti">asyncio.Event, asyncio.Lock: synchronization primitives</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">threading vs multiprocessing vs asyncio</div>
+          <div class="topics">
+            <div class="ti h">asyncio: best for I/O-bound — network, DB, file — single thread</div>
+            <div class="ti">threading: I/O-bound with blocking libraries — GIL limits CPU work</div>
+            <div class="ti">multiprocessing: CPU-bound — bypasses GIL with separate processes</div>
+            <div class="ti">concurrent.futures: ThreadPoolExecutor, ProcessPoolExecutor</div>
+            <div class="ti">asyncio.run_in_executor(): run blocking code in thread pool from async context</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">asyncio</span><span class="tag hot">async/await</span>
+          <span class="tag">gather</span><span class="tag">Semaphore</span><span class="tag">Queue</span><span class="tag">run_in_executor</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m8)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m8);border-color:rgba(251,191,36,.3)">08.2</span>
+        <span class="tc-tag">Threading · Multiprocessing · Celery</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Threads, Processes & Task Queues</div>
+        <div class="tg">
+          <div class="tg-lbl">threading</div>
+          <div class="topics">
+            <div class="ti h">Thread(target=fn, args=(), daemon=True): create and start threads</div>
+            <div class="ti">Lock, RLock: mutual exclusion — prevent race conditions</div>
+            <div class="ti">Event: signal between threads</div>
+            <div class="ti">Queue (thread-safe): producer-consumer without locks</div>
+            <div class="ti">ThreadPoolExecutor: managed pool with submit() and map()</div>
+            <div class="ti">threading.local(): thread-local storage</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">multiprocessing</div>
+          <div class="topics">
+            <div class="ti h">Process(target=fn): true parallelism bypassing GIL</div>
+            <div class="ti">Pool.map, Pool.starmap, Pool.imap: parallel function application</div>
+            <div class="ti">ProcessPoolExecutor: futures-based API for process pool</div>
+            <div class="ti">Manager: shared dict, list, Queue across processes</div>
+            <div class="ti">Value, Array: shared memory primitives</div>
+            <div class="ti">if __name__ == '__main__': guard required on Windows</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Celery — Distributed Task Queue</div>
+          <div class="topics">
+            <div class="ti h">@app.task decorator: define background tasks</div>
+            <div class="ti">task.delay(args): enqueue task asynchronously</div>
+            <div class="ti">task.apply_async(args, countdown=60): delayed execution</div>
+            <div class="ti">Celery beat: periodic scheduled tasks (cron-like)</div>
+            <div class="ti">Result backend: Redis or database for task result storage</div>
+            <div class="ti">Retry: @app.task(max_retries=3, default_retry_delay=60)</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">threading</span><span class="tag hot">multiprocessing</span><span class="tag hot">Celery</span>
+          <span class="tag">GIL</span><span class="tag">ThreadPoolExecutor</span><span class="tag">ProcessPool</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 09 — TESTING & QUALITY ═══════════════ -->
+<section class="mod-section" id="m9">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m9);color:#080c12">Module 09</span>
+    <span class="mod-title">Testing, Quality & Developer Tooling</span>
+    <span class="mod-desc">pytest · mocking · coverage · linting · type checking</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m9)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m9);border-color:rgba(200,241,53,.3)">09.1</span>
+        <span class="tc-tag">pytest</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">pytest — Testing Framework</div>
+        <div class="tg">
+          <div class="tg-lbl">Writing Tests</div>
+          <div class="topics">
+            <div class="ti h">Test discovery: test_*.py files, test_ prefixed functions</div>
+            <div class="ti">assert statements: plain Python with informative failure messages</div>
+            <div class="ti">pytest.raises(ExcType): test that exceptions are raised</div>
+            <div class="ti">pytest.approx(): floating-point comparison with tolerance</div>
+            <div class="ti">@pytest.mark.parametrize: run test with multiple input sets</div>
+            <div class="ti">@pytest.mark.skip, @pytest.mark.xfail: conditional test running</div>
+            <div class="ti">@pytest.mark.slow: custom marks for grouping tests</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Fixtures</div>
+          <div class="topics">
+            <div class="ti h">@pytest.fixture: reusable setup/teardown with yield</div>
+            <div class="ti">Fixture scopes: function, class, module, session</div>
+            <div class="ti">conftest.py: shared fixtures across test files</div>
+            <div class="ti">tmp_path, capfd, monkeypatch: built-in fixtures</div>
+            <div class="ti">Factory fixtures: fixtures that return factory functions</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Mocking</div>
+          <div class="topics">
+            <div class="ti h">unittest.mock.patch: replace objects in tested module's namespace</div>
+            <div class="ti">MagicMock: mock with magic methods, return_value, side_effect</div>
+            <div class="ti">pytest-mock: monkeypatch.setattr — cleaner syntax</div>
+            <div class="ti">respx / responses: mock HTTP calls (httpx / requests)</div>
+            <div class="ti">freezegun: freeze datetime.now() for deterministic tests</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Code Quality Tools</div>
+          <div class="topics">
+            <div class="ti h">ruff: blazing fast linter + formatter (replaces flake8, isort, pyupgrade)</div>
+            <div class="ti">black: opinionated code formatter — no style arguments</div>
+            <div class="ti">mypy: static type checking — catch type errors before runtime</div>
+            <div class="ti">pyright: Microsoft's faster type checker (Pylance in VSCode)</div>
+            <div class="ti">coverage.py: measure test coverage — pytest --cov=src --cov-report=html</div>
+            <div class="ti">pre-commit: run ruff + black + mypy on every git commit</div>
+            <div class="ti">bandit: security vulnerability scanner for Python code</div>
+            <div class="ti">safety: check dependencies against known CVE database</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">pytest</span><span class="tag hot">fixtures</span><span class="tag hot">MagicMock</span>
+          <span class="tag">ruff</span><span class="tag">mypy</span><span class="tag">coverage</span><span class="tag">pre-commit</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MODULE 10 — ADVANCED PYTHON ═══════════════ -->
+<section class="mod-section" id="m10">
+  <div class="mod-header">
+    <span class="mod-num" style="background:var(--m10)">Module 10</span>
+    <span class="mod-title">Advanced Python Internals</span>
+    <span class="mod-desc">Decorators · Metaclasses · Descriptors · Memory · Performance</span>
+  </div>
+  <div class="card-grid">
+
+    <div class="tc">
+      <div class="tc-stripe" style="background:var(--m10)"></div>
+      <div class="tc-head">
+        <span class="tc-badge" style="color:var(--m10);border-color:rgba(232,121,249,.3)">10.1</span>
+        <span class="tc-tag">Advanced Patterns</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">Decorators, Descriptors & Metaclasses</div>
+        <div class="tg">
+          <div class="tg-lbl">Advanced Decorators</div>
+          <div class="topics">
+            <div class="ti h">Parameterized decorators: decorator factory returning decorator</div>
+            <div class="ti">Class decorators: __call__ with state across invocations</div>
+            <div class="ti">Stacking decorators: execution order (bottom-up wrapping)</div>
+            <div class="ti">Decorator use cases: retry, rate limit, cache, auth, logging, timing</div>
+            <div class="ti">functools.wraps: preserve __name__, __doc__, __annotations__</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Descriptors</div>
+          <div class="topics">
+            <div class="ti h">__get__, __set__, __delete__: protocol for attribute access interception</div>
+            <div class="ti">Non-data vs data descriptors: read-only vs read-write</div>
+            <div class="ti">@property is a descriptor under the hood</div>
+            <div class="ti">Validators: lazy computation, type coercion via descriptors</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Metaclasses</div>
+          <div class="topics">
+            <div class="ti h">type: the metaclass of all classes — type(name, bases, dict)</div>
+            <div class="ti">Custom metaclass: class Meta(type): __new__, __init__, __prepare__</div>
+            <div class="ti">__init_subclass__: lighter alternative to metaclass for subclass hooks</div>
+            <div class="ti">Use cases: ORM model registration, API auto-discovery, validation on class creation</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Memory & Performance</div>
+          <div class="topics">
+            <div class="ti h">sys.getsizeof(): object memory size in bytes</div>
+            <div class="ti">gc module: garbage collector, reference counting, cycle detection</div>
+            <div class="ti">weakref: weak references to avoid preventing garbage collection</div>
+            <div class="ti">__slots__: eliminate per-instance __dict__ for memory savings</div>
+            <div class="ti">timeit module: microbenchmark code snippets accurately</div>
+            <div class="ti">cProfile / profile: function-level profiling</div>
+            <div class="ti">line_profiler: line-by-line execution time</div>
+            <div class="ti">memory_profiler: line-by-line memory usage</div>
+            <div class="ti">Cython / mypyc: compile Python to C extensions for speed</div>
+            <div class="ti">NumPy vectorization: replace Python loops with C-level operations</div>
+          </div>
+        </div>
+        <div class="tg">
+          <div class="tg-lbl">Python Packaging</div>
+          <div class="topics">
+            <div class="ti h">pyproject.toml: PEP 517/518/660 standard project metadata</div>
+            <div class="ti">Build backends: hatchling, flit, setuptools, poetry</div>
+            <div class="ti">Versioning: semver, calendar versioning, bumpver</div>
+            <div class="ti">Publishing to PyPI: python -m build → twine upload</div>
+            <div class="ti">Private packages: local directory installs, Artifactory, GitHub Packages</div>
+          </div>
+        </div>
+        <div class="proj">
+          <div class="proj-lbl">Capstone Project</div>
+          <div class="proj-name">Python Library Package</div>
+          <div class="proj-items">
+            <div class="proj-item">Build a reusable utility library with 5+ modules</div>
+            <div class="proj-item">Full test suite: 90%+ coverage with pytest</div>
+            <div class="proj-item">Type annotations + mypy clean + ruff clean</div>
+            <div class="proj-item">Publish to TestPyPI with pyproject.toml + GitHub Actions</div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag hot">Decorators</span><span class="tag hot">Descriptors</span>
+          <span class="tag">Metaclasses</span><span class="tag">cProfile</span>
+          <span class="tag">weakref</span><span class="tag">PyPI</span><span class="tag">Cython</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- QUICK REFERENCE CHEATSHEET -->
+<div class="cheat-banner">
+  <h2>Quick Reference — Key Python Libraries</h2>
+  <div style="color:var(--muted);font-size:13px">pip install any of these — the most important third-party ecosystem packages</div>
+  <div class="cheat-grid">
+    <div>
+      <div class="cheat-col-title">Web & APIs</div>
+      <div class="cheat-item"><span>fastapi</span> — async web framework</div>
+      <div class="cheat-item"><span>flask</span> — lightweight WSGI framework</div>
+      <div class="cheat-item"><span>requests</span> — HTTP client</div>
+      <div class="cheat-item"><span>httpx</span> — async HTTP client</div>
+      <div class="cheat-item"><span>pydantic</span> — data validation</div>
+      <div class="cheat-item"><span>uvicorn</span> — ASGI server</div>
+      <div class="cheat-item"><span>gunicorn</span> — WSGI production server</div>
+      <div class="cheat-item"><span>python-jose</span> — JWT tokens</div>
+      <div class="cheat-item"><span>passlib</span> — password hashing</div>
+    </div>
+    <div>
+      <div class="cheat-col-title">Databases</div>
+      <div class="cheat-item"><span>sqlalchemy</span> — SQL ORM</div>
+      <div class="cheat-item"><span>alembic</span> — DB migrations</div>
+      <div class="cheat-item"><span>psycopg2-binary</span> — PostgreSQL</div>
+      <div class="cheat-item"><span>asyncpg</span> — async PostgreSQL</div>
+      <div class="cheat-item"><span>pymongo</span> — MongoDB</div>
+      <div class="cheat-item"><span>motor</span> — async MongoDB</div>
+      <div class="cheat-item"><span>redis</span> — Redis client</div>
+      <div class="cheat-item"><span>pymysql</span> — MySQL</div>
+      <div class="cheat-item"><span>tortoise-orm</span> — async ORM</div>
+    </div>
+    <div>
+      <div class="cheat-col-title">Data & ML</div>
+      <div class="cheat-item"><span>numpy</span> — numerical arrays</div>
+      <div class="cheat-item"><span>pandas</span> — data analysis</div>
+      <div class="cheat-item"><span>matplotlib</span> — plotting</div>
+      <div class="cheat-item"><span>seaborn</span> — statistical charts</div>
+      <div class="cheat-item"><span>plotly</span> — interactive charts</div>
+      <div class="cheat-item"><span>scikit-learn</span> — ML algorithms</div>
+      <div class="cheat-item"><span>polars</span> — fast DataFrame</div>
+      <div class="cheat-item"><span>pyarrow</span> — columnar data</div>
+      <div class="cheat-item"><span>openpyxl</span> — Excel read/write</div>
+    </div>
+    <div>
+      <div class="cheat-col-title">Dev Tooling</div>
+      <div class="cheat-item"><span>pytest</span> — testing</div>
+      <div class="cheat-item"><span>ruff</span> — linter + formatter</div>
+      <div class="cheat-item"><span>black</span> — code formatter</div>
+      <div class="cheat-item"><span>mypy</span> — type checker</div>
+      <div class="cheat-item"><span>celery</span> — task queue</div>
+      <div class="cheat-item"><span>python-dotenv</span> — .env loader</div>
+      <div class="cheat-item"><span>pydantic-settings</span> — typed config</div>
+      <div class="cheat-item"><span>loguru</span> — beautiful logging</div>
+      <div class="cheat-item"><span>rich</span> — terminal pretty-print</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <span style="color:var(--text);font-weight:500">Python Mastery · Complete Course Index</span>
+  <span>10 Modules · 50+ Topics · 6 Database Engines · 30+ Libraries</span>
+  <span style="color:#60a5fa">From Syntax to Production-Grade Code</span>
+</footer>
+
+</body>
+</html>

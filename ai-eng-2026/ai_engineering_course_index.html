@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Engineering — Complete Course Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080c12; --surface:#0d1520; --border:rgba(255,255,255,0.07);
+    --accent:#c8f135; --accent2:#38bdf8; --text:#e8edf5; --muted:#6b7a93;
+    --w1:#c8f135;--w2:#38bdf8;--w3:#a78bfa;--w4:#f97316;
+    --w5:#34d399;--w6:#f472b6;--w7:#fb923c;--w8:#60a5fa;--w9:#fbbf24;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+
+  /* HERO */
+  .hero{position:relative;padding:72px 52px 56px;border-bottom:1px solid var(--border);overflow:hidden;}
+  .hero::after{content:'';position:absolute;top:-100px;right:-180px;width:600px;height:600px;background:radial-gradient(circle,rgba(200,241,53,.07) 0%,transparent 70%);pointer-events:none;}
+  .hero::before{content:'';position:absolute;bottom:-80px;left:30%;width:400px;height:400px;background:radial-gradient(circle,rgba(56,189,248,.04) 0%,transparent 65%);pointer-events:none;}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;padding:5px 14px;border-radius:100px;margin-bottom:26px;}
+  .hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.8);}}
+  .hero h1{font-family:'Syne',sans-serif;font-size:clamp(34px,4.5vw,62px);font-weight:800;line-height:1.05;letter-spacing:-.02em;margin-bottom:14px;}
+  .hero h1 em{color:var(--accent);font-style:normal;}
+  .hero-sub{color:var(--muted);font-size:15px;max-width:560px;margin-bottom:36px;line-height:1.7;}
+  .stats-row{display:flex;flex-wrap:wrap;gap:32px;}
+  .stat{display:flex;flex-direction:column;gap:2px;}
+  .stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--accent);}
+  .stat-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+
+  /* STICKY NAV */
+  .week-nav{position:sticky;top:0;z-index:100;background:rgba(8,12,18,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 52px;display:flex;overflow-x:auto;scrollbar-width:none;}
+  .week-nav::-webkit-scrollbar{display:none;}
+  .week-nav a{display:flex;align-items:center;gap:7px;padding:14px 18px;color:var(--muted);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;}
+  .week-nav a:hover{color:var(--text);border-bottom-color:rgba(255,255,255,.15);}
+  .wdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+  /* MAIN */
+  .main{padding:0 52px 80px;max-width:1440px;margin:0 auto;}
+
+  /* WEEK SECTION */
+  .week-block{padding:52px 0 0;}
+  .week-header{display:flex;align-items:baseline;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
+  .week-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:4px 12px;border-radius:100px;color:#080c12;font-weight:600;}
+  .week-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+  .week-meta{color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;}
+
+  /* GRID */
+  .days-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(370px,1fr));gap:14px;}
+
+  /* DAY CARD */
+  .day-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;position:relative;}
+  .day-card:hover{border-color:rgba(255,255,255,.14);transform:translateY(-2px);}
+  .card-stripe{position:absolute;top:0;left:0;right:0;height:2px;}
+  .card-header{padding:18px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .day-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:100px;border:1px solid;}
+  .session-badge{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;background:rgba(255,255,255,.04);padding:3px 8px;border-radius:100px;}
+  .card-body{padding:10px 20px 20px;}
+  .card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:16px;line-height:1.3;}
+
+  /* TOPIC GROUP */
+  .tg{margin-bottom:14px;}
+  .tg:last-of-type{margin-bottom:0;}
+  .tg-label{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+  .tg-label::after{content:'';flex:1;height:1px;background:var(--border);}
+  .topics{display:flex;flex-direction:column;gap:2px;}
+  .ti{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#8ea3be;padding:2px 0;line-height:1.55;}
+  .ti::before{content:'→';font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4e66;flex-shrink:0;margin-top:3px;}
+  .ti.h{color:#cdd8e8;font-weight:500;}
+  .ti.h::before{color:var(--accent);}
+  .ti.note{color:#5a6a80;font-size:11.5px;font-style:italic;}
+  .ti.note::before{content:'※';color:#3a4e66;}
+
+  /* TAGS */
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.06em;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.04);color:#5a6a80;border:1px solid rgba(255,255,255,.07);}
+  .tag.hot{background:rgba(200,241,53,.06);color:rgba(200,241,53,.6);border-color:rgba(200,241,53,.15);}
+
+  /* PROJECT BLOCK */
+  .proj-block{background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.14);border-radius:10px;padding:14px 16px;margin-top:14px;}
+  .proj-block-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);opacity:.7;margin-bottom:4px;}
+  .proj-block-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;}
+  .proj-block-desc{font-size:11.5px;color:rgba(200,241,53,.5);margin-bottom:8px;}
+  .proj-deliverables{display:flex;flex-direction:column;gap:3px;}
+  .proj-d{font-size:11px;color:rgba(200,241,53,.4);display:flex;gap:6px;align-items:flex-start;}
+  .proj-d::before{content:'✓';color:rgba(200,241,53,.6);font-size:9px;margin-top:2px;flex-shrink:0;}
+
+  /* SOFT SKILLS CARD */
+  .soft-card{background:rgba(56,189,248,.03);}
+  .soft-card .card-title{color:var(--accent2);}
+
+  /* DIVIDER */
+  .week-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);margin:0;}
+
+  /* CAPSTONE */
+  .capstone-wrap{margin-top:52px;border:1px solid rgba(200,241,53,.18);border-radius:16px;overflow:hidden;}
+  .capstone-header{background:linear-gradient(135deg,rgba(200,241,53,.08),rgba(167,139,250,.06));padding:32px 36px 24px;}
+  .capstone-header h2{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--accent);margin-bottom:8px;}
+  .capstone-header p{color:var(--muted);font-size:13px;max-width:680px;line-height:1.7;}
+  .capstone-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid rgba(200,241,53,.1);}
+  .cap-col{padding:24px 28px;border-right:1px solid rgba(255,255,255,.06);}
+  .cap-col:last-child{border-right:none;}
+  .cap-col-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .cap-item{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#8ea3be;padding:3px 0;}
+  .cap-item::before{content:'→';font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4e66;flex-shrink:0;margin-top:3px;}
+
+  /* BONUS */
+  .bonus-section{margin-top:36px;}
+  .bonus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
+  .bonus-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:10px;padding:18px;}
+  .bonus-card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:10px;}
+  .bonus-item{font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:flex-start;padding:2px 0;}
+  .bonus-item::before{content:'·';color:#3a4e66;flex-shrink:0;}
+
+  footer{border-top:1px solid var(--border);padding:28px 52px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;flex-wrap:wrap;gap:10px;}
+
+  @media(max-width:768px){
+    .hero,.main,footer{padding-left:18px;padding-right:18px;}
+    .week-nav{padding:0 18px;}
+    .days-grid{grid-template-columns:1fr;}
+    .capstone-body{grid-template-columns:1fr;}
+    .cap-col{border-right:none;border-bottom:1px solid rgba(255,255,255,.06);}
+    .bonus-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">AI ENGINEERING · COMPLETE COURSE INDEX · 9 WEEKS</div>
+  <h1>From Python to<br><em>Production AI</em></h1>
+  <p class="hero-sub">A comprehensive, structured curriculum for software engineers transitioning into AI engineering — covering foundations, RAG, agents, multi-agent systems, LLM finetuning, cloud deployment, and career readiness.</p>
+  <div class="stats-row">
+    <div class="stat"><span class="stat-num">9</span><span class="stat-label">Weeks</span></div>
+    <div class="stat"><span class="stat-num">18</span><span class="stat-label">Sessions</span></div>
+    <div class="stat"><span class="stat-num">75</span><span class="stat-label">Days</span></div>
+    <div class="stat"><span class="stat-num">10+</span><span class="stat-label">Projects</span></div>
+    <div class="stat"><span class="stat-num">3.5hr</span><span class="stat-label">Per Session</span></div>
+  </div>
+</header>
+
+<!-- STICKY NAV -->
+<nav class="week-nav">
+  <a href="#w1"><span class="wdot" style="background:var(--w1)"></span>W1 · Foundation</a>
+  <a href="#w2"><span class="wdot" style="background:var(--w2)"></span>W2 · LLMs & Embeddings</a>
+  <a href="#w3"><span class="wdot" style="background:var(--w3)"></span>W3 · RAG</a>
+  <a href="#w4"><span class="wdot" style="background:var(--w4)"></span>W4 · Agents</a>
+  <a href="#w5"><span class="wdot" style="background:var(--w5)"></span>W5 · Orchestration</a>
+  <a href="#w6"><span class="wdot" style="background:var(--w6)"></span>W6 · Multi-Agent</a>
+  <a href="#w7"><span class="wdot" style="background:var(--w7)"></span>W7 · Advanced AI</a>
+  <a href="#w8"><span class="wdot" style="background:var(--w8)"></span>W8 · Cloud & Finetuning</a>
+  <a href="#w9"><span class="wdot" style="background:var(--w9)"></span>W9 · Capstone & Career</a>
+</nav>
+
+<main class="main">
+
+<!-- ════════════════════ WEEK 1 ════════════════════ -->
+<section class="week-block" id="w1">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w1)">Week 1</span>
+    <span class="week-title">Python Mastery & AI Foundations</span>
+    <span class="week-meta">Sessions 1–2 · Days 1–2</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 1 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w1)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w1);border-color:rgba(200,241,53,.3)">Session 01</span>
+        <span class="session-badge">Python · APIs · Setup</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Python for AI Engineers + REST API Design</div>
+
+        <div class="tg">
+          <div class="tg-label">AI Engineering Landscape</div>
+          <div class="topics">
+            <div class="ti h">The AI stack: infrastructure → models → frameworks → applications</div>
+            <div class="ti">AI vs ML vs DL vs GenAI — precise distinctions, not marketing fluff</div>
+            <div class="ti">Foundation models and why they changed software engineering</div>
+            <div class="ti">Closed-source (GPT-4o, Claude 3.5, Gemini 1.5) vs open-source (Llama 3, Mistral, Phi-4)</div>
+            <div class="ti">Multimodal models: text, image, audio, video — unified understanding</div>
+            <div class="ti">Reasoning models: o1, o3, DeepSeek-R1 — chain-of-thought at inference time</div>
+            <div class="ti">Inference providers: Groq (LPU), Together AI, Fireworks, Replicate</div>
+            <div class="ti">AI Engineer role: what you build, what you don't (vs ML Engineer)</div>
+            <div class="ti">2026 job market: in-demand skills, compensation ranges, company types</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Python Core — Rapid Mastery</div>
+          <div class="topics">
+            <div class="ti h">Python for engineers fluent in Java/C#/JS — key differences and gotchas</div>
+            <div class="ti">Data types: int, float, str, bool, None — mutability and equality traps</div>
+            <div class="ti">Collections: list, tuple, dict, set — choosing the right one</div>
+            <div class="ti">Iteration: for loops, while, enumerate, zip, itertools</div>
+            <div class="ti">Comprehensions: list, dict, set, generator expressions</div>
+            <div class="ti">Functions: positional, keyword, *args, **kwargs, default values</div>
+            <div class="ti">Lambda, map, filter, functools.reduce</div>
+            <div class="ti">Generators and lazy evaluation — critical for large data pipelines</div>
+            <div class="ti">Context managers: with statement, contextlib.contextmanager</div>
+            <div class="ti">Decorators: @wraps, stacking decorators, parameterized decorators</div>
+            <div class="ti">Exception handling: try/except/else/finally, chained exceptions</div>
+            <div class="ti">Logging: levels, formatters, handlers, structured JSON logging</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Object-Oriented Programming</div>
+          <div class="topics">
+            <div class="ti h">Classes: __init__, __repr__, __str__, __eq__, __hash__</div>
+            <div class="ti">Instance / class / static methods — when each applies</div>
+            <div class="ti">Properties: @property, @setter, @deleter for controlled access</div>
+            <div class="ti">Inheritance and MRO: multiple inheritance, super(), diamond problem</div>
+            <div class="ti">Abstract base classes with abc.ABC and @abstractmethod</div>
+            <div class="ti">Dataclasses: @dataclass, field(), __post_init__, frozen=True</div>
+            <div class="ti">Protocols (typing.Protocol): structural subtyping for duck typing</div>
+            <div class="ti">Slots (__slots__): memory optimization for high-volume objects</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Type System & Tooling</div>
+          <div class="topics">
+            <div class="ti h">Type annotations: basic, Union, Optional, Literal, TypeVar, Generic</div>
+            <div class="ti">Pydantic v2: BaseModel, Field, validators, model_config, serialization</div>
+            <div class="ti">Environment management: venv, conda, uv (Rust-based, 100× faster than pip)</div>
+            <div class="ti">pyproject.toml: PEP 517/518 project structure, optional dependencies</div>
+            <div class="ti">Code quality: ruff (linter), black (formatter), mypy (type checker)</div>
+            <div class="ti">Pre-commit hooks: automated quality gates before each commit</div>
+            <div class="ti">Testing: pytest, fixtures, parametrize, conftest.py, coverage reports</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">FastAPI & Async Python</div>
+          <div class="topics">
+            <div class="ti h">FastAPI internals: ASGI, Starlette, Uvicorn — the full stack</div>
+            <div class="ti">Routing: path operations, path params, query params, request bodies</div>
+            <div class="ti">Pydantic integration: automatic validation and OpenAPI schema generation</div>
+            <div class="ti">Dependency injection: Depends(), reusable auth, config, DB connections</div>
+            <div class="ti">Middleware: CORS, request timing, logging, custom middleware</div>
+            <div class="ti">Background tasks: post-response async processing</div>
+            <div class="ti">asyncio: event loop, coroutines, tasks, asyncio.gather for parallelism</div>
+            <div class="ti">aiohttp vs httpx: async HTTP clients for calling external APIs</div>
+            <div class="ti">SSE (Server-Sent Events): streaming token-by-token LLM responses</div>
+            <div class="ti">WebSockets: bidirectional real-time AI chat connections</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 01</div>
+          <div class="proj-block-name">Financial Insight API</div>
+          <div class="proj-block-desc">Python OOP + FastAPI + live market data + LLM summaries</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">Stock class: fetch live price, market cap, P/E ratio via API</div>
+            <div class="proj-d">POST /analyze endpoint with Pydantic request/response models</div>
+            <div class="proj-d">LLM-generated natural language analysis of financials</div>
+            <div class="proj-d">Async error handling: timeouts, invalid tickers, rate limits</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">Python</span><span class="tag hot">FastAPI</span><span class="tag hot">Pydantic v2</span>
+          <span class="tag">asyncio</span><span class="tag">OOP</span><span class="tag">Type Hints</span>
+          <span class="tag">uv</span><span class="tag">pytest</span><span class="tag">SSE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 2 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w1)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w1);border-color:rgba(200,241,53,.3)">Session 02</span>
+        <span class="session-badge">Soft Skills · Product</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">AI Product Thinking & Engineering Mindset</div>
+
+        <div class="tg">
+          <div class="tg-label">AI Product Thinking Framework</div>
+          <div class="topics">
+            <div class="ti h">Problem framing: turning vague business requests into solvable AI tasks</div>
+            <div class="ti">Jobs-to-be-done: map user pain points to AI capability gaps</div>
+            <div class="ti">Build vs buy vs fine-tune vs RAG — decision framework with examples</div>
+            <div class="ti">When AI is NOT the answer: deterministic logic, exact lookup, simple CRUD</div>
+            <div class="ti">Defining measurable success: accuracy, latency, cost, user satisfaction</div>
+            <div class="ti">Baseline-first thinking: what does the non-AI solution look like?</div>
+            <div class="ti">MVP scoping: minimum that proves AI value to stakeholders</div>
+            <div class="ti">User feedback loops: thumbs up/down, ratings, implicit behavioral signals</div>
+            <div class="ti">Iteration cycle: evaluate → diagnose failures → fix → re-evaluate</div>
+            <div class="ti">AI product risks: hallucinations, latency, cost overruns, privacy</div>
+            <div class="ti">Writing a one-page AI Product Requirements Document (PRD)</div>
+            <div class="ti">Roadmapping AI features alongside existing software development sprints</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Developer Workflow & Habits</div>
+          <div class="topics">
+            <div class="ti h">Setting up a productive AI development environment end to end</div>
+            <div class="ti">Git workflow: feature branches, conventional commits, PR hygiene</div>
+            <div class="ti">Dotenv patterns: never committing API keys, 12-factor app config</div>
+            <div class="ti">Using AI coding assistants (Copilot, Cursor) effectively without skill atrophy</div>
+            <div class="ti">Notebook vs script: when Jupyter, when pure Python modules</div>
+            <div class="ti">Debugging LLM apps: isolating problems (prompt? retrieval? parsing?)</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Exercise Review</div>
+          <div class="topics">
+            <div class="ti h">Live code review: architecture, structure, readability critique</div>
+            <div class="ti">Common Python mistakes in AI projects</div>
+            <div class="ti">Security review: input sanitization, API key management</div>
+            <div class="ti">Q&A — 1 hour dedicated doubt clearing</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag">Product Thinking</span><span class="tag">PRD</span><span class="tag">JTBD</span>
+          <span class="tag">Git Workflow</span><span class="tag">Code Review</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 2 ════════════════════ -->
+<section class="week-block" id="w2">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w2);color:#080c12">Week 2</span>
+    <span class="week-title">LLMs, Embeddings & Vector Databases</span>
+    <span class="week-meta">Sessions 3–4 · Days 3–4</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 3 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w2)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w2);border-color:rgba(56,189,248,.3)">Session 03</span>
+        <span class="session-badge">LLMs · Transformers · Inference</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">How Large Language Models Actually Work</div>
+
+        <div class="tg">
+          <div class="tg-label">Transformer Architecture — Engineer's Intuition</div>
+          <div class="topics">
+            <div class="ti h">Attention mechanism: query, key, value matrices — what they actually represent</div>
+            <div class="ti">Scaled dot-product attention: why we scale by √d_k</div>
+            <div class="ti">Multi-head attention: parallel attention over different representation subspaces</div>
+            <div class="ti">Positional encoding: absolute (sinusoidal), relative (RoPE, ALiBi)</div>
+            <div class="ti">Feed-forward network: SwiGLU activation in modern LLMs</div>
+            <div class="ti">Layer normalization: Pre-LN vs Post-LN, RMSNorm</div>
+            <div class="ti">Residual connections: why they solve gradient vanishing</div>
+            <div class="ti">Decoder-only (GPT), encoder-decoder (T5), encoder-only (BERT)</div>
+            <div class="ti">KV Cache: storing past key/value states to skip recomputation</div>
+            <div class="ti">Flash Attention: IO-aware attention for long contexts on GPU</div>
+            <div class="ti">Grouped Query Attention (GQA) and Multi-Query Attention (MQA)</div>
+            <div class="ti">Mixture of Experts (MoE): sparse activation for parameter efficiency</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Tokenization Deep Dive</div>
+          <div class="topics">
+            <div class="ti h">Why tokenization matters: cost, context limits, multilingual gaps</div>
+            <div class="ti">Byte-Pair Encoding (BPE): bottom-up merge algorithm step by step</div>
+            <div class="ti">SentencePiece: language-agnostic subword tokenization</div>
+            <div class="ti">tiktoken: OpenAI's fast Rust tokenizer, cl100k_base vs o200k_base</div>
+            <div class="ti">Special tokens: BOS, EOS, PAD, chat template tokens per model family</div>
+            <div class="ti">Tokenization quirks: numbers, whitespace, non-Latin scripts, code</div>
+            <div class="ti">Token counting before API call: cost control and context planning</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Inference & Sampling Controls</div>
+          <div class="topics">
+            <div class="ti h">Autoregressive generation: predicting one token at a time</div>
+            <div class="ti">Temperature: scaling logits — low (deterministic) to high (creative)</div>
+            <div class="ti">Top-p (nucleus sampling): sample from minimal probability mass set</div>
+            <div class="ti">Top-k: restrict candidate pool to k most probable tokens</div>
+            <div class="ti">Frequency penalty: reduce repeated token probabilities</div>
+            <div class="ti">Presence penalty: discourage any previously used token</div>
+            <div class="ti">Stop sequences: halt generation on specific strings</div>
+            <div class="ti">max_tokens vs max_completion_tokens: budget output length</div>
+            <div class="ti">Seed for reproducibility: deterministic outputs for testing</div>
+            <div class="ti">Logit bias: manually boost or suppress specific token IDs</div>
+            <div class="ti">Speculative decoding: draft model + verifier for 2–3× throughput</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Structured Outputs & Function Calling</div>
+          <div class="topics">
+            <div class="ti h">JSON mode: constrain LLM output to valid JSON</div>
+            <div class="ti">Structured outputs with JSON Schema: strict enum, format enforcement</div>
+            <div class="ti">Function / tool calling: declare callable functions in API request</div>
+            <div class="ti">Parallel function calling: multiple tool calls in a single turn</div>
+            <div class="ti">Pydantic + instructor library: typed structured output extraction</div>
+            <div class="ti">Grammar-constrained generation: llama.cpp GBNF grammars</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Prompt Engineering Techniques</div>
+          <div class="topics">
+            <div class="ti h">System prompt design: role, task, constraints, output format, examples</div>
+            <div class="ti">Zero-shot, one-shot, few-shot prompting — when each works best</div>
+            <div class="ti">Chain-of-Thought (CoT): "think step by step" and why it works</div>
+            <div class="ti">Self-consistency: sample multiple CoT paths, majority-vote the answer</div>
+            <div class="ti">Tree of Thoughts (ToT): branching reasoning, BFS/DFS exploration</div>
+            <div class="ti">ReAct in prompts: interleaved thought + action + observation</div>
+            <div class="ti">Negative examples in prompts: showing what NOT to produce</div>
+            <div class="ti">Delimiters and XML tags: structuring complex multi-part prompts</div>
+            <div class="ti">Prompt injection awareness: user input contaminating system instructions</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">Transformers</span><span class="tag hot">Attention</span>
+          <span class="tag">KV Cache</span><span class="tag">Flash Attention</span>
+          <span class="tag">Tokenization</span><span class="tag">Sampling</span>
+          <span class="tag">CoT</span><span class="tag">Structured Outputs</span><span class="tag">MoE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 4 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w2)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w2);border-color:rgba(56,189,248,.3)">Session 04</span>
+        <span class="session-badge">Embeddings · Vector DBs</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Embeddings, Semantic Search & Vector Databases</div>
+
+        <div class="tg">
+          <div class="tg-label">Embedding Fundamentals</div>
+          <div class="topics">
+            <div class="ti h">Embeddings: compressing meaning into dense vectors in high-dimensional space</div>
+            <div class="ti">Word2Vec → GloVe → contextual embeddings (BERT) → modern bi-encoders</div>
+            <div class="ti">Sentence transformers: bi-encoder for retrieval, cross-encoder for re-ranking</div>
+            <div class="ti">Embedding models: text-embedding-3-large, Cohere embed-v3, BGE-M3, E5-mistral</div>
+            <div class="ti">Dimensionality: 256 vs 768 vs 1536 vs 3072 — quality vs cost trade-offs</div>
+            <div class="ti">Matryoshka Representation Learning (MRL): truncate dimensions without retraining</div>
+            <div class="ti">Late chunking: embed full document, then pool chunk-level representations</div>
+            <div class="ti">Task-specific embeddings: query embeddings vs passage embeddings (asymmetric)</div>
+            <div class="ti">Multilingual embeddings: mE5, LaBSE for cross-lingual retrieval</div>
+            <div class="ti">MTEB benchmark: evaluating embedding models across retrieval tasks</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Similarity & Distance Metrics</div>
+          <div class="topics">
+            <div class="ti h">Cosine similarity: angle between vectors, scale-invariant — best for normalized embeddings</div>
+            <div class="ti">Dot product: equivalent to cosine when vectors are unit-normalized</div>
+            <div class="ti">Euclidean (L2) distance: magnitude-sensitive, used in some clustering</div>
+            <div class="ti">Hamming distance: for binary/quantized embedding spaces</div>
+            <div class="ti">When to use which: model-specific recommendations and benchmarks</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Sparse Embeddings & Hybrid Search</div>
+          <div class="topics">
+            <div class="ti h">BM25: TF-IDF-based sparse retrieval — exact keyword matching strength</div>
+            <div class="ti">SPLADE: learned sparse embeddings with term weighting</div>
+            <div class="ti">Dense retrieval (neural) vs sparse retrieval (keyword) — failure modes</div>
+            <div class="ti">Hybrid search: combining dense + sparse scores (Reciprocal Rank Fusion)</div>
+            <div class="ti">Alpha parameter: tuning the dense/sparse balance for your domain</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Vector Database Internals</div>
+          <div class="topics">
+            <div class="ti h">Exact vs Approximate Nearest Neighbor (ANN): why exact is too slow at scale</div>
+            <div class="ti">HNSW (Hierarchical Navigable Small World): multi-layer proximity graph</div>
+            <div class="ti">IVF (Inverted File Index): cluster-based coarse quantization</div>
+            <div class="ti">Product Quantization (PQ): compressing vectors into codebooks</div>
+            <div class="ti">Scalar and binary quantization: trading accuracy for memory savings</div>
+            <div class="ti">ef_construction, M, ef_search: HNSW hyperparameters and their effects</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Qdrant — Hands-On</div>
+          <div class="topics">
+            <div class="ti h">Collections, points, vectors, payloads — core data model</div>
+            <div class="ti">Upserting points: batch operations for high-throughput indexing</div>
+            <div class="ti">Payload filtering: metadata filters combined with vector search</div>
+            <div class="ti">Named vectors: storing multiple embedding models per document</div>
+            <div class="ti">Sparse vectors in Qdrant: BM25 + dense hybrid in one collection</div>
+            <div class="ti">Scroll API: paginating through all points in a collection</div>
+            <div class="ti">Qdrant snapshots: backup and restore collections</div>
+            <div class="ti">Qdrant cloud vs local Docker deployment</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Vector DB Landscape</div>
+          <div class="topics">
+            <div class="ti h">Pinecone: managed serverless, best for zero-ops production</div>
+            <div class="ti">Weaviate: built-in ML modules (vectorizer, reader, Q&A)</div>
+            <div class="ti">Chroma: lightweight, best for local dev and prototyping</div>
+            <div class="ti">pgvector: Postgres extension — SQL + vector in one DB</div>
+            <div class="ti">Milvus / Zilliz: high-scale distributed vector search</div>
+            <div class="ti">Azure AI Search: enterprise-grade with hybrid + semantic ranking</div>
+            <div class="ti">When to use pgvector vs dedicated vector DB: decision guide</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 02</div>
+          <div class="proj-block-name">Semantic Product Recommender</div>
+          <div class="proj-block-desc">Qdrant + embeddings + hybrid search + FastAPI</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">Embed product catalog with text-embedding-3-small + BGE-M3</div>
+            <div class="proj-d">Hybrid search: dense + BM25 with Reciprocal Rank Fusion</div>
+            <div class="proj-d">Payload filters: "similar products under ₹2000 in Electronics"</div>
+            <div class="proj-d">API endpoint with <50ms P95 response time</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">Embeddings</span><span class="tag hot">Qdrant</span>
+          <span class="tag">HNSW</span><span class="tag">BM25</span><span class="tag">SPLADE</span>
+          <span class="tag">Hybrid Search</span><span class="tag">MRL</span><span class="tag">pgvector</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 3 ════════════════════ -->
+<section class="week-block" id="w3">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w3)">Week 3</span>
+    <span class="week-title">Retrieval-Augmented Generation (RAG)</span>
+    <span class="week-meta">Sessions 5–6 · Days 5–6</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 5 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w3)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w3);border-color:rgba(167,139,250,.3)">Session 05</span>
+        <span class="session-badge">RAG · Ingestion · Retrieval</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">RAG Pipeline Architecture — Ingestion & Retrieval</div>
+
+        <div class="tg">
+          <div class="tg-label">Why RAG</div>
+          <div class="topics">
+            <div class="ti h">Hallucination problem: LLMs generate confident but fabricated facts</div>
+            <div class="ti">Knowledge cutoff: LLMs are frozen at training — no live knowledge</div>
+            <div class="ti">RAG: retrieve relevant docs → ground the LLM → cite sources</div>
+            <div class="ti">RAG vs fine-tuning vs long context: when to use each</div>
+            <div class="ti">Naive RAG → Advanced RAG → Modular RAG — the evolution</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Document Ingestion</div>
+          <div class="topics">
+            <div class="ti h">PDF loaders: PyMuPDF (speed), pdfplumber (tables), pypdf (simplicity)</div>
+            <div class="ti">DOCX, PPTX, HTML, Markdown, CSV, JSON loaders</div>
+            <div class="ti">Web loaders: Playwright for JS-rendered pages, BeautifulSoup for static</div>
+            <div class="ti">Cloud loaders: S3, Google Drive, Notion, Confluence, SharePoint</div>
+            <div class="ti">OCR for scanned PDFs: Tesseract, Azure Document Intelligence, AWS Textract</div>
+            <div class="ti">Table extraction: Camelot, tabula-py, LLM-based table understanding</div>
+            <div class="ti">Text cleaning: removing headers, footers, watermarks, artifacts</div>
+            <div class="ti">Metadata extraction: filename, page number, section, author, date</div>
+            <div class="ti">Deduplication: MinHash LSH for near-duplicate detection at scale</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Chunking Strategies</div>
+          <div class="topics">
+            <div class="ti h">Fixed-size: character count + overlap — simple baseline</div>
+            <div class="ti">Recursive character splitter: paragraph → sentence → word hierarchy</div>
+            <div class="ti">Semantic chunking: split at embedding cosine similarity drops</div>
+            <div class="ti">Sentence-level: spaCy / NLTK sentence boundary detection</div>
+            <div class="ti">Markdown/HTML-aware: respect headings, code blocks, lists</div>
+            <div class="ti">Parent-child: index small children, store large parent for context</div>
+            <div class="ti">Proposition-based: extract atomic factual statements as chunks</div>
+            <div class="ti">Contextual chunk enrichment: prepend document title + section header</div>
+            <div class="ti">Chunk size tuning: 256 vs 512 vs 1024 tokens — domain-specific guidance</div>
+            <div class="ti">Overlap tuning: 10–20% overlap to prevent boundary information loss</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Retrieval Techniques</div>
+          <div class="topics">
+            <div class="ti h">Top-k: retrieve k most similar chunks — tuning for recall vs precision</div>
+            <div class="ti">Similarity threshold: only retrieve above confidence score</div>
+            <div class="ti">Maximum Marginal Relevance (MMR): balance relevance with diversity</div>
+            <div class="ti">HyDE (Hypothetical Document Embeddings): generate fake answer, search with it</div>
+            <div class="ti">Multi-query retrieval: generate 3–5 query variants, merge deduplicated results</div>
+            <div class="ti">Step-back prompting: abstract the query to retrieve broader context</div>
+            <div class="ti">Query decomposition: break compound questions into atomic sub-queries</div>
+            <div class="ti">FLARE: forward-looking active retrieval during generation</div>
+            <div class="ti">Contextual compression: extract only relevant sentences from retrieved chunks</div>
+            <div class="ti">Re-ranking: cross-encoder (Cohere Rerank, BGE-Reranker) over top-20</div>
+            <div class="ti">Reciprocal Rank Fusion (RRF): combine multiple ranked lists</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Advanced RAG Architectures</div>
+          <div class="topics">
+            <div class="ti h">Speculative RAG: generate draft answer → use as retrieval query</div>
+            <div class="ti">Corrective RAG (CRAG): grade retrieved docs, web-search fallback if poor</div>
+            <div class="ti">Self-RAG: LLM decides when to retrieve, grades its own output</div>
+            <div class="ti">Adaptive RAG: route queries to RAG or direct answer by complexity</div>
+            <div class="ti">Graph RAG: knowledge graph + vector retrieval for relational reasoning</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">RAG</span><span class="tag hot">Chunking</span><span class="tag hot">Retrieval</span>
+          <span class="tag">HyDE</span><span class="tag">Multi-Query</span><span class="tag">FLARE</span>
+          <span class="tag">CRAG</span><span class="tag">Self-RAG</span><span class="tag">Graph RAG</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 6 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w3)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w3);border-color:rgba(167,139,250,.3)">Session 06</span>
+        <span class="session-badge">LangChain · Generation · Evaluation</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">LangChain, RAG Generation & Evaluation</div>
+
+        <div class="tg">
+          <div class="tg-label">LangChain Framework Internals</div>
+          <div class="topics">
+            <div class="ti h">LangChain Expression Language (LCEL): pipe operator |, composable runnables</div>
+            <div class="ti">RunnablePassthrough, RunnableParallel, RunnableLambda, RunnableBranch</div>
+            <div class="ti">Document loaders, text splitters, vector store abstractions</div>
+            <div class="ti">Retrieval chains: create_retrieval_chain, create_history_aware_retriever</div>
+            <div class="ti">ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder</div>
+            <div class="ti">Output parsers: StrOutputParser, JsonOutputParser, PydanticOutputParser</div>
+            <div class="ti">Memory: ConversationBufferMemory, ConversationSummaryBufferMemory</div>
+            <div class="ti">Callbacks: streaming tokens, custom logging, cost tracking</div>
+            <div class="ti">LangChain Hub: pulling shared prompts and chains</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">RAG Generation Best Practices</div>
+          <div class="topics">
+            <div class="ti h">Context stuffing: formatting retrieved chunks for the LLM prompt</div>
+            <div class="ti">Citation generation: mapping answer sentences to source documents</div>
+            <div class="ti">Faithfulness enforcement: instructing LLM to only use retrieved context</div>
+            <div class="ti">"I don't know" calibration: when retrieved context is insufficient</div>
+            <div class="ti">Multi-document synthesis: aggregating conflicting information</div>
+            <div class="ti">Conversational RAG: history-aware retrieval for follow-up questions</div>
+            <div class="ti">Streaming RAG: streaming generated answer while retrieval completes</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">RAG Evaluation</div>
+          <div class="topics">
+            <div class="ti h">RAGAS metrics: faithfulness, answer relevancy, context precision, context recall</div>
+            <div class="ti">Building golden evaluation datasets: annotation guidelines and tooling</div>
+            <div class="ti">LLM-as-judge: GPT-4 or Claude evaluating RAG quality programmatically</div>
+            <div class="ti">G-Eval: criteria-based scoring with CoT reasoning for reliability</div>
+            <div class="ti">Retrieval metrics: Hit Rate@k, MRR, NDCG</div>
+            <div class="ti">Generation metrics: ROUGE, BERTScore, FactScore</div>
+            <div class="ti">End-to-end RAG testing in CI: automated regression on golden set</div>
+            <div class="ti">Error analysis: failure taxonomy (retrieval miss, context miss, generation error)</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 03</div>
+          <div class="proj-block-name">Policy & Compliance Chatbot</div>
+          <div class="proj-block-desc">Full production RAG — pure Python first, LangChain refactor second</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">PDF ingestion with table extraction + metadata enrichment</div>
+            <div class="proj-d">Hybrid search: BM25 + dense with re-ranking layer</div>
+            <div class="proj-d">Conversational memory for multi-turn Q&A with source citations</div>
+            <div class="proj-d">RAGAS evaluation on 50-question golden test set</div>
+            <div class="proj-d">Streaming response FastAPI endpoint</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">LangChain</span><span class="tag hot">LCEL</span><span class="tag hot">RAGAS</span>
+          <span class="tag">Context Stuffing</span><span class="tag">G-Eval</span>
+          <span class="tag">Conversational RAG</span><span class="tag">Citation</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 4 ════════════════════ -->
+<section class="week-block" id="w4">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w4)">Week 4</span>
+    <span class="week-title">AI Agents — Design, Tools & Guardrails</span>
+    <span class="week-meta">Sessions 7–8 · Days 7–8</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 7 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w4)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w4);border-color:rgba(249,115,22,.3)">Session 07</span>
+        <span class="session-badge">Agents · Tools · Memory</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Agentic AI — Foundations & Tool Use</div>
+
+        <div class="tg">
+          <div class="tg-label">Agent Architectures</div>
+          <div class="topics">
+            <div class="ti h">What is an AI agent? perception → reasoning → action → observation loop</div>
+            <div class="ti">ReAct: interleaved thought + action + observation traces</div>
+            <div class="ti">Plan-and-Execute: planner generates full plan, executor runs each step</div>
+            <div class="ti">Reflexion: verbal reinforcement — agent critiques its own past actions</div>
+            <div class="ti">Self-Ask: agent generates and answers sub-questions before final answer</div>
+            <div class="ti">MRKL systems: routed modular chains with specialized experts</div>
+            <div class="ti">Stopping criteria: max iterations, confidence signal, explicit finish token</div>
+            <div class="ti">Failure modes: infinite loops, tool hallucination, over-planning</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Tool Binding Protocol</div>
+          <div class="topics">
+            <div class="ti h">OpenAI / Anthropic tool calling: JSON Schema function definitions</div>
+            <div class="ti">Parallel tool calls: multiple tool invocations in one LLM response</div>
+            <div class="ti">Writing tool descriptions: precision that enables reliable LLM selection</div>
+            <div class="ti">Strict schemas: constraining argument types and enums</div>
+            <div class="ti">Tool execution: calling real functions, injecting results as tool messages</div>
+            <div class="ti">Error messages back to LLM: structured error for self-correction</div>
+            <div class="ti">Tool versioning and backward compatibility in production agents</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Tool Ecosystem</div>
+          <div class="topics">
+            <div class="ti h">Web search: Tavily AI, Serper, Brave Search API, DuckDuckGo</div>
+            <div class="ti">Code interpreter: sandboxed Python execution (E2B, Modal, Daytona)</div>
+            <div class="ti">Browser tools: Playwright-based navigation, click, fill, screenshot</div>
+            <div class="ti">File system: read file, write file, list directory, delete</div>
+            <div class="ti">Database tools: SQL query executor with schema introspection</div>
+            <div class="ti">REST API tools: generic HTTP client with auth and response parsing</div>
+            <div class="ti">Email and calendar: Gmail, Outlook, Google Calendar API tools</div>
+            <div class="ti">Vector store as tool: RAG retrieval the agent decides to invoke</div>
+            <div class="ti">Calculation tools: math, unit conversion, date arithmetic</div>
+            <div class="ti">Image generation: DALL-E 3, Stable Diffusion as agent tools</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Agent Memory Systems</div>
+          <div class="topics">
+            <div class="ti h">Short-term (in-context): conversation history in the context window</div>
+            <div class="ti">Long-term external: persistent store across sessions</div>
+            <div class="ti">Episodic memory: past conversations and user preferences</div>
+            <div class="ti">Semantic memory: facts stored in vector DB for retrieval</div>
+            <div class="ti">Procedural memory: learned workflows and tool usage patterns</div>
+            <div class="ti">Memory consolidation: rolling summary to free context window space</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 04</div>
+          <div class="proj-block-name">Research & Analysis Agent</div>
+          <div class="proj-block-desc">Multi-tool ReAct agent with memory and streaming traces</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">Tools: web search, code executor, RAG retrieval, calculator</div>
+            <div class="proj-d">Persistent episodic memory across conversations</div>
+            <div class="proj-d">Streaming intermediate reasoning steps to frontend</div>
+            <div class="proj-d">Max iteration + confidence-based stopping logic</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">Agents</span><span class="tag hot">ReAct</span><span class="tag hot">Tool Calling</span>
+          <span class="tag">Plan-Execute</span><span class="tag">Reflexion</span>
+          <span class="tag">E2B</span><span class="tag">Agent Memory</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 8 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w4)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w4);border-color:rgba(249,115,22,.3)">Session 08</span>
+        <span class="session-badge">Routing · Guardrails · Evals · Ethics</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Agent Orchestration, Guardrails & Ethical Compliance</div>
+
+        <div class="tg">
+          <div class="tg-label">Semantic Routing</div>
+          <div class="topics">
+            <div class="ti h">Intent classification: route to the right chain based on query intent</div>
+            <div class="ti">Embedding-based routing: cosine similarity to labeled intent clusters</div>
+            <div class="ti">LLM-based routing: classifier prompt returning structured route ID</div>
+            <div class="ti">Rule-based routing: regex + keyword matching for deterministic flows</div>
+            <div class="ti">Hybrid routing: fast rule check → embedding → LLM fallback</div>
+            <div class="ti">Confidence thresholds: route only when classifier confidence is sufficient</div>
+            <div class="ti">Multi-chain orchestration: SQL, RAG, agent, calculator, general chains</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Input Guardrails</div>
+          <div class="topics">
+            <div class="ti h">Prompt injection detection: "ignore previous instructions" attack patterns</div>
+            <div class="ti">Jailbreak detection: intent classifiers on adversarial prompt datasets</div>
+            <div class="ti">PII detection: regex + NER models for email, phone, SSN, credit card</div>
+            <div class="ti">PII redaction: masking before sending to LLM, de-masking after response</div>
+            <div class="ti">Input length limits: token counting and hard cutoff before API call</div>
+            <div class="ti">Topic filtering: blocklist for off-topic or out-of-scope queries</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Output Guardrails</div>
+          <div class="topics">
+            <div class="ti h">Hallucination detection: groundedness check against retrieved sources</div>
+            <div class="ti">Content moderation: OpenAI Moderation API, Perspective API integration</div>
+            <div class="ti">Toxicity filtering: profanity, hate speech, harmful content classifiers</div>
+            <div class="ti">Factual consistency: NLI-based entailment checking between answer and context</div>
+            <div class="ti">Format validation: JSON schema enforcement on structured outputs</div>
+            <div class="ti">NeMo Guardrails: declarative colang-based guardrail specification</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">LLM Evaluation Frameworks</div>
+          <div class="topics">
+            <div class="ti h">LLM-as-judge: strong model evaluates weaker model output on defined criteria</div>
+            <div class="ti">G-Eval: criteria-based scoring with CoT justification for reliability</div>
+            <div class="ti">Pairwise evals: A vs B comparison for nuanced quality ranking</div>
+            <div class="ti">QAG: auto-generate Q&A pairs from docs to build evaluation sets</div>
+            <div class="ti">Slice-based evals: performance breakdown by domain, language, query length</div>
+            <div class="ti">Regression testing in CI: catching quality degradations on model upgrades</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Ethical & Regulatory Compliance</div>
+          <div class="topics">
+            <div class="ti h">HIPAA: PHI de-identification rules, BAA agreements with AI vendors</div>
+            <div class="ti">GDPR: lawful basis for AI processing, data minimization, right to explanation</div>
+            <div class="ti">EU AI Act: risk tiers, prohibited uses, conformity assessments</div>
+            <div class="ti">Responsible AI: fairness, transparency, accountability, human oversight</div>
+            <div class="ti">Model cards and system cards: documenting capabilities and limitations</div>
+            <div class="ti">Data retention and logging policies for production AI systems</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 05</div>
+          <div class="proj-block-name">Enterprise Organizational Assistant</div>
+          <div class="proj-block-desc">Production agent: semantic routing + guardrails + evaluation suite</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">4-route semantic router: IT, HR, Finance, General</div>
+            <div class="proj-d">Input guardrail: PII redaction + injection detection</div>
+            <div class="proj-d">Output guardrail: groundedness check + toxicity filter</div>
+            <div class="proj-d">LLM-as-judge evaluation on 100-question golden dataset</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">Semantic Routing</span><span class="tag hot">Guardrails</span>
+          <span class="tag">NeMo</span><span class="tag">G-Eval</span>
+          <span class="tag">HIPAA</span><span class="tag">GDPR</span><span class="tag">EU AI Act</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 5 ════════════════════ -->
+<section class="week-block" id="w5">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w5);color:#080c12">Week 5</span>
+    <span class="week-title">Observability, Deployment & Personal Branding</span>
+    <span class="week-meta">Sessions 9–10 · Days 9–10</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 9 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w5)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w5);border-color:rgba(52,211,153,.3)">Session 09</span>
+        <span class="session-badge">Observability · Docker · Azure</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">AI Observability & Cloud Deployment</div>
+
+        <div class="tg">
+          <div class="tg-label">LangSmith Observability</div>
+          <div class="topics">
+            <div class="ti h">Automatic tracing: every LLM call, retrieval, tool use captured with zero code</div>
+            <div class="ti">Runs & traces: parent trace with nested child spans for complex pipelines</div>
+            <div class="ti">Token usage and cost per trace — real-time cost dashboards</div>
+            <div class="ti">Latency breakdown: time in retrieval vs LLM vs tool execution</div>
+            <div class="ti">Error tracking: failed runs, exception stack traces, retry counts</div>
+            <div class="ti">Annotation queues: human labeling workflows for building eval datasets</div>
+            <div class="ti">Datasets: building golden sets directly from production traces</div>
+            <div class="ti">LangSmith experiments: A/B compare two prompt or model versions</div>
+            <div class="ti">Playground: interactive prompt testing against any LLM</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">OpenTelemetry for AI Apps</div>
+          <div class="topics">
+            <div class="ti h">OTel data model: traces, spans, metrics, logs — the observability triad</div>
+            <div class="ti">FastAPI auto-instrumentation: request traces with zero manual code</div>
+            <div class="ti">Custom spans: adding token count, model name, prompt hash as attributes</div>
+            <div class="ti">Prometheus metrics: request count, latency histograms, error rates</div>
+            <div class="ti">Grafana dashboards: visualizing AI app health in production</div>
+            <div class="ti">Alerting: PagerDuty / Slack alerts on error rate or latency spikes</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Containerization</div>
+          <div class="topics">
+            <div class="ti h">Dockerfile anatomy: FROM, WORKDIR, COPY, RUN, ENV, EXPOSE, CMD</div>
+            <div class="ti">Multi-stage builds: separate build stage from lean runtime image</div>
+            <div class="ti">Layer caching: ordering instructions to maximize cache reuse</div>
+            <div class="ti">.dockerignore: excluding unnecessary files from image context</div>
+            <div class="ti">Non-root user: security hardening inside containers</div>
+            <div class="ti">Docker Compose: local multi-service setup (app + Qdrant + Redis)</div>
+            <div class="ti">Image size: alpine base, distroless, removing dev dependencies</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Azure Deployment</div>
+          <div class="topics">
+            <div class="ti h">Azure Container Apps: serverless, scale-to-zero, HTTP-triggered</div>
+            <div class="ti">Azure Container Registry (ACR): private Docker image hosting</div>
+            <div class="ti">Azure Key Vault + Managed Identity: secrets without storing keys in code</div>
+            <div class="ti">Application Insights: APM with distributed tracing for Azure apps</div>
+            <div class="ti">Azure Monitor: KQL log queries, dashboards, alert rules</div>
+            <div class="ti">Custom domains and SSL certificates via Azure Front Door</div>
+            <div class="ti">Blue-green deployments: traffic splitting between revisions</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">CI/CD Pipeline</div>
+          <div class="topics">
+            <div class="ti h">GitHub Actions: triggers, jobs, steps, matrix strategy</div>
+            <div class="ti">Pipeline: pytest → ruff/mypy → Docker build → ACR push → Azure deploy</div>
+            <div class="ti">GitHub encrypted secrets: API keys, registry credentials</div>
+            <div class="ti">Branch protection: CI must pass before merge to main</div>
+            <div class="ti">Semantic versioning with tags triggering production deploys</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Production Hardening</div>
+          <div class="topics">
+            <div class="ti h">Authentication: JWT, API keys, OAuth2 with FastAPI middleware</div>
+            <div class="ti">Rate limiting: slowapi with Redis backend for per-IP/key limits</div>
+            <div class="ti">Graceful shutdown: FastAPI lifespan, draining in-flight requests</div>
+            <div class="ti">Health + readiness endpoints: /health, /ready for load balancers</div>
+            <div class="ti">Retry logic: tenacity with exponential backoff and jitter for LLM calls</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">LangSmith</span><span class="tag hot">Docker</span><span class="tag hot">Azure</span>
+          <span class="tag">OpenTelemetry</span><span class="tag">Grafana</span>
+          <span class="tag">GitHub Actions</span><span class="tag">Container Apps</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 10 -->
+    <div class="day-card soft-card">
+      <div class="card-stripe" style="background:var(--accent2)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--accent2);border-color:rgba(56,189,248,.3)">Session 10</span>
+        <span class="session-badge">Soft Skills · Branding</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Personal Branding & Project Portfolio Review</div>
+
+        <div class="tg">
+          <div class="tg-label">LinkedIn Optimization</div>
+          <div class="topics">
+            <div class="ti h">Headline formula: target role + specialization + one quantified outcome</div>
+            <div class="ti">About section: narrative arc — past experience → transition → future goal</div>
+            <div class="ti">Experience bullets: quantified achievements, not job descriptions</div>
+            <div class="ti">Skills section: AI-specific skills recruiters actually search for</div>
+            <div class="ti">Featured section: pin project demos, articles, and GitHub repos</div>
+            <div class="ti">Content strategy: 2–3 posts/week — learnings, projects, opinions</div>
+            <div class="ti">Engagement: thoughtful technical comments generate profile visits</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">GitHub Portfolio Excellence</div>
+          <div class="topics">
+            <div class="ti h">Profile README: intro, stack badges, pinned repos, contribution stats</div>
+            <div class="ti">Project README: problem → solution → demo → architecture → setup</div>
+            <div class="ti">Demo GIFs: screen recordings that show the AI in action</div>
+            <div class="ti">Architecture diagrams: Mermaid or draw.io exported to README</div>
+            <div class="ti">CI badges: build status, test coverage, code quality on every repo</div>
+            <div class="ti">Pinning: 6 best repositories highlighted on profile</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Building in Public</div>
+          <div class="topics">
+            <div class="ti h">Documenting the learning journey: weekly bootcamp update posts</div>
+            <div class="ti">Technical writing: turning project pain points into tutorial articles</div>
+            <div class="ti">AI engineering communities: Discord servers, X/Twitter, Substack</div>
+            <div class="ti">Open-source contributions: first issues, docs, bug fixes on AI frameworks</div>
+            <div class="ti">Hackathons: team projects for credibility and network expansion</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag">LinkedIn</span><span class="tag">GitHub Portfolio</span>
+          <span class="tag">Build in Public</span><span class="tag">Technical Writing</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 6 ════════════════════ -->
+<section class="week-block" id="w6">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w6)">Week 6</span>
+    <span class="week-title">Multi-Agent Systems with LangGraph & MCP</span>
+    <span class="week-meta">Sessions 11–12 · Days 11–12</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 11 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w6)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w6);border-color:rgba(244,114,182,.3)">Session 11</span>
+        <span class="session-badge">LangGraph · Stateful Graphs</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Multi-Agent Systems with LangGraph</div>
+
+        <div class="tg">
+          <div class="tg-label">LangGraph Fundamentals</div>
+          <div class="topics">
+            <div class="ti h">Why LangGraph: stateful, cyclical graphs — chains can't loop or branch</div>
+            <div class="ti">Graph primitives: nodes (functions), edges (routing), shared state</div>
+            <div class="ti">StateGraph: TypedDict or Pydantic state schema with reducers</div>
+            <div class="ti">Reducers: how state fields merge from multiple node updates (add vs replace)</div>
+            <div class="ti">Conditional edges: routing to different nodes based on state evaluation</div>
+            <div class="ti">Entry points, END node, graph lifecycle</div>
+            <div class="ti">Compiling: .compile(), invoking .invoke(), streaming .stream()</div>
+            <div class="ti">Streaming intermediate state: watch graph execution token by token</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Checkpointing & Persistence</div>
+          <div class="topics">
+            <div class="ti h">Thread IDs: isolate conversation state per user session</div>
+            <div class="ti">MemorySaver: in-process checkpointing for development</div>
+            <div class="ti">SQLiteSaver: file-based persistence for single-machine deployment</div>
+            <div class="ti">AsyncPostgresSaver: production-grade distributed persistence</div>
+            <div class="ti">Time-travel: replay graph from any past checkpoint for debugging</div>
+            <div class="ti">Forking: branch from past state to explore alternative execution paths</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Human-in-the-Loop</div>
+          <div class="topics">
+            <div class="ti h">interrupt(): pause graph execution at any node to await human input</div>
+            <div class="ti">Approval workflows: agent proposes → human approves → agent executes</div>
+            <div class="ti">Editing state mid-run: humans correcting agent mistakes in flight</div>
+            <div class="ti">Resuming from interruption: injecting human response and continuing</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Advanced LangGraph Patterns</div>
+          <div class="topics">
+            <div class="ti h">Subgraphs: encapsulate complex logic into reusable nested graphs</div>
+            <div class="ti">Map-reduce: fan-out to parallel worker nodes, fan-in to aggregator</div>
+            <div class="ti">Send API: dynamic edge creation for variable-width parallel branches</div>
+            <div class="ti">Long-term memory: external store read/write between graph runs</div>
+            <div class="ti">Cross-thread memory: share knowledge across different user conversations</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Multi-Agent Coordination Patterns</div>
+          <div class="topics">
+            <div class="ti h">Supervisor pattern: routing LLM delegates tasks to specialist agents</div>
+            <div class="ti">Hierarchical: supervisor of supervisors for complex multi-domain workflows</div>
+            <div class="ti">Reflection pattern: generator agent + critic agent iterating to quality</div>
+            <div class="ti">Debate pattern: agents argue opposing positions, third synthesizes</div>
+            <div class="ti">Swarm: agents hand control to each other based on expertise signal</div>
+            <div class="ti">Cost control: token budgets per agent, early exit on low-value branches</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 06</div>
+          <div class="proj-block-name">Multi-Agent Research Pipeline</div>
+          <div class="proj-block-desc">LangGraph supervisor + specialists + human approval</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">Supervisor routes to: researcher, writer, code-analyst, QA agents</div>
+            <div class="proj-d">Persistent checkpointing — resume interrupted research sessions</div>
+            <div class="proj-d">Human-in-loop: approve before publishing or sending results</div>
+            <div class="proj-d">Parallel map-reduce: analyze multiple sources simultaneously</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">LangGraph</span><span class="tag hot">StateGraph</span>
+          <span class="tag">Checkpointing</span><span class="tag">Human-in-Loop</span>
+          <span class="tag">Subgraphs</span><span class="tag">Supervisor</span><span class="tag">Swarm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 12 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w6)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w6);border-color:rgba(244,114,182,.3)">Session 12</span>
+        <span class="session-badge">MCP · Context Engineering</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Model Context Protocol & Context Engineering</div>
+
+        <div class="tg">
+          <div class="tg-label">Model Context Protocol (MCP)</div>
+          <div class="topics">
+            <div class="ti h">MCP: open standard for connecting LLMs to tools and data sources portably</div>
+            <div class="ti">Architecture: host application, MCP client, MCP server — three-layer model</div>
+            <div class="ti">Transport types: stdio (local process), SSE (HTTP remote), Streamable HTTP</div>
+            <div class="ti">Core primitives: Resources (data URIs), Tools (callable actions), Prompts (templates)</div>
+            <div class="ti">Resources: expose files, DB records, API responses as readable URIs</div>
+            <div class="ti">Tools: server-side Python functions the LLM invokes with typed arguments</div>
+            <div class="ti">Prompt templates: parameterized prompts returned by the MCP server</div>
+            <div class="ti">Building an MCP server in Python with FastMCP framework</div>
+            <div class="ti">MCP server lifecycle: initialize → capabilities negotiation → serve requests</div>
+            <div class="ti">Authentication: OAuth 2.0 tokens for remote MCP servers</div>
+            <div class="ti">Sampling: MCP server can request LLM completions via the host</div>
+            <div class="ti">MCP roots: declaring accessible file system paths</div>
+            <div class="ti">Ecosystem: 200+ pre-built servers (GitHub, Slack, Postgres, Figma, Stripe)</div>
+            <div class="ti">MCP vs direct function calling: portability and client-agnostic design</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Context Engineering — 4 Pillars</div>
+          <div class="topics">
+            <div class="ti h">Pillar 1 — WRITE: craft explicit instructions, personas, output formats</div>
+            <div class="ti">System prompt design: role + task + constraints + output format + examples</div>
+            <div class="ti">Shot selection: choosing few-shot examples that maximize signal per token</div>
+            <div class="ti">XML/delimiter structuring for complex multi-part prompts</div>
+            <div class="ti h">Pillar 2 — SELECT: dynamically retrieve only relevant context</div>
+            <div class="ti">Relevance filtering: only inject docs above similarity threshold</div>
+            <div class="ti">Personalization: selectively inject user profile and history</div>
+            <div class="ti">Tool result trimming: extract signal from verbose API responses</div>
+            <div class="ti h">Pillar 3 — COMPRESS: shrink context without losing meaning</div>
+            <div class="ti">Conversation summary: replace old messages with LLM-generated summary</div>
+            <div class="ti">Selective pruning: drop low-relevance turns from history</div>
+            <div class="ti">Extractive doc compression: pull only relevant sentences</div>
+            <div class="ti">Attention sink awareness: critical info at start or end of context</div>
+            <div class="ti h">Pillar 4 — ISOLATE: route context to the right model or chain</div>
+            <div class="ti">Sandboxed context windows per agent role</div>
+            <div class="ti">Context routing: CRM data only to CRM agent, not to general agent</div>
+            <div class="ti">Cross-agent context pollution prevention</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 07</div>
+          <div class="proj-block-name">Onboarding & HR Integration Agent</div>
+          <div class="proj-block-desc">MCP server connecting AI to HR systems securely</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">MCP server: expose HR docs, org chart, IT ticketing as resources/tools</div>
+            <div class="proj-d">OAuth-secured remote MCP transport for identity verification</div>
+            <div class="proj-d">Context engineering: compress policy docs, select relevant chunks</div>
+            <div class="proj-d">Multi-turn onboarding conversation with persistent long-term memory</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">MCP</span><span class="tag hot">Context Engineering</span>
+          <span class="tag">FastMCP</span><span class="tag">SSE Transport</span>
+          <span class="tag">Sampling</span><span class="tag">Context Compression</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 7 ════════════════════ -->
+<section class="week-block" id="w7">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w7)">Week 7</span>
+    <span class="week-title">Declarative AI with DSPy & Stakeholder Skills</span>
+    <span class="week-meta">Sessions 13–14 · Days 13–14</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 13 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w7)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w7);border-color:rgba(251,146,60,.3)">Session 13</span>
+        <span class="session-badge">DSPy · Declarative AI</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Declarative AI Using DSPy</div>
+
+        <div class="tg">
+          <div class="tg-label">DSPy Philosophy</div>
+          <div class="topics">
+            <div class="ti h">Core insight: prompt engineering is brittle — program LLMs like you configure ML models</div>
+            <div class="ti">Signatures: declare input → output contracts without writing prompts manually</div>
+            <div class="ti">Modules: composable building blocks implementing a signature</div>
+            <div class="ti">Optimizers (Teleprompters): automatically improve prompts using a metric</div>
+            <div class="ti">Compiled programs: save optimized prompts for deployment</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Signatures & Modules</div>
+          <div class="topics">
+            <div class="ti h">Signature syntax: "question -> answer", "context, question -> answer, reasoning"</div>
+            <div class="ti">Typed signatures: Annotated fields for structured output enforcement</div>
+            <div class="ti">dspy.Predict: basic signature execution, minimal overhead</div>
+            <div class="ti">dspy.ChainOfThought: adds reasoning field before final answer</div>
+            <div class="ti">dspy.ProgramOfThought: generates and executes code for numerical tasks</div>
+            <div class="ti">dspy.ReAct: agentic reasoning + tool use inside DSPy programs</div>
+            <div class="ti">dspy.MultiChainComparison: generate N candidates, pick best by majority</div>
+            <div class="ti">Composing modules: chaining DSPy modules into programs</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Optimizers (Teleprompters)</div>
+          <div class="topics">
+            <div class="ti h">Metric functions: Python functions that score program output quality</div>
+            <div class="ti">BootstrapFewShot: auto-generate few-shot examples from training traces</div>
+            <div class="ti">BootstrapFewShotWithRandomSearch: add search over example combinations</div>
+            <div class="ti">MIPROv2: Bayesian optimization of instructions + demonstrations jointly</div>
+            <div class="ti">COPRO: coordinate ascent over per-module instruction optimization</div>
+            <div class="ti">Teacher-student: GPT-4 optimizes prompts that run on GPT-3.5/open models</div>
+            <div class="ti">Compiling and saving optimized programs for production</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">DSPy Assertions & Reliability</div>
+          <div class="topics">
+            <div class="ti h">dspy.Assert: hard constraints — fails and retries with constraint feedback</div>
+            <div class="ti">dspy.Suggest: soft constraints — nudges without failing</div>
+            <div class="ti">Backtracking: auto-retry with constraint violation message in context</div>
+            <div class="ti">Use cases: format validation, length constraints, factuality checks</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 08</div>
+          <div class="proj-block-name">Self-Optimizing Research Assistant</div>
+          <div class="proj-block-desc">DSPy multi-agent program with MIPROv2 optimization</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">Coordinator module: decomposes user query into sub-tasks via signature</div>
+            <div class="proj-d">Researcher module: dspy.ReAct with RAG tool + web search tool</div>
+            <div class="proj-d">Writer module: synthesizes into structured report with citations</div>
+            <div class="proj-d">MIPROv2: optimize all module prompts on 50-example eval set</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">DSPy</span><span class="tag hot">MIPROv2</span>
+          <span class="tag">Signatures</span><span class="tag">BootstrapFewShot</span>
+          <span class="tag">Assertions</span><span class="tag">Teleprompters</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 14 -->
+    <div class="day-card soft-card">
+      <div class="card-stripe" style="background:var(--accent2)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--accent2);border-color:rgba(56,189,248,.3)">Session 14</span>
+        <span class="session-badge">Soft Skills · Stakeholders</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Stakeholder Management & Project Communication</div>
+
+        <div class="tg">
+          <div class="tg-label">Communicating AI to Leadership</div>
+          <div class="topics">
+            <div class="ti h">Translating AI metrics into business language: accuracy → revenue / time saved</div>
+            <div class="ti">Managing expectations: AI is probabilistic, not deterministic — set this early</div>
+            <div class="ti">Status update templates: progress, blockers, risks, decisions needed, next steps</div>
+            <div class="ti">Cost-benefit framing: development investment vs productivity/accuracy gain</div>
+            <div class="ti">Demo strategy: show inputs and outputs, not model internals</div>
+            <div class="ti">Handling "why can't it just…?" with grace and redirect</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Managing AI Projects</div>
+          <div class="topics">
+            <div class="ti h">Sprint planning: uncertainty budgets, spike tickets, research time allocation</div>
+            <div class="ti">Definition of done for AI: eval metrics pass, not just "it responds"</div>
+            <div class="ti">Scope creep defense: "yes, but in which sprint and at what trade-off?"</div>
+            <div class="ti">Post-launch monitoring plan: ownership, alert thresholds, review cadence</div>
+            <div class="ti">Incident response: escalation paths, rollback decisions, postmortems</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Time Management & Deep Work</div>
+          <div class="topics">
+            <div class="ti h">Deep Work: scheduling 2–4 hour uninterrupted focus blocks for AI engineering</div>
+            <div class="ti">Shallow vs deep work: classify tasks and protect deep time ruthlessly</div>
+            <div class="ti">Managing notifications: async-first communication norms</div>
+            <div class="ti">Context switching cost: why frequent meetings destroy flow in AI projects</div>
+            <div class="ti">Weekly review: shipped, blocked, learned — 15-minute Friday ritual</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag">Stakeholder Mgmt</span><span class="tag">AI Communication</span>
+          <span class="tag">Sprint Planning</span><span class="tag">Deep Work</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 8 ════════════════════ -->
+<section class="week-block" id="w8">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w8);color:#080c12">Week 8</span>
+    <span class="week-title">Advanced AI Engineering, Finetuning & Cloud</span>
+    <span class="week-meta">Sessions 15–16 · Days 15–16</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 15 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w8)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w8);border-color:rgba(96,165,250,.3)">Session 15</span>
+        <span class="session-badge">Advanced AI · Finetuning · Local Models</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Advanced AI Engineering & LLM Finetuning</div>
+
+        <div class="tg">
+          <div class="tg-label">Cost & Throughput Optimization</div>
+          <div class="topics">
+            <div class="ti h">LLM cost anatomy: input tokens + output tokens + embedding + vector storage</div>
+            <div class="ti">Prompt caching: Anthropic (up to 90% input reduction) and OpenAI prefix caching</div>
+            <div class="ti">Semantic cache: GPTCache / custom Redis cache with embedding similarity lookup</div>
+            <div class="ti">Cache hit rate optimization: stabilize system prompts, normalize queries</div>
+            <div class="ti">Batch API: 50% cost reduction for async, non-real-time workloads</div>
+            <div class="ti">Output length control: max_tokens, stop sequences, conciseness instructions</div>
+            <div class="ti">Rate limiting: token bucket algorithm, sliding window, per-user quotas</div>
+            <div class="ti">Exponential backoff with jitter: tenacity retry for 429 and 5xx errors</div>
+            <div class="ti">Multi-key rotation: distribute load across API key pool</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Model Routing & Multi-Modal RAG</div>
+          <div class="topics">
+            <div class="ti h">Complexity routing: simple queries → small model, complex → large model</div>
+            <div class="ti">RouteLLM: learned binary router trained on preference data</div>
+            <div class="ti">Cascading: try small model first, escalate if confidence below threshold</div>
+            <div class="ti">Latency routing: Groq for speed-critical, GPT-4o for quality-critical paths</div>
+            <div class="ti">Multi-modal ingestion: Docling, Unstructured for PDFs with text + images + tables</div>
+            <div class="ti">ColPali: patch-level visual embeddings for document page retrieval</div>
+            <div class="ti">Vision model captioning: GPT-4o / Claude describing images for text indexing</div>
+            <div class="ti">Audio RAG: Whisper transcription → chunk → embed → retrieve</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">LLM Finetuning — Theory</div>
+          <div class="topics">
+            <div class="ti h">When to finetune: style/format, domain vocabulary, consistent persona, privacy</div>
+            <div class="ti">When NOT to: knowledge injection → use RAG; one-off task → use prompts</div>
+            <div class="ti">Supervised Finetuning (SFT): next-token prediction on curated examples</div>
+            <div class="ti">DPO (Direct Preference Optimization): alignment without a reward model</div>
+            <div class="ti">ORPO: SFT + alignment in a single training objective</div>
+            <div class="ti">Data: Alpaca / ShareGPT / ChatML instruction formats</div>
+            <div class="ti">Data quality: 500 excellent examples > 50,000 mediocre ones</div>
+            <div class="ti">Synthetic data: GPT-4 distillation for training smaller models</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">LoRA, QLoRA & Training Stack</div>
+          <div class="topics">
+            <div class="ti h">LoRA: low-rank adapter matrices — only train ΔW = BA, not full W</div>
+            <div class="ti">Rank r, alpha, dropout hyperparameter guide</div>
+            <div class="ti">Target modules: which projection layers to apply LoRA</div>
+            <div class="ti">QLoRA: 4-bit NF4 quantized base + LoRA — train 70B on a single A100</div>
+            <div class="ti">bitsandbytes: 4-bit and 8-bit quantization on consumer GPUs</div>
+            <div class="ti">Unsloth: 2× speed, 70% less memory than vanilla HuggingFace LoRA</div>
+            <div class="ti">HuggingFace TRL: SFTTrainer, DPOTrainer, PPOTrainer</div>
+            <div class="ti">Axolotl: YAML-configured multi-GPU finetuning framework</div>
+            <div class="ti">Free GPU: Google Colab Pro, Kaggle, RunPod, Vast.ai</div>
+            <div class="ti">Eval: held-out test set vs base model vs GPT-4 — task-specific metrics</div>
+            <div class="ti">Merging adapters: peft merge_and_unload() for deployment</div>
+            <div class="ti">Export formats: GGUF (llama.cpp), ONNX, TorchScript</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Local Model Serving</div>
+          <div class="topics">
+            <div class="ti h">Ollama: one-command local model server with OpenAI-compatible API</div>
+            <div class="ti">Supported models: Llama 3.3, Mistral Nemo, Phi-4, Gemma 3, Qwen2.5</div>
+            <div class="ti">Modelfiles: base model + system prompt + parameters as config</div>
+            <div class="ti">Running your finetuned GGUF via custom Modelfile</div>
+            <div class="ti">VRAM requirements by quantization level: Q4_K_M vs Q8_0 vs F16</div>
+            <div class="ti">Open WebUI: browser chat interface for local Ollama models</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">LLM Finetuning</span><span class="tag hot">LoRA</span><span class="tag hot">QLoRA</span>
+          <span class="tag">DPO</span><span class="tag">Unsloth</span><span class="tag">Ollama</span>
+          <span class="tag">ColPali</span><span class="tag">RouteLLM</span><span class="tag">GGUF</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 16 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w8)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w8);border-color:rgba(96,165,250,.3)">Session 16</span>
+        <span class="session-badge">Azure AI · Cloud Architecture</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Advanced Azure AI Cloud</div>
+
+        <div class="tg">
+          <div class="tg-label">Azure OpenAI Service</div>
+          <div class="topics">
+            <div class="ti h">Azure OpenAI vs OpenAI API: compliance, data residency, SLA, HIPAA BAA</div>
+            <div class="ti">Deploying models: GPT-4o, GPT-4o-mini, o1, text-embedding-3-large, DALL-E 3</div>
+            <div class="ti">Provisioned Throughput Units (PTU): reserved capacity for consistent latency</div>
+            <div class="ti">Pay-as-you-go vs PTU: cost modeling at scale</div>
+            <div class="ti">Content filters: granular per-category severity configuration</div>
+            <div class="ti">Private endpoints + VNet integration: zero public internet exposure</div>
+            <div class="ti">Managed identity: apps access Azure OpenAI without stored credentials</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Azure AI Foundry</div>
+          <div class="topics">
+            <div class="ti h">AI Foundry: unified studio for models, data, evaluation, and monitoring</div>
+            <div class="ti">Model catalog: 1000+ models — serverless API or managed compute</div>
+            <div class="ti">Prompt Flow: visual DAG-based LLM pipeline builder and debugger</div>
+            <div class="ti">Built-in evaluators: groundedness, coherence, relevance, similarity</div>
+            <div class="ti">Azure AI Search: hybrid + semantic ranking for enterprise RAG</div>
+            <div class="ti">Integrated skillsets: auto-chunk → embed → index from blob storage</div>
+            <div class="ti">Managed finetuning: GPT-4o-mini finetuning jobs via Foundry UI</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Cloud Architecture Patterns for AI</div>
+          <div class="topics">
+            <div class="ti h">Async AI pipelines: doc ingestion as background job with status polling</div>
+            <div class="ti">Event-driven: Azure Service Bus → AI processor → results to Cosmos DB</div>
+            <div class="ti">Azure Functions: serverless inference for low-frequency workloads</div>
+            <div class="ti">Azure Cache for Redis: semantic cache in front of LLM API</div>
+            <div class="ti">Auto-scaling: KEDA scaling rules based on queue depth</div>
+            <div class="ti">Multi-region: latency-based routing with Azure Front Door</div>
+            <div class="ti">Cost governance: resource tagging, budgets, cost allocation per feature</div>
+          </div>
+        </div>
+
+        <div class="proj-block">
+          <div class="proj-block-label">Project 09</div>
+          <div class="proj-block-name">Azure-Deployed AI Platform</div>
+          <div class="proj-block-desc">Full production deployment on Azure with observability</div>
+          <div class="proj-deliverables">
+            <div class="proj-d">Azure OpenAI + Azure AI Search for enterprise RAG</div>
+            <div class="proj-d">Private endpoint + managed identity — zero stored credentials</div>
+            <div class="proj-d">Redis semantic cache with LangSmith trace dashboards</div>
+            <div class="proj-d">GitHub Actions → ACR → Container Apps CI/CD pipeline</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">Azure OpenAI</span><span class="tag hot">AI Foundry</span>
+          <span class="tag">PTU</span><span class="tag">AI Search</span>
+          <span class="tag">KEDA</span><span class="tag">Prompt Flow</span><span class="tag">Cosmos DB</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ WEEK 9 ════════════════════ -->
+<section class="week-block" id="w9">
+  <div class="week-header">
+    <span class="week-label" style="background:var(--w9);color:#080c12">Week 9</span>
+    <span class="week-title">Capstone Showcase & Interview Preparation</span>
+    <span class="week-meta">Sessions 17–18 · Days 17–18</span>
+  </div>
+  <div class="days-grid">
+
+    <!-- SESSION 17 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w9)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w9);border-color:rgba(251,191,36,.3)">Session 17</span>
+        <span class="session-badge">Capstone · Presentations</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Project Showdown — Capstone Presentations</div>
+
+        <div class="tg">
+          <div class="tg-label">Capstone Technical Requirements</div>
+          <div class="topics">
+            <div class="ti h">Real business problem with quantified value (hrs saved, accuracy gain, cost reduction)</div>
+            <div class="ti">End-to-end AI system: ingestion → retrieval/agents → generation → deployed</div>
+            <div class="ti">One advanced technique: multi-agent, finetuning, multi-modal, or MCP</div>
+            <div class="ti">Observability: LangSmith traces + cost/latency dashboards live in production</div>
+            <div class="ti">Evaluation suite: automated test passing defined metrics on golden set</div>
+            <div class="ti">Guardrails: at minimum input validation + output quality check</div>
+            <div class="ti">Clean repository: README, architecture diagram, local setup instructions</div>
+            <div class="ti">Live public URL: not localhost — deployed and accessible</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Presentation Structure</div>
+          <div class="topics">
+            <div class="ti h">Opening: lead with the problem and who it affects — not the tech stack</div>
+            <div class="ti">Architecture walkthrough: system diagram with data flow and component choices</div>
+            <div class="ti">Live demo: 2–3 key user journeys, pre-warmed for latency</div>
+            <div class="ti">Metrics: show latency, cost per query, accuracy numbers on screen</div>
+            <div class="ti">Challenges: honest technical struggles build credibility with experts</div>
+            <div class="ti">Future: scaling plan, what you'd change, next features</div>
+            <div class="ti">Q&A: redirect vague questions, admit unknowns confidently</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Demo Best Practices</div>
+          <div class="topics">
+            <div class="ti h">Always have a pre-recorded video backup — live demos fail</div>
+            <div class="ti">Warm the context window before demo: avoid cold-start latency spikes</div>
+            <div class="ti">Choose inputs that showcase strengths, not stress the edge cases</div>
+            <div class="ti">Browser zoom 125%: text readable for all viewers in the room</div>
+            <div class="ti">Narrate what the AI is doing during generation — no silent waiting</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag">Capstone</span><span class="tag">Presentation</span>
+          <span class="tag">Live Demo</span><span class="tag">Storytelling</span><span class="tag">Expert Feedback</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 18 -->
+    <div class="day-card">
+      <div class="card-stripe" style="background:var(--w9)"></div>
+      <div class="card-header">
+        <span class="day-badge" style="color:var(--w9);border-color:rgba(251,191,36,.3)">Session 18</span>
+        <span class="session-badge">Interviews · Career · Job Market</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Interview Preparation & Career Navigation</div>
+
+        <div class="tg">
+          <div class="tg-label">AI System Design Interview</div>
+          <div class="topics">
+            <div class="ti h">Framework: clarify scope → estimate scale → architect → trade-offs → failure modes</div>
+            <div class="ti">Design a customer support AI for a 10M-user SaaS product</div>
+            <div class="ti">Design a document intelligence system for a law firm with HIPAA compliance</div>
+            <div class="ti">Design a multi-agent research assistant for financial analysts</div>
+            <div class="ti">Design a code review agent integrated with GitHub PRs</div>
+            <div class="ti">Retrieval strategy selection under cost, latency, accuracy constraints</div>
+            <div class="ti">Token budget calculation: monthly cost at 1M requests/day</div>
+            <div class="ti">Latency allocation: 2s SLA split across retrieval, LLM, network, parsing</div>
+            <div class="ti">Failure modes: LLM down, vector DB down, rate limit exceeded — handling each</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Technical Concept Questions</div>
+          <div class="topics">
+            <div class="ti h">Explain RAG and when you'd choose it over finetuning</div>
+            <div class="ti">How do embeddings encode semantics? Why does cosine measure similarity?</div>
+            <div class="ti">What is an AI agent and what are its top three failure modes?</div>
+            <div class="ti">How does LangGraph differ from LangChain chains?</div>
+            <div class="ti">Explain ReAct and when it breaks down</div>
+            <div class="ti">What is prompt injection and how do you defend against it?</div>
+            <div class="ti">How do you evaluate a RAG system's quality end-to-end?</div>
+            <div class="ti">What is LoRA and why does low-rank adaptation work?</div>
+            <div class="ti">Explain the 4 pillars of context engineering</div>
+            <div class="ti">What is MCP and when would you use it over direct function calling?</div>
+            <div class="ti">How does DSPy differ from manual prompt engineering?</div>
+            <div class="ti">What is speculative decoding and what trade-off does it make?</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Project Storytelling (STAR)</div>
+          <div class="topics">
+            <div class="ti h">STAR method: Situation, Task, Action, Result for each project</div>
+            <div class="ti">"Walk me through your most complex AI project" — capstone answer structure</div>
+            <div class="ti">"How did you decide which approach to take?" — decision reasoning</div>
+            <div class="ti">"What would you do differently?" — self-awareness and growth signal</div>
+            <div class="ti">"How would you scale this to 10×?" — architectural thinking under pressure</div>
+            <div class="ti">Quantifying results: latency improvement, cost reduction, accuracy gain numbers</div>
+          </div>
+        </div>
+
+        <div class="tg">
+          <div class="tg-label">Career Navigation</div>
+          <div class="topics">
+            <div class="ti h">Job titles: AI Engineer, LLM Engineer, ML Platform Engineer — differences</div>
+            <div class="ti">Target company types: AI-native startups, Big Tech, enterprises — trade-offs</div>
+            <div class="ti">Reading JDs: mapping your skills to stated and unstated requirements</div>
+            <div class="ti">Compensation: ranges for AI engineering in India and globally (2026 data)</div>
+            <div class="ti">Negotiation: anchoring, leveraging competing offers, equity vs cash</div>
+            <div class="ti">Interview process: typical 4–6 round structure for AI engineering roles</div>
+            <div class="ti">Live mock interview: AI system design question with live expert feedback</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag hot">System Design</span><span class="tag hot">Mock Interview</span>
+          <span class="tag">STAR Method</span><span class="tag">Technical Q&A</span>
+          <span class="tag">Salary Negotiation</span><span class="tag">Career</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CAPSTONE -->
+<div class="capstone-wrap">
+  <div class="capstone-header">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--accent);margin-bottom:10px">🏆 CAPSTONE PROJECT — WEEK 9 SHOWCASE</div>
+    <h2>Your Production AI Product</h2>
+    <p>Identify a real industry problem, architect the complete solution, implement with observability and guardrails, run an automated evaluation suite, and deploy to production. This is the flagship portfolio piece that demonstrates production-grade AI engineering capability to employers.</p>
+  </div>
+  <div class="capstone-body">
+    <div class="cap-col">
+      <div class="cap-col-title">Discovery & Design</div>
+      <div class="cap-item">Identify real business problem with quantified impact</div>
+      <div class="cap-item">Architecture Decision Record (ADR) — document key choices</div>
+      <div class="cap-item">Component selection: RAG, agents, finetuning, multi-modal</div>
+      <div class="cap-item">Define success metrics and evaluation criteria upfront</div>
+      <div class="cap-item">MVP scope — what ships in 2 weeks</div>
+    </div>
+    <div class="cap-col">
+      <div class="cap-col-title">Build & Test</div>
+      <div class="cap-item">Core AI pipeline implementation with clean module separation</div>
+      <div class="cap-item">Guardrails: input validation + output quality checks</div>
+      <div class="cap-item">Automated evaluation suite with golden test set</div>
+      <div class="cap-item">LangSmith observability: traces, cost, latency dashboards</div>
+      <div class="cap-item">CI/CD pipeline with eval gates before deploy</div>
+    </div>
+    <div class="cap-col">
+      <div class="cap-col-title">Deploy & Present</div>
+      <div class="cap-item">Production deployment on Azure — live public URL</div>
+      <div class="cap-item">Clean GitHub repo: README, architecture diagram, setup guide</div>
+      <div class="cap-item">10-minute structured presentation with live demo</div>
+      <div class="cap-item">Expert panel Q&A and architecture critique</div>
+      <div class="cap-item">Publish to portfolio and LinkedIn</div>
+    </div>
+  </div>
+</div>
+
+<!-- BONUSES -->
+<div class="bonus-section">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--muted)">INCLUDED WITH THE PROGRAM</div>
+  <div class="bonus-grid">
+    <div class="bonus-card">
+      <div class="bonus-card-title">GenAI Self-Paced Bootcamp</div>
+      <div class="bonus-item">Python and ML fundamentals (6–8 months of content)</div>
+      <div class="bonus-item">NLP, GenAI concepts, prompt engineering basics</div>
+      <div class="bonus-item">1-year access — revisit at any time</div>
+      <div class="bonus-item">Prerequisite material for non-ML background engineers</div>
+    </div>
+    <div class="bonus-card">
+      <div class="bonus-card-title">Hackathon & Community</div>
+      <div class="bonus-item">Cohort team projects built alongside the curriculum</div>
+      <div class="bonus-item">Ship and publish a group hackathon project</div>
+      <div class="bonus-item">Discord community of AI engineering peers</div>
+      <div class="bonus-item">Alumni network for referrals and job leads</div>
+    </div>
+    <div class="bonus-card">
+      <div class="bonus-card-title">Career Toolkit</div>
+      <div class="bonus-item">Portfolio website template for showcasing projects</div>
+      <div class="bonus-item">LinkedIn profile optimizer for AI engineering roles</div>
+      <div class="bonus-item">Interview practice platform with AI system design questions</div>
+      <div class="bonus-item">Resume review and job referral pipeline</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <span style="color:var(--text);font-weight:500">AI Engineering Bootcamp · Complete Course Index</span>
+  <span>18 Sessions · 9 Weeks · 75 Days · 10+ Projects</span>
+  <span style="color:var(--accent)">Sat & Sun · 7:00 – 10:30 PM IST · 3.5 hrs/session</span>
+</footer>
+
+</body>
+</html>
